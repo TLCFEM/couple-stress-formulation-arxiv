@@ -1,0 +1,285 @@
+\documentclass[3p,sort&compress,11pt,fleqn]{elsarticle}
+\usepackage{setspace,tikz,float,booktabs,amsmath,mathpazo}
+\usetikzlibrary{arrows.meta}
+\tikzset{>={Latex[width=2mm,length=2mm]},base/.style={rectangle,rounded corners,draw=black,minimum width=1cm,minimum height=1cm,text centered,font=\sffamily}
+}
+\bibliographystyle{elsarticle-num-names}
+\journal{IJNME}
+\newcommand*{\figref}[1]{Fig.~\ref{#1}}
+\newcommand*{\eqsref}[1]{Eq.~(\ref{#1})}
+\newcommand*{\tabref}[1]{Table~\ref{#1}}
+\newcommand*{\class}[1]{\texttt{#1}}
+%\newcommand*{\mathbold}[1]{\mathbf{#1}}
+\newcommand*{\mT}{\mathrm{T}}
+\newcommand*{\md}[1]{\mathrm{d}#1}
+\newcommand*{\pfrac}[2]{\dfrac{\partial#1}{\partial#2}}
+\onehalfspacing
+\begin{document}
+\begin{abstract}
+A
+\end{abstract}
+\begin{keyword}
+mixed formulation\sep
+couple stress theory\sep
+size dependence
+\end{keyword}
+\begin{frontmatter}
+\title{Mixed formulation of finite elements based on couple stress theory}
+\author[]{T.~L.~Chang\corref{tlc}}\ead{tlcfem@gmail.com}
+%\cortext[tlc]{corresponding author}
+\address{Department of Civil and Natural Resources Engineering, University of Canterbury, Christchurch, New Zealand, 8041.}
+\end{frontmatter}
+\section{Introduction}
+The Cauchy continuum mechanics has received wide recognition over the years and become the standard framework for many engineering problems. Both analytical and numerical solutions can be developed.
+
+However, due to the lack of proper measure of rotation/curvature (and its stress conjugate), certain difficulties are encountered in problems involving beams, plates, shells, etc. Besides, the Cauchy theory is incapable of describing the size effect, which is frequently seen in many materials and plays a vital role in fracture mechanics.
+
+The consistent couple stress theory \citep{Hadjesfandiari2011} provides a promising tool to address the aforementioned shortcomings of the Cauchy theory.
+
+Recent research work on membrane elements with drilling degrees of freedom can be seen in the review by \cite{Boutagouga2020}.
+\section{The Couple Stress Theory}
+Details of the adopted consistent couple stress theory can be seen in the work by \citet{Hadjesfandiari2011}. Here a brief summary of all necessary expressions utilised in finite element formulation is presented.
+\subsection{Kinematics}
+Within the infinitesimal strain framework, the couple stress theory \citep{Hadjesfandiari2011} accounts for both symmetric and skew--symmetric parts of displacement gradient in kinematics, that is
+\begin{gather}\label{eq:varepsilon}
+\varepsilon_{ij}=\dfrac{1}{2}\left(u_{i,j}+u_{j,i}\right),\\
+\omega_{ij}=\dfrac{1}{2}\left(u_{i,j}-u_{j,i}\right),
+\end{gather}
+where $u_i$ is the displacement field, $\varepsilon_{ij}$ is the infinitesimal strain tensor, $\omega_{ij}$ is the skew--symmetric strain tensor that can be equivalently represented by the rotation vector $\theta_i$,
+\begin{gather}\label{eq:theta}
+\theta_i=\dfrac{1}{2}\epsilon_{ijk}\omega_{kj}=\dfrac{1}{2}\epsilon_{ijk}u_{k,j},
+\end{gather}
+where $\epsilon_{ijk}$ is the Levi--Civita (permutation) symbol. By utilising $\theta_i$, the mean curvature vector $\kappa_i$ is defined as
+\begin{gather}\label{eq:kappa}
+\kappa_i=\dfrac{1}{2}\epsilon_{ijk}\theta_{k,j},
+\end{gather}
+which can be further expressed in terms of $u_i$ so that
+\begin{gather}
+\kappa_i=\dfrac{1}{4}\left(u_{j,ij}-u_{i,jj}\right).
+\end{gather}
+\subsection{Equilibrium}
+The total stress tensor consists of two parts, namely the conventional symmetric stress tensor $\sigma_{ij}$ and the additional skew--symmetric couple stress tensor $\mu_{ij}$. Compared to the original literature \citep{Hadjesfandiari2011}, here a slightly different notation is used for brevity.
+
+The couple stress vector $\mu_i$ dual to $\mu_{ij}$ can be defined as
+\begin{gather}
+\mu_{ji}=\epsilon_{ijk}\mu_k.
+\end{gather}
+It is found that $\mu_i$ is the energetic conjugate to $-2\kappa_i$.
+
+The corresponding equilibrium equation can be shown as
+\begin{gather}\label{eq:equilibrium}
+\sigma_{ji,j}+\dfrac{1}{2}\left(\mu_{j,ij}-\mu_{i,jj}\right)+f_i=0,
+\end{gather}
+where $f_i$ is the body force field.
+\subsection{Linear Elasticity}
+The stored energy function $W$ can be defined as a function of $\varepsilon_{ij}$ and $\kappa_i$ such that
+\begin{gather}
+W\left(\varepsilon_{ij},\kappa_i\right)=\dfrac{1}{2}\lambda\varepsilon_{ii}\varepsilon_{jj}+\mu\varepsilon_{ij}\varepsilon_{ij}+8\eta\kappa_i\kappa_i,
+\end{gather}
+where $\lambda$ and $\mu$ are Lam\'{e} constants, $\eta$ is the additional material constant. The corresponding constitutive relations for linear elasticity can then be derived to be
+\begin{gather}
+\mu_i=-8\eta\kappa_i=4\eta\left(-2\kappa_i\right),\\
+\sigma_{ij}=\lambda\delta_{ij}\varepsilon_{kk}+2\mu\varepsilon_{ij},
+\end{gather}
+where $\delta_{ij}$ is the Kronecker delta. The additional constant $\eta$ can be related to shear modulus $\mu$ by the characteristic length $l$ according to the following expression,
+\begin{gather}
+\eta=l^2\mu.
+\end{gather}
+
+Given that in this work $\sigma_{ij}$ is assumed to be symmetric, without loss of generality, the variation of $W$ can be expressed as
+\begin{gather}\label{eq:potential_energy}
+\delta{}W\left(\varepsilon_{ij},\kappa_i\right)=\bar{\sigma}_{ij}\delta\varepsilon_{ij}-2\bar{\mu}_{i}\delta\kappa_i,
+\end{gather}
+with $\bar{\sigma}_{ij}$ and $\bar{\mu}_{i}$ denoting stress and couple stress tensors obtained from typical strain driven constitutive model. For linear elasticity, they are simply
+\begin{gather*}
+\bar{\sigma}_{ij}=\sigma_{ij},\qquad\bar{\mu}_{i}=\mu_{i}.
+\end{gather*}
+\subsection{Remarks}
+It could be noted that $C^1$ continuity is required by the displacement field $u_i$ due to the presence of the second order derivatives in $\kappa_i$. Shape functions based on such as NURBS \citep[see][]{Dargush2021} that support $C^1$ continuity can be adopted to construct properly finite elements. Alternatively, $\theta_i$ can be treated as an independent field and the corresponding kinematic equations can be introduced into the functional via the method of Lagrangian multiplier, applications of which can be seen for example in the work by \citet{Darrall2013,Deng2016,Pedgaonkar2021}. Further discussions of such a consistent couple stress theory can be also seen in the work by \citet{Hadjesfandiari2016}.
+\section{A Six--Field Mixed Framework}
+In this section, the variational theorem developed by \citet{Darrall2013} is further extended to a more general form which resembles the Hu--Washizu variational theorem in the classic Cauchy theory.
+
+By assuming the essential boundary conditions can be satisfied by proper construction, in absence of body force and surface force/moment traction, the total potential energy functional over an arbitrary domain $V$ can be simply expressed as
+\begin{gather}
+\varPi\left(\varepsilon_{ij},\kappa_i\right)=\int_VW~\md{V}
+\end{gather}
+where $W\left(\varepsilon_{ij},\kappa_i\right)$ is defined in \eqsref{eq:potential_energy} for linear elastic material. Since $\varepsilon_{ij}\left(u_i\right)$ and $\kappa_i\left(u_i\right)$ are functions of $u_i$, $u_i$ is the only independent field in the above functional.
+
+Now consider the case in which $u_i$, $\theta_i$, $\varepsilon_{ij}$, and $\kappa_i$ are all treated as independent fields, the kinematic equations \eqsref{eq:varepsilon}, \eqsref{eq:kappa} and \eqsref{eq:theta} need to be satisfied in a weak form. By introducing three Lagrangian multipliers $\alpha_{ij}$, $\beta_i$ and $\gamma_i$, those equations can be appended to the above functional so that
+\begin{multline}
+\varPi\left(u_i,\theta_i,\varepsilon_{ij},\kappa_i,\alpha_{ij},\beta_i,\gamma_i\right)=\int_VW~\md{V}
++\int_V\alpha_{ij}\left(\varepsilon_{ij}-\dfrac{1}{2}\left(u_{i,j}+u_{j,i}\right)\right)~\md{V}\\
++\int_V\beta_i\left(\kappa_i-\dfrac{1}{2}\epsilon_{ijk}\theta_{k,j}\right)~\md{V}
++\int_V\gamma_i\left(\theta_i-\dfrac{1}{2}\epsilon_{ijk}u_{k,j}\right)~\md{V}.
+\end{multline}
+Taking the first variation leads to
+\begin{gather}\label{eq:variation}
+\begin{split}
+\delta\varPi&=
+\int_V\bar{\sigma}_{ij}\delta\varepsilon_{ij}~\md{V}
+-\int_V2\bar{\mu}_{i}\delta\kappa_i~\md{V}\\&
++\int_V\delta{}\alpha_{ij}\left(\varepsilon_{ij}-\dfrac{1}{2}\left(u_{i,j}+u_{j,i}\right)\right)~\md{V}
++\int_V\alpha_{ij}\left(\delta{}\varepsilon_{ij}-\dfrac{1}{2}\left(\delta{}u_{i,j}+\delta{}u_{j,i}\right)\right)~\md{V}\\&
++\int_V\delta{}\beta_i\left(\kappa_i-\dfrac{1}{2}\epsilon_{ijk}\theta_{k,j}\right)~\md{V}
++\int_V\beta_i\left(\delta{}\kappa_i-\dfrac{1}{2}\epsilon_{ijk}\delta{}\theta_{k,j}\right)~\md{V}\\&
++\int_V\delta{}\gamma_i\left(\theta_i-\dfrac{1}{2}\epsilon_{ijk}u_{k,j}\right)~\md{V}
++\int_V\gamma_i\left(\delta{}\theta_i-\dfrac{1}{2}\epsilon_{ijk}\delta{}u_{k,j}\right)~\md{V}.
+\end{split}
+\end{gather}
+By performing integration by parts and applying the divergence theorem, one can find
+\begin{gather}
+-\dfrac{1}{2}\int_V\alpha_{ij}\left(\delta{}u_{i,j}+\delta{}u_{j,i}\right)~\md{V}=\int_V\dfrac{\alpha_{ij,j}+\alpha_{ji,j}}{2}\delta{}u_i~\md{V}-\int_S\dfrac{\alpha_{ij}+\alpha_{ji}}{2}n_j\delta{}u_i~\md{S},\\
+-\dfrac{1}{2}\int_V\epsilon_{ijk}\beta_i\delta\theta_{k,j}~\md{V}=\dfrac{1}{2}\int_V\epsilon_{ijk}\beta_{i,j}\delta\theta_k~\md{V}-\dfrac{1}{2}\int_S\epsilon_{ijk}\beta_in_j\delta\theta_k~\md{S},\\
+-\dfrac{1}{2}\int_V\epsilon_{ijk}\gamma_i\delta{}u_{k,j}~\md{V}=\dfrac{1}{2}\int_V\epsilon_{ijk}\gamma_{i,j}\delta{}u_k~\md{V}-\dfrac{1}{2}\int_S\epsilon_{ijk}\gamma_in_j\delta{}u_k~\md{S}.
+\end{gather}
+Here $S$ is not further refined for simplicity.
+
+Inserting the above expressions back to \eqsref{eq:variation} gives
+\begin{gather}
+\begin{split}
+\delta\varPi&=
+\int_V\bar{\sigma}_{ij}\delta\varepsilon_{ij}~\md{V}+\int_V\alpha_{ij}\delta{}\varepsilon_{ij}~\md{V}
+-\int_V2\bar{\mu}_{i}\delta\kappa_i~\md{V}+\int_V\beta_i\delta{}\kappa_i~\md{V}\\&
++\int_V\delta{}\alpha_{ij}\left(\varepsilon_{ij}-\dfrac{1}{2}\left(u_{i,j}+u_{j,i}\right)\right)~\md{V}
++\int_V\delta{}\beta_i\left(\kappa_i-\dfrac{1}{2}\epsilon_{ijk}\theta_{k,j}\right)~\md{V}\\&
++\int_V\delta{}\gamma_i\left(\theta_i-\dfrac{1}{2}\epsilon_{ijk}u_{k,j}\right)~\md{V}
++\int_V\dfrac{\alpha_{ij,j}+\alpha_{ji,j}}{2}\delta{}u_i~\md{V}
++\dfrac{1}{2}\int_V\epsilon_{ijk}\gamma_{i,j}\delta{}u_k~\md{V}\\&
++\int_V\gamma_i\delta{}\theta_i~\md{V}+\dfrac{1}{2}\int_V\epsilon_{ijk}\beta_{i,j}\delta\theta_k~\md{V}-\dfrac{1}{2}\int_S\epsilon_{ijk}\beta_in_j\delta\theta_k~\md{S}\\&
+-\int_S\dfrac{\alpha_{ij}+\alpha_{ji}}{2}n_j\delta{}u_i~\md{S}-\dfrac{1}{2}\int_S\epsilon_{ijk}\gamma_in_j\delta{}u_k~\md{S}.
+\end{split}
+\end{gather}
+
+Since the variations $\delta{}u_i$, $\delta{}\theta_i$, $\delta{}\varepsilon_{ij}$, $\delta{}\kappa_i$, $\delta{}\alpha_{ij}$, $\delta{}\beta_i$ and $\delta{}\gamma_i$ are arbitrary, the stationary condition requires the following equations involving Lagrangian multipliers to hold.
+\begin{gather}
+%\left\{\begin{array}{l}
+\bar{\sigma}_{ij}+\alpha_{ij}=0,\quad
+-2\bar{\mu}_i+\beta_i=0,\quad
+\alpha_{kj,j}+\alpha_{jk,j}+\epsilon_{ijk}\gamma_{i,j}=0,\quad
+\gamma_k+\dfrac{1}{2}\epsilon_{ijk}\beta_{i,j}=0.
+%\end{array}\right.
+\end{gather}
+It can be identified that $\alpha_{ij}=-\sigma_{ij}$, $\beta_i=2\mu_i$ and $\gamma_i=\epsilon_{ijk}\mu_{k,j}$ with $\sigma_{ij}$ and $\mu_i$ be independent fields. The third equation is essentially the stress equilibrium \eqsref{eq:equilibrium}.
+
+The functional in its general form is then
+\begin{multline}
+\varPi\left(u_i,\theta_i,\varepsilon_{ij},\sigma_{ij},\kappa_i,\mu_i\right)=\int_VW~\md{V}
+-\int_V\sigma_{ij}\left(\varepsilon_{ij}-\dfrac{1}{2}\left(u_{i,j}+u_{j,i}\right)\right)~\md{V}\\
++\int_V2\mu_i\left(\kappa_i-\dfrac{1}{2}\epsilon_{ijk}\theta_{k,j}\right)~\md{V}
++\int_V\epsilon_{imn}\mu_{n,m}\left(\theta_i-\dfrac{1}{2}\epsilon_{ijk}u_{k,j}\right)~\md{V}.
+\end{multline}
+It shall be noted that all boundary terms are omitted for brevity. In vector/matrix form, it can also be written as
+\begin{multline}\label{eq:functional}
+\varPi\left(\mathbold{u},\mathbold{\theta},\mathbold{\varepsilon},\mathbold{\sigma},\mathbold{\kappa},\mathbold{\mu}\right)=\int_VW~\md{V}
++\int_V\mathbold{\sigma}^\mT\left(\nabla^s\mathbold{u}-\mathbold{\varepsilon}\right)~\md{V}\\
++\int_V2\mathbold{\mu}^\mT\left(\mathbold{\kappa}-\dfrac{1}{2}\nabla\times\mathbold{\theta}\right)~\md{V}
++\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}.
+\end{multline}
+The $\nabla^s\mathbold{u}$ is used to denote the result of $\left(u_{i,j}+u_{j,i}\right)/2$ expressed in Voigt form.
+
+It occupies a form similar to that of the functional used in the Hu--Washizu principle. Starting from \eqsref{eq:functional}, various levels of simplifications can be conducted to derive both mixed--type and hybrid--type finite elements. For example, any of \eqsref{eq:varepsilon}, \eqsref{eq:kappa} and \eqsref{eq:theta} can be satisfied in strong forms thus the corresponding terms can be omitted from the functional. One can also apply divergence theorem to terms involving derivatives to convert between volume and surface integrals.
+\section{Finite Element Formulation}
+In this section, the linear equation system of the aforementioned general six--field variational principle is derived. Since there is no other local residual apart from the one due to potential inelastic constitutive models, a locally iterative algorithm is not required. The final elemental stiffness may possess a form similar to that of conventional displacement based elements.
+\subsection{Linear System}
+Let six fields be discretized as follows.
+\begin{gather}
+\mathbold{u}=\mathbold{\phi}_\mathbold{u}\mathbold{p},\quad
+\mathbold{\theta}=\mathbold{\phi}_\mathbold{\theta}\mathbold{q},\quad
+\mathbold{\kappa}=\mathbold{\phi}_\mathbold{\kappa}\mathbold{r},\quad
+\mathbold{\mu}=\mathbold{\phi}_\mathbold{\mu}\mathbold{s},\quad
+\mathbold{\varepsilon}=\mathbold{\phi}_\mathbold{\varepsilon}\mathbold{\beta},\quad
+\mathbold{\sigma}=\mathbold{\phi}_\mathbold{\sigma}\mathbold{\alpha}.
+\end{gather}
+Then, naturally, $\nabla^s\mathbold{u}=\mathbold{L}\mathbold{\phi}_\mathbold{u}\mathbold{p}$ where $\mathbold{L}$ is the differential operator which can be expressed as
+\begin{gather}
+\mathbold{L}=\begin{bmatrix}
+\pfrac{}{x}&\cdot&\cdot&\pfrac{}{y}&\cdot&\pfrac{}{z}\\[4mm]
+\cdot&\pfrac{}{y}&\cdot&\pfrac{}{x}&\pfrac{}{z}&\cdot\\[4mm]
+\cdot&\cdot&\pfrac{}{z}&\cdot&\pfrac{}{y}&\pfrac{}{x}
+\end{bmatrix}^\mT.
+\end{gather}
+Similarly, the curl operator can be expressed as $\dfrac{1}{2}\nabla\times\left(\cdot\right)=\mathbold{J}\left(\cdot\right)$ with
+\begin{gather}
+\mathbold{J}=\dfrac{1}{2}\begin{bmatrix}
+\cdot&-\pfrac{}{z}&\pfrac{}{y}\\[4mm]
+\pfrac{}{z}&\cdot&-\pfrac{}{x}\\[4mm]
+-\pfrac{}{y}&\pfrac{}{x}&\cdot
+\end{bmatrix}.
+\end{gather}
+
+Now the functional can be rewritten as
+\begin{multline}\label{eq:functional_new}
+\varPi\left(\mathbold{p},\mathbold{q},\mathbold{r},\mathbold{s},\mathbold{\beta},\mathbold{\alpha}\right)=\int_VW~\md{V}
++\int_V\mathbold{\alpha}^\mT\mathbold{\phi}_\mathbold{\sigma}^\mT\left(\mathbold{L}\mathbold{\phi}_\mathbold{u}\mathbold{p}-\mathbold{\phi}_\mathbold{\varepsilon}\mathbold{\beta}\right)~\md{V}\\
++\int_V2\mathbold{s}^\mT\mathbold{\phi}_\mathbold{\mu}^\mT\left(\mathbold{\phi}_\mathbold{\kappa}\mathbold{r}-\mathbold{J}\mathbold{\phi}_\mathbold{\theta}\mathbold{q}\right)~\md{V}
++\int_V2\mathbold{s}^\mT\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)^\mT\left(\mathbold{\phi}_\mathbold{\theta}\mathbold{q}-\mathbold{J}\mathbold{\phi}_\mathbold{u}\mathbold{p}\right)~\md{V}.
+\end{multline}
+
+Taking variations leads to the following system of equations.
+\begin{gather}
+\left\{
+\begin{array}{lll}
+\dfrac{\delta\varPi}{\delta{}\mathbold{p}}=0&\longrightarrow&\displaystyle\int_V\left(\mathbold{L}\mathbold{\phi}_\mathbold{u}\right)^\mT\mathbold{\phi}_\mathbold{\sigma}\mathbold{\alpha}-2\left(\mathbold{J}\mathbold{\phi}_\mathbold{u}\right)^\mT\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)\mathbold{s}~\md{V}=\mathbold{R}_\mathbold{u},\\[4mm]
+\dfrac{\delta\varPi}{\delta{}\mathbold{q}}=0&\longrightarrow&\displaystyle\int_V2\left(\mathbold{\phi}_\mathbold{\theta}^\mT\mathbold{J}\mathbold{\phi}_\mathbold{\mu}-\left(\mathbold{J}\mathbold{\phi}_\mathbold{\theta}\right)^\mT\mathbold{\phi}_\mathbold{\mu}\right)\mathbold{s}~\md{V}=\mathbold{R}_\mathbold{\theta},\\[4mm]
+\dfrac{\delta\varPi}{\delta{}\mathbold{r}}=0&\longrightarrow&\displaystyle\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT{}W_\mathbold{\kappa}+2\mathbold{\phi}_\mathbold{\kappa}^\mT\mathbold{\phi}_\mathbold{\mu}\mathbold{s}~\md{V}=\mathbold{0},\\[4mm]
+\dfrac{\delta\varPi}{\delta{}\mathbold{s}}=0&\longrightarrow&\displaystyle
+\int_V2\left(\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)^\mT\mathbold{\phi}_\mathbold{\theta}-\mathbold{\phi}_\mathbold{\mu}^\mT\mathbold{J}\mathbold{\phi}_\mathbold{\theta}\right)\mathbold{q}+2\mathbold{\phi}_\mathbold{\mu}^\mT\mathbold{\phi}_\mathbold{\kappa}\mathbold{r}-2\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)^\mT\mathbold{J}\mathbold{\phi}_\mathbold{u}\mathbold{p}~\md{V}=\mathbold{0},\\[4mm]
+\dfrac{\delta\varPi}{\delta{}\mathbold{\beta}}=0&\longrightarrow&\displaystyle\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT{}W_{\mathbold{\varepsilon}}~\md{V}
+-\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT\mathbold{\phi}_\mathbold{\sigma}\mathbold{\alpha}~\md{V}=\mathbold{0},\\[4mm]
+\dfrac{\delta\varPi}{\delta{}\mathbold{\alpha}}=0&\longrightarrow&\displaystyle\int_V\mathbold{\phi}_\mathbold{\sigma}^\mT\mathbold{L}\mathbold{\phi}_\mathbold{u}\mathbold{p}-\mathbold{\phi}_\mathbold{\sigma}^\mT\mathbold{\phi}_\mathbold{\varepsilon}\mathbold{\beta}~\md{V}=\mathbold{0}.
+\end{array}
+\right.
+\end{gather}
+In the above system, $\mathbold{R}_\mathbold{u}$ and $\mathbold{R}_\mathbold{\theta}$ are resistances due to omitted boundary terms, $W_\mathbold{\kappa}$ and $W_\mathbold{\varepsilon}$ denote the partial derivatives respectively.
+
+By further denoting
+\begin{gather*}
+\mathbold{E}_1=\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT\mathbold{D}\mathbold{\phi}_\mathbold{\kappa}~\md{V},\quad
+\mathbold{E}_2=\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT\mathbold{C}\mathbold{\phi}_\mathbold{\varepsilon}~\md{V},\quad
+\mathbold{H}_1=-2\int_V\left(\mathbold{J}\mathbold{\phi}_\mathbold{u}\right)^\mT\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)~\md{V},\\
+\mathbold{H}_2=\int_V\left(\mathbold{L}\mathbold{\phi}_\mathbold{u}\right)^\mT\mathbold{\phi}_\mathbold{\sigma}~\md{V},\quad
+\mathbold{H}_3=2\int_V\mathbold{\phi}_\mathbold{\theta}^\mT\mathbold{J}\mathbold{\phi}_\mathbold{\mu}-\left(\mathbold{J}\mathbold{\phi}_\mathbold{\theta}\right)^\mT\mathbold{\phi}_\mathbold{\mu}~\md{V},\\
+\mathbold{H}_4=-2\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT\mathbold{\phi}_\mathbold{\mu}~\md{V},\quad
+\mathbold{H}_5=\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT\mathbold{\phi}_\mathbold{\sigma}~\md{V},\quad
+\end{gather*}
+the incremental form of linear equation system can be expressed as
+\begin{gather}
+\begin{bmatrix}
+\cdot&\cdot&\cdot&\mathbold{H}_1&\cdot&\mathbold{H}_2\\
+\cdot&\cdot&\cdot&\mathbold{H}_3&\cdot&\cdot\\
+\cdot&\cdot&\mathbold{E}_1&-\mathbold{H}_4&\cdot&\cdot\\
+\mathbold{H}_1^\mT&\mathbold{H}_3^\mT&-\mathbold{H}_4^\mT&\cdot&\cdot&\cdot\\
+\cdot&\cdot&\cdot&\cdot&\mathbold{E}_2&-\mathbold{H}_5\\
+\mathbold{H}_2^\mT&\cdot&\cdot&\cdot&-\mathbold{H}_5^\mT&\cdot
+\end{bmatrix}
+\begin{bmatrix}
+\Delta\mathbold{p}\\\Delta\mathbold{q}\\\Delta\mathbold{r}\\\Delta\mathbold{s}\\\Delta\mathbold{\beta}\\\Delta\mathbold{\alpha}
+\end{bmatrix}=\begin{bmatrix}
+\Delta\mathbold{R}_\mathbold{u}\\\Delta\mathbold{R}_\mathbold{\theta}\\\mathbold{0}\\\mathbold{0}\\\mathbold{0}\\\mathbold{0}
+\end{bmatrix}.
+\end{gather}
+\subsection{Solution Procedure}
+Similar to the author's previous work \citep{Chang2019}, the solution procedure can be developed based on the assumption that $\mathbold{H}_4$ and $\mathbold{H}_5$ are invertible, which is always feasible by choosing proper interpolations. By performing static condensation, one can obtain
+\begin{gather}
+\begin{bmatrix}
+\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{E}_2\mathbold{H}_5^{-\mT}\mathbold{H}_2^\mT+\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{E}_1\mathbold{H}_4^{-\mT}\mathbold{H}_1^\mT&\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{E}_1\mathbold{H}_4^{-\mT}\mathbold{H}_3^\mT\\
+\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{E}_1\mathbold{H}_4^{-\mT}\mathbold{H}_1^\mT&\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{E}_1\mathbold{H}_4^{-\mT}\mathbold{H}_3^\mT
+\end{bmatrix}
+\begin{bmatrix}
+\Delta\mathbold{p}\\\Delta\mathbold{q}
+\end{bmatrix}=\begin{bmatrix}
+\Delta\mathbold{R}_\mathbold{u}\\\Delta\mathbold{R}_\mathbold{\theta}
+\end{bmatrix}.
+\end{gather}
+
+Since all $\mathbold{H}_n$ matrices are constant once interpolations are determined, they only need to be computed once during the initialisation stage. Furthermore, $\mathbold{H}_n$ require no additional storage as $\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{\phi}_\mathbold{\varepsilon}^\mT$, $\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ and $\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ can be stored as `equivalent strain matrices' for each integration points.
+\subsection{An Elementary Membrane Element}
+\section{Numerical Examples}
+\section{Conclusions}
+In this work, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated.
+
+Given that most existing constitutive models are developed based on the Cauchy theory, it is still difficult to further investigate the performance of the couple stress theory beyond elasticity for the moment. It would be interesting to see work in that regard in future.
+
+The proposed elements have been implemented in \texttt{suanPan} \citep{Chang2021}. Sample model scripts can be found online\footnote{Link to the repository would be added after acceptance}.
+\bibliography{S}
+\end{document}
