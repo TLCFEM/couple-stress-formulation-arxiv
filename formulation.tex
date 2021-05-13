@@ -159,7 +159,13 @@ Since the variations $\delta{}u_i$, $\delta{}\theta_i$, $\delta{}\varepsilon_{ij
 \gamma_k+\dfrac{1}{2}\epsilon_{ijk}\beta_{i,j}=0.
 %\end{array}\right.
 \end{gather}
-It can be identified that $\alpha_{ij}=-\sigma_{ij}$, $\beta_i=2\mu_i$ and $\gamma_i=\epsilon_{ijk}\mu_{k,j}$ with $\sigma_{ij}$ and $\mu_i$ be independent fields. The third equation is essentially the stress equilibrium \eqsref{eq:equilibrium}.
+It can be identified that $\alpha_{ij}=-\sigma_{ij}$, $\beta_i=2\mu_i$ and $\gamma_i=\epsilon_{ijk}\mu_{k,j}$ with $\sigma_{ij}$ and $\mu_i$ be independent fields. The third equation is essentially
+\begin{gather*}
+\begin{split}
+0=\left(\alpha_{kj}+\alpha_{jk}\right)_{,j}+\epsilon_{ijk}\epsilon_{imn}\mu_{m,nj}=\left(\alpha_{ji}+\alpha_{ij}\right)_{,j}+\left(\mu_{j,i}-\mu_{i,j}\right)_{,j},
+\end{split}
+\end{gather*}
+which is the stress equilibrium \eqsref{eq:equilibrium} in absence of body force $f_i$.
 
 The functional in its general form is then
 \begin{multline}
@@ -196,9 +202,9 @@ Then, naturally, $\nabla^s\mathbold{u}=\mathbold{L}\mathbold{\phi}_\mathbold{u}\
 \pfrac{}{x}&\cdot&\cdot&\pfrac{}{y}&\cdot&\pfrac{}{z}\\[4mm]
 \cdot&\pfrac{}{y}&\cdot&\pfrac{}{x}&\pfrac{}{z}&\cdot\\[4mm]
 \cdot&\cdot&\pfrac{}{z}&\cdot&\pfrac{}{y}&\pfrac{}{x}
-\end{bmatrix}^\mT.
+\end{bmatrix}^\mT
 \end{gather}
-Similarly, the curl operator can be expressed as $\dfrac{1}{2}\nabla\times\left(\cdot\right)=\mathbold{J}\left(\cdot\right)$ with
+in 3D space. Similarly, the curl operator can be expressed as $\dfrac{1}{2}\nabla\times\left(\cdot\right)=\mathbold{J}\left(\cdot\right)$ with
 \begin{gather}
 \mathbold{J}=\dfrac{1}{2}\begin{bmatrix}
 \cdot&-\pfrac{}{z}&\pfrac{}{y}\\[4mm]
@@ -274,6 +280,7 @@ Similar to the author's previous work \citep{Chang2019}, the solution procedure 
 
 Since all $\mathbold{H}_n$ matrices are constant once interpolations are determined, they only need to be computed once during the initialisation stage. Furthermore, $\mathbold{H}_n$ require no additional storage as $\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{\phi}_\mathbold{\varepsilon}^\mT$, $\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ and $\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ can be stored as `equivalent strain matrices' for each integration points.
 \subsection{An Elementary Membrane Element}
+Not all couple stress theories support membrane problems, the popular modified couple stress theory \citep{Yang2002} adopts a symmetric couple stress tensor, with which in-plane response cannot be fully decoupled from out-of-plane response. Discussions of relevant topics can be seen elsewhere \citep{Hadjesfandiari2016}. The consistent couple stress theory is free from similar issues, which makes it more appealing for general continuum problems.
 \section{Numerical Examples}
 \section{Conclusions}
 In this work, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated.
