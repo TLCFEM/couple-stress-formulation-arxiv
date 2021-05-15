@@ -16,7 +16,7 @@
 \onehalfspacing
 \begin{document}
 \begin{abstract}
-A
+This work discusses the finite element formulation based on a six-field variational principle that incorporates the consistent couple stress theory.
 \end{abstract}
 \begin{keyword}
 mixed formulation\sep
@@ -36,7 +36,7 @@ However, due to the lack of proper measure of rotation/curvature (and its stress
 
 The consistent couple stress theory \citep{Hadjesfandiari2011} provides a promising tool to address the aforementioned shortcomings of the Cauchy theory.
 
-Recent research work on membrane elements with drilling degrees of freedom can be seen in the review by \cite{Boutagouga2020}.
+Recent research work on membrane elements with drilling degrees of freedom can be seen in the review by \citet{Boutagouga2020}.
 \section{The Couple Stress Theory}
 Details of the adopted consistent couple stress theory can be seen in the work by \citet{Hadjesfandiari2011}. Here a brief summary of all necessary expressions utilised in finite element formulation is presented.
 \subsection{Kinematics}
@@ -77,7 +77,7 @@ The stored energy function $W$ can be defined as a function of $\varepsilon_{ij}
 W\left(\varepsilon_{ij},\kappa_i\right)=\dfrac{1}{2}\lambda\varepsilon_{ii}\varepsilon_{jj}+\mu\varepsilon_{ij}\varepsilon_{ij}+8\eta\kappa_i\kappa_i,
 \end{gather}
 where $\lambda$ and $\mu$ are Lam\'{e} constants, $\eta$ is the additional material constant. The corresponding constitutive relations for linear elasticity can then be derived to be
-\begin{gather}
+\begin{gather}\label{eq:constitutive_couple}
 \mu_i=-8\eta\kappa_i=4\eta\left(-2\kappa_i\right),\\
 \sigma_{ij}=\lambda\delta_{ij}\varepsilon_{kk}+2\mu\varepsilon_{ij},
 \end{gather}
@@ -183,7 +183,18 @@ It shall be noted that all boundary terms are omitted for brevity. In vector/mat
 \end{multline}
 The $\nabla^s\mathbold{u}$ is used to denote the result of $\left(u_{i,j}+u_{j,i}\right)/2$ expressed in Voigt form.
 
-It occupies a form similar to that of the functional used in the Hu--Washizu principle. Starting from \eqsref{eq:functional}, various levels of simplifications can be conducted to derive both mixed--type and hybrid--type finite elements. For example, any of \eqsref{eq:varepsilon}, \eqsref{eq:kappa} and \eqsref{eq:theta} can be satisfied in strong forms thus the corresponding terms can be omitted from the functional. One can also apply divergence theorem to terms involving derivatives to convert between volume and surface integrals.
+It occupies a form similar to that of the functional used in the Hu--Washizu principle. Fields $\mathbold{u}$, $\mathbold{\theta}$ and $\mathbold{\mu}$ require $C^0$ continuity, while $\mathbold{\kappa}$, $\mathbold{\varepsilon}$ and $\mathbold{\sigma}$ can be constant fields. Starting from \eqsref{eq:functional}, various levels of simplifications can be conducted to derive both mixed--type and hybrid--type finite elements. For example, any of \eqsref{eq:varepsilon}, \eqsref{eq:kappa} and \eqsref{eq:theta} can be satisfied in strong forms thus the corresponding terms can be omitted from the functional. The mixed functional used by \citet{Darrall2013}, which is
+\begin{gather}
+\varPi\left(\mathbold{u},\mathbold{\theta},\mathbold{\mu}\right)=\int_VW~\md{V}
++\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}+\varPi_{b.t.}.
+\end{gather}
+can be obtained by enforcing \eqsref{eq:varepsilon} and \eqsref{eq:kappa} in strong forms. By considering \eqsref{eq:varepsilon} only, another functional can be obtained.
+\begin{multline}
+\varPi\left(\mathbold{u},\mathbold{\theta},\mathbold{\kappa},\mathbold{\mu}\right)=\int_VW~\md{V}
++\int_V2\mathbold{\mu}^\mT\left(\mathbold{\kappa}-\dfrac{1}{2}\nabla\times\mathbold{\theta}\right)~\md{V}\\
++\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}+\varPi_{b.t.}.
+\end{multline}
+One can also apply divergence theorem to terms involving derivatives to convert between volume and surface integrals.
 \section{Finite Element Formulation}
 In this section, the linear equation system of the aforementioned general six--field variational principle is derived. Since there is no other local residual apart from the one due to potential inelastic constitutive models, a locally iterative algorithm is not required. The final elemental stiffness may possess a form similar to that of conventional displacement based elements.
 \subsection{Linear System}
@@ -236,7 +247,7 @@ Taking variations leads to the following system of equations.
 \end{array}
 \right.
 \end{gather}
-In the above system, $\mathbold{R}_\mathbold{u}$ and $\mathbold{R}_\mathbold{\theta}$ are resistances due to omitted boundary terms, $W_\mathbold{\kappa}$ and $W_\mathbold{\varepsilon}$ denote the partial derivatives respectively.
+In the above system, $\mathbold{R}_\mathbold{u}$ and $\mathbold{R}_\mathbold{\theta}$ are nodal forces due to omitted boundary terms, $W_\mathbold{\kappa}$ and $W_\mathbold{\varepsilon}$ denote the partial derivatives respectively.
 
 By further denoting
 \begin{gather*}
@@ -248,7 +259,7 @@ By further denoting
 \mathbold{H}_4=-2\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT\mathbold{\phi}_\mathbold{\mu}~\md{V},\quad
 \mathbold{H}_5=\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT\mathbold{\phi}_\mathbold{\sigma}~\md{V},\quad
 \end{gather*}
-the incremental form of linear equation system can be expressed as
+in which $\mathbold{C}$ and $\mathbold{D}$ denote material tangent moduli. The incremental form of linear equation system can be expressed as
 \begin{gather}
 \begin{bmatrix}
 \cdot&\cdot&\cdot&\mathbold{H}_1&\cdot&\mathbold{H}_2\\
@@ -278,14 +289,66 @@ Similar to the author's previous work \citep{Chang2019}, the solution procedure 
 \end{bmatrix}.
 \end{gather}
 
-Since all $\mathbold{H}_n$ matrices are constant once interpolations are determined, they only need to be computed once during the initialisation stage. Furthermore, $\mathbold{H}_n$ require no additional storage as $\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{\phi}_\mathbold{\varepsilon}^\mT$, $\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ and $\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ can be stored as `equivalent strain matrices' for each integration points.
+Since all $\mathbold{H}_n$ matrices are constant once interpolations are determined, they only need to be computed once during the initialisation stage. Furthermore, $\mathbold{H}_n$ require no additional storage as $\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{\phi}_\mathbold{\varepsilon}^\mT$, $\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ and $\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ can be stored as `equivalent strain matrices' for each integration points. Once the elemental stiffness matrix is computed, reordering of degrees of freedom may be performed.
+
+It can be noted that the elemental stiffness possesses a symmetric structure although moduli $\mathbold{E}_1$ and $\mathbold{E}_2$ may be asymmetric due to for example non-associative plasticity in the case of material nonlinearity.
 \subsection{An Elementary Membrane Element}
-Not all couple stress theories support membrane problems, the popular modified couple stress theory \citep{Yang2002} adopts a symmetric couple stress tensor, with which in-plane response cannot be fully decoupled from out-of-plane response. Discussions of relevant topics can be seen elsewhere \citep{Hadjesfandiari2016}. The consistent couple stress theory is free from similar issues, which makes it more appealing for general continuum problems.
+Not all couple stress theories support membrane problems, the popular modified couple stress theory \citep{Yang2002} adopts a symmetric couple stress tensor, with which in-plane response cannot be fully decoupled from out-of-plane response. Discussions of relevant topics can be seen elsewhere \citep{Hadjesfandiari2016}. The consistent couple stress theory is free from similar issues, which makes it more appealing for a wide range of general continuum problems.
+
+The simplest membrane element may be the three-node triangular element. For plane stress problem, given the constitutive equation between mean curvature vector $\kappa_i$ and couple stress vector $\mu_i$ occupies the form shown in \eqsref{eq:constitutive_couple}, it is clear that in-plane and out-of-plane actions are decoupled. Thus six fields reduce to the following Voigt forms.
+\begin{gather}
+\mathbold{u}=\begin{bmatrix}
+u_x\\u_y
+\end{bmatrix},\quad
+\mathbold{\theta}=\begin{bmatrix}
+\theta_z
+\end{bmatrix},\quad
+\mathbold{\kappa}=\begin{bmatrix}
+\kappa_x\\\kappa_y
+\end{bmatrix},\quad
+\mathbold{\mu}=\begin{bmatrix}
+\mu_x\\\mu_y
+\end{bmatrix},\quad
+\mathbold{\varepsilon}=\begin{bmatrix}
+\varepsilon_x\\\varepsilon_y\\\gamma_{xy}
+\end{bmatrix},\quad
+\mathbold{\sigma}=\begin{bmatrix}
+\sigma_x\\\sigma_y\\\tau_{xy}
+\end{bmatrix}.
+\end{gather}
+
+The standard isoparametric mapping is used for coordinate, displacement, drilling rotation and couple stress, that is
+\begin{gather}
+\chi=\sum_{i=1}^3N_i\chi_i
+\end{gather}
+where $N_i$ is the complete first order isoparametric shape function, $\chi$ represents one of $x$, $y$, $u_x$, $u_y$, $\theta_z$, $\mu_x$ and $\mu_y$. Thus for each fields, three nodal values are used for interpolation.
+
+Given that $\mathbold{u}$ is linearly interpolated, $\mathbold{\varepsilon}$ and $\mathbold{\sigma}$ can be chosen to be constant fields.
+\begin{gather}
+\mathbold{\varepsilon}=\begin{bmatrix}
+1&&\\&1&\\&&1
+\end{bmatrix}\begin{bmatrix}
+\beta_1\\\beta_2\\\beta_3
+\end{bmatrix},\qquad
+\mathbold{\sigma}=\begin{bmatrix}
+1&&\\&1&\\&&1
+\end{bmatrix}\begin{bmatrix}
+\alpha_1\\\alpha_2\\\alpha_3
+\end{bmatrix}.
+\end{gather}
+In this case, $\beta_i$ and $\alpha_i$ are essentially strain and stress components. The same strategy can also be applied to $\kappa$,
+\begin{gather}
+\mathbold{\kappa}=\begin{bmatrix}
+1&\\&1
+\end{bmatrix}\begin{bmatrix}
+r_1\\r_2
+\end{bmatrix}.
+\end{gather}
+
+The explicit forms are not listed here for brevity. Interested readers are referred to typical textbooks on finite element methods for details of formulating interpolation matrices.
 \section{Numerical Examples}
 \section{Conclusions}
-In this work, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated.
-
-Given that most existing constitutive models are developed based on the Cauchy theory, it is still difficult to further investigate the performance of the couple stress theory beyond elasticity for the moment. It would be interesting to see work in that regard in future.
+In this work, based on the consistent couple stress theory, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated accordingly for problems with both linear and nonlienar materials, although it is still difficult to further investigate the performance of the couple stress theory beyond elasticity for the moment, given that most existing constitutive models are developed based on the Cauchy theory. It would be interesting to see work in that regard in future.
 
 The proposed elements have been implemented in \texttt{suanPan} \citep{Chang2021}. Sample model scripts can be found online\footnote{Link to the repository would be added after acceptance}.
 \bibliography{S}
