@@ -1,5 +1,5 @@
 \documentclass[3p,sort&compress,11pt,fleqn]{elsarticle}
-\usepackage{setspace,tikz,float,booktabs,amsmath,mathpazo}
+\usepackage{setspace,tikz,float,booktabs,amsmath,amssymb,mathpazo,siunitx}
 \usetikzlibrary{arrows.meta}
 \tikzset{>={Latex[width=2mm,length=2mm]},base/.style={rectangle,rounded corners,draw=black,minimum width=1cm,minimum height=1cm,text centered,font=\sffamily}
 }
@@ -37,6 +37,10 @@ However, due to the lack of proper measure of rotation/curvature (and its stress
 The consistent couple stress theory \citep{Hadjesfandiari2011} provides a promising tool to address the aforementioned shortcomings of the Cauchy theory.
 
 Recent research work on membrane elements with drilling degrees of freedom can be seen in the review by \citet{Boutagouga2020}.
+
+The drilling degree of freedom defined within Cauchy theory shows significant size effect, which limits its application in modelling problems involving both membrane and beam elements \citep{Chang2020}.
+
+This paper is organised as follows. The consistent couple stress theory is briefly reviewed by summarising key equations and quantities that are later used in finite element formulation. Based on this theory, a general mixed variational principle involving six independent fields are derived. Two elements couple stress triangle and quadrilateral elements are developed after formulating system of linear equations. With the proposed elements, the performance of the drilling degree of freedom is further investigated by conducting numerical experiments.
 \section{The Couple Stress Theory}
 Details of the adopted consistent couple stress theory can be seen in the work by \citet{Hadjesfandiari2011}. Here a brief summary of all necessary expressions utilised in finite element formulation is presented.
 \subsection{Kinematics}
@@ -251,8 +255,8 @@ In the above system, $\mathbold{R}_\mathbold{u}$ and $\mathbold{R}_\mathbold{\th
 
 By further denoting
 \begin{gather*}
-\mathbold{E}_1=\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT\mathbold{D}\mathbold{\phi}_\mathbold{\kappa}~\md{V},\quad
-\mathbold{E}_2=\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT\mathbold{C}\mathbold{\phi}_\mathbold{\varepsilon}~\md{V},\quad
+\mathbold{E}_1=\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT\mathbold{C}\mathbold{\phi}_\mathbold{\varepsilon}~\md{V},\quad
+\mathbold{E}_2=\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT\mathbold{D}\mathbold{\phi}_\mathbold{\kappa}~\md{V},\quad
 \mathbold{H}_1=-2\int_V\left(\mathbold{J}\mathbold{\phi}_\mathbold{u}\right)^\mT\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)~\md{V},\\
 \mathbold{H}_2=\int_V\left(\mathbold{L}\mathbold{\phi}_\mathbold{u}\right)^\mT\mathbold{\phi}_\mathbold{\sigma}~\md{V},\quad
 \mathbold{H}_3=2\int_V\mathbold{\phi}_\mathbold{\theta}^\mT\mathbold{J}\mathbold{\phi}_\mathbold{\mu}-\left(\mathbold{J}\mathbold{\phi}_\mathbold{\theta}\right)^\mT\mathbold{\phi}_\mathbold{\mu}~\md{V},\\
@@ -260,13 +264,13 @@ By further denoting
 \mathbold{H}_5=\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT\mathbold{\phi}_\mathbold{\sigma}~\md{V},\quad
 \end{gather*}
 in which $\mathbold{C}$ and $\mathbold{D}$ denote material tangent moduli. The incremental form of linear equation system can be expressed as
-\begin{gather}
+\begin{gather}\label{eq:incremental_form}
 \begin{bmatrix}
 \cdot&\cdot&\cdot&\mathbold{H}_1&\cdot&\mathbold{H}_2\\
 \cdot&\cdot&\cdot&\mathbold{H}_3&\cdot&\cdot\\
-\cdot&\cdot&\mathbold{E}_1&-\mathbold{H}_4&\cdot&\cdot\\
+\cdot&\cdot&\mathbold{E}_2&-\mathbold{H}_4&\cdot&\cdot\\
 \mathbold{H}_1^\mT&\mathbold{H}_3^\mT&-\mathbold{H}_4^\mT&\cdot&\cdot&\cdot\\
-\cdot&\cdot&\cdot&\cdot&\mathbold{E}_2&-\mathbold{H}_5\\
+\cdot&\cdot&\cdot&\cdot&\mathbold{E}_1&-\mathbold{H}_5\\
 \mathbold{H}_2^\mT&\cdot&\cdot&\cdot&-\mathbold{H}_5^\mT&\cdot
 \end{bmatrix}
 \begin{bmatrix}
@@ -276,11 +280,39 @@ in which $\mathbold{C}$ and $\mathbold{D}$ denote material tangent moduli. The i
 \end{bmatrix}.
 \end{gather}
 \subsection{Solution Procedure}
-Similar to the author's previous work \citep{Chang2019}, the solution procedure can be developed based on the assumption that $\mathbold{H}_4$ and $\mathbold{H}_5$ are invertible, which is always feasible by choosing proper interpolations. By performing static condensation, one can obtain
+\subsubsection{Option One --- Invertible $\mathbold{E}_1$ and $\mathbold{E}_2$}
+Since $\mathbold{E}_1$ and $\mathbold{E}_2$ are guaranteed to be square matrices, they are invertible with sufficient integration points provided, performing static condensation leads to the following result.
 \begin{gather}
 \begin{bmatrix}
-\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{E}_2\mathbold{H}_5^{-\mT}\mathbold{H}_2^\mT+\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{E}_1\mathbold{H}_4^{-\mT}\mathbold{H}_1^\mT&\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{E}_1\mathbold{H}_4^{-\mT}\mathbold{H}_3^\mT\\
-\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{E}_1\mathbold{H}_4^{-\mT}\mathbold{H}_1^\mT&\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{E}_1\mathbold{H}_4^{-\mT}\mathbold{H}_3^\mT
+\mathbold{H}_2\left(\mathbold{H}_5^\mT\mathbold{E}_1^{-1}\mathbold{H}_5\right)^{-1}\mathbold{H}_2^\mT+\mathbold{H}_1\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_1^\mT&\mathbold{H}_1\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_3^\mT\\
+\mathbold{H}_3\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_1^\mT&\mathbold{H}_3\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_3^\mT
+\end{bmatrix}
+\begin{bmatrix}
+\Delta\mathbold{p}\\\Delta\mathbold{q}
+\end{bmatrix}=\begin{bmatrix}
+\Delta\mathbold{R}_\mathbold{u}\\\Delta\mathbold{R}_\mathbold{\theta}
+\end{bmatrix}.
+\end{gather}
+The above procedure requires matrices inversions to be conducted at element level whenever tangent moduli update. This is considered not very efficient for nonlinear analysis.
+\paragraph{Stability Condition}
+Let the size of $\mathbold{H}_5$ be $i\times{}j$, the size of $\mathbold{H}_4$ be $n\times{}m$ and the number of strain and mean curvature components be $d$, then the minimum number of integration points $n_{ip}$ must satisfy the following inequalities,
+\begin{gather}
+n_{ip}\cdot{}d\geqslant{}\max\left(i,~j,~n,~m\right).
+\end{gather}
+This, however, only guarantees successful computation of elemental stiffness matrix thus is the minimum condition. Denoting the number of rigid body motion as $n_f$ and the size of elemental stiffness matrix as $n_k$, then for a single element, at least
+\begin{gather}
+n_{ip}\cdot{}d\geqslant{}n_k-n_f.
+\end{gather}
+Eventually,
+\begin{gather}\label{eq:stability}
+n_{ip}\cdot{}d\geqslant{}\max\left(i,~j,~n,~m,~n_k-n_f\right).
+\end{gather}
+\subsubsection{Option Two --- Invertible $\mathbold{H}_4$ and $\mathbold{H}_5$}
+By proper construction, $\mathbold{H}_4$ and $\mathbold{H}_5$ can be square and invertible. Similar to the work by the author \citep{Chang2019}, by static condensation, one can obtain
+\begin{gather}
+\begin{bmatrix}
+\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{E}_1\mathbold{H}_5^{-\mT}\mathbold{H}_2^\mT+\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{E}_2\mathbold{H}_4^{-\mT}\mathbold{H}_1^\mT&\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{E}_2\mathbold{H}_4^{-\mT}\mathbold{H}_3^\mT\\
+\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{E}_2\mathbold{H}_4^{-\mT}\mathbold{H}_1^\mT&\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{E}_2\mathbold{H}_4^{-\mT}\mathbold{H}_3^\mT
 \end{bmatrix}
 \begin{bmatrix}
 \Delta\mathbold{p}\\\Delta\mathbold{q}
@@ -289,10 +321,33 @@ Similar to the author's previous work \citep{Chang2019}, the solution procedure 
 \end{bmatrix}.
 \end{gather}
 
+The above system can be conveniently converted into a more expressive form, in which the elemental stiffness matrix $\mathbold{K}$ can be shown as
+\begin{gather}\label{eq:stiffness}
+\mathbold{K}=\begin{bmatrix}
+\mathbold{H}_2\mathbold{H}_5^{-1}&\cdot\\\cdot&\cdot
+\end{bmatrix}\begin{bmatrix}
+\mathbold{E}_1&\cdot\\\cdot&\cdot
+\end{bmatrix}\begin{bmatrix}
+\mathbold{H}_5^{-\mT}\mathbold{H}_2^\mT&\cdot\\\cdot&\cdot
+\end{bmatrix}+\begin{bmatrix}
+\cdot&\mathbold{H}_1\mathbold{H}_4^{-1}\\\cdot&\mathbold{H}_3\mathbold{H}_4^{-1}
+\end{bmatrix}\begin{bmatrix}
+\cdot&\cdot\\\cdot&\mathbold{E}_2
+\end{bmatrix}\begin{bmatrix}
+\cdot&\cdot\\\mathbold{H}_4^{-\mT}\mathbold{H}_1^\mT&\mathbold{H}_4^{-\mT}\mathbold{H}_3^\mT
+\end{bmatrix}.
+\end{gather}
+
 Since all $\mathbold{H}_n$ matrices are constant once interpolations are determined, they only need to be computed once during the initialisation stage. Furthermore, $\mathbold{H}_n$ require no additional storage as $\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{\phi}_\mathbold{\varepsilon}^\mT$, $\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ and $\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ can be stored as `equivalent strain matrices' for each integration points. Once the elemental stiffness matrix is computed, reordering of degrees of freedom may be performed.
 
 It can be noted that the elemental stiffness possesses a symmetric structure although moduli $\mathbold{E}_1$ and $\mathbold{E}_2$ may be asymmetric due to for example non-associative plasticity in the case of material nonlinearity.
-\subsection{An Elementary Membrane Element}
+\paragraph{Stability Condition}
+This option requires the inversion of $\mathbold{H}_4$ and $\mathbold{H}_5$ thus the stability condition is identical to \eqsref{eq:stability}.
+\subsubsection{Remarks}
+Although the second option appears to be more efficient, both options can be chosen to formulate elemental stiffness matrix and they share the same stability condition. However, they may require different numbers of shape functions for the corresponding fields in order to construct square matrices. Depending on the type of element and the number of available integration points, one may switch from one option to another for optimal formulation.
+\subsection{Some Basic Elements}
+Two elements named as couple stress triangle and quadrilateral (CSMT and CSMQ) are formulated as examples. Since the incremental form and the elemental stiffness are given in \eqsref{eq:incremental_form} and \eqsref{eq:stiffness}, there is no difficulty in constructing other types of elements such as serendipity quadrilaterals with various nodes, axisymmetric triangle/quadrilateral, eight-node brick/cube, four-node tetrahedron and higher order elements. The procedure follows a standard FEM approach.
+\subsubsection{An Elementary Membrane Element --- CSMT}
 Not all couple stress theories support membrane problems, the popular modified couple stress theory \citep{Yang2002} adopts a symmetric couple stress tensor, with which in-plane response cannot be fully decoupled from out-of-plane response. Discussions of relevant topics can be seen elsewhere \citep{Hadjesfandiari2016}. The consistent couple stress theory is free from similar issues, which makes it more appealing for a wide range of general continuum problems.
 
 The simplest membrane element may be the three-node triangular element. For plane stress problem, given the constitutive equation between mean curvature vector $\kappa_i$ and couple stress vector $\mu_i$ occupies the form shown in \eqsref{eq:constitutive_couple}, it is clear that in-plane and out-of-plane actions are decoupled. Thus six fields reduce to the following Voigt forms.
@@ -317,11 +372,13 @@ u_x\\u_y
 \end{bmatrix}.
 \end{gather}
 
-The standard isoparametric mapping is used for coordinate, displacement, drilling rotation and couple stress, that is
+The linear mapping is used for coordinate, displacement, drilling rotation and couple stress, that is
 \begin{gather}
 \chi=\sum_{i=1}^3N_i\chi_i
 \end{gather}
-where $N_i$ is the complete first order isoparametric shape function, $\chi$ represents one of $x$, $y$, $u_x$, $u_y$, $\theta_z$, $\mu_x$ and $\mu_y$. Thus for each fields, three nodal values are used for interpolation.
+where $N_i$ is the complete first order shape function with modes $\begin{bmatrix}
+1&x&y
+\end{bmatrix}$, $\chi$ represents any of $x$, $y$, $u_x$, $u_y$, $\theta_z$, $\kappa_x$, $\kappa_y$, $\mu_x$ and $\mu_y$. Thus for each fields, three nodal values are used for interpolation.
 
 Given that $\mathbold{u}$ is linearly interpolated, $\mathbold{\varepsilon}$ and $\mathbold{\sigma}$ can be chosen to be constant fields.
 \begin{gather}
@@ -336,16 +393,23 @@ Given that $\mathbold{u}$ is linearly interpolated, $\mathbold{\varepsilon}$ and
 \alpha_1\\\alpha_2\\\alpha_3
 \end{bmatrix}.
 \end{gather}
-In this case, $\beta_i$ and $\alpha_i$ are essentially strain and stress components. The same strategy can also be applied to $\kappa$,
+In this case, $\beta_i$ and $\alpha_i$ are essentially strain and stress components.
+
+The explicit forms are not listed here for brevity. Interested readers are referred to typical textbooks on finite element methods for details of formulating interpolation matrices \citep[see, e.g.,][section 5.1.3.1]{Zienkiewicz2013}. Three integration points are used for numerical integration. This element is denoted as couple stress mixed triangle (CSMT) element.
+
+The CSMT element is essentially an extension of constant strain triangle (CST) element (CPS3 and CPE3 in ABAQUS notion) with additional fields incorporates mean curvature and couple stress. Given that only linear and constant interpolations are used, its performance shall be similar to that of CST.
+\subsubsection{A Four-Node Quadrilateral Membrane Element --- CSMQ}
+Similarly, the aforementioned formulation can be applied to four-node quadrilaterals. The standard isoparametric mapping can be applied.
 \begin{gather}
-\mathbold{\kappa}=\begin{bmatrix}
-1&\\&1
-\end{bmatrix}\begin{bmatrix}
-r_1\\r_2
+\chi=\sum_{i=1}^4N_i\chi_i
+\end{gather}
+with $N_i=\left(1+\xi_i\xi\right)\left(1+\eta_i\eta\right)/4$ where $\xi$ and $\eta$ are parent coordinates while $\xi_i$ and $\eta_i$ are values of parent coordinates of target node. Again, $\chi$ can be any of $x$, $y$, $u_x$, $u_y$, $\theta_z$, $\kappa_x$, $\kappa_y$, $\mu_x$ and $\mu_y$. A complete first order interpolation can be chosen for both strain and stress.
+\begin{gather}
+\mathbold{\phi}_\mathbold{\varepsilon}=\mathbold{\phi}_\mathbold{\sigma}=\begin{bmatrix}
+1&\cdot&\cdot&\cdot&y&\cdot&x\\\cdot&1&\cdot&x&\cdot&y&\cdot\\\cdot&\cdot&1&\cdot&\cdot&-x&-y
 \end{bmatrix}.
 \end{gather}
-
-The explicit forms are not listed here for brevity. Interested readers are referred to typical textbooks on finite element methods for details of formulating interpolation matrices.
+Based on previous discovery \citep{Chang2019}, $\mathbold{\phi}_\mathbold{\varepsilon}$ can be further modified to include the Poisson effect, which overcomes (near) incompressible problems. A \num{2x2} Gauss quadrature is used for numerical integration, this element is denoted as couple stress mixed quadrilateral (CSMQ) element.
 \section{Numerical Examples}
 \section{Conclusions}
 In this work, based on the consistent couple stress theory, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated accordingly for problems with both linear and nonlienar materials, although it is still difficult to further investigate the performance of the couple stress theory beyond elasticity for the moment, given that most existing constitutive models are developed based on the Cauchy theory. It would be interesting to see work in that regard in future.
