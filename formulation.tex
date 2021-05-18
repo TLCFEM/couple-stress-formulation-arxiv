@@ -61,6 +61,10 @@ which can be further expressed in terms of $u_i$ so that
 \begin{gather}
 \kappa_i=\dfrac{1}{4}\left(u_{j,ij}-u_{i,jj}\right).
 \end{gather}
+The engineering mean curvature $k_i$ can be defined accordingly to be
+\begin{gather}
+k_i=-2\kappa_i.
+\end{gather}
 \subsection{Equilibrium}
 The total stress tensor consists of two parts, namely the conventional symmetric stress tensor $\sigma_{ij}$ and the additional skew--symmetric couple stress tensor $\mu_{ij}$. Compared to the original literature \citep{Hadjesfandiari2011}, here a slightly different notation is used for brevity.
 
@@ -68,7 +72,7 @@ The couple stress vector $\mu_i$ dual to $\mu_{ij}$ can be defined as
 \begin{gather}
 \mu_{ji}=\epsilon_{ijk}\mu_k.
 \end{gather}
-It is found that $\mu_i$ is the energetic conjugate to $-2\kappa_i$.
+It is found that $\mu_i$ is the energetic conjugate to engineering mean curvature $k_i$.
 
 The corresponding equilibrium equation can be shown as
 \begin{gather}\label{eq:equilibrium}
@@ -82,7 +86,7 @@ W\left(\varepsilon_{ij},\kappa_i\right)=\dfrac{1}{2}\lambda\varepsilon_{ii}\vare
 \end{gather}
 where $\lambda$ and $\mu$ are Lam\'{e} constants, $\eta$ is the additional material constant. The corresponding constitutive relations for linear elasticity can then be derived to be
 \begin{gather}\label{eq:constitutive_couple}
-\mu_i=-8\eta\kappa_i=4\eta\left(-2\kappa_i\right),\\
+\mu_i=-8\eta\kappa_i=4\eta{}k_i,\\
 \sigma_{ij}=\lambda\delta_{ij}\varepsilon_{kk}+2\mu\varepsilon_{ij},
 \end{gather}
 where $\delta_{ij}$ is the Kronecker delta. The additional constant $\eta$ can be related to shear modulus $\mu$ by the characteristic length $l$ according to the following expression,
@@ -93,6 +97,10 @@ where $\delta_{ij}$ is the Kronecker delta. The additional constant $\eta$ can b
 Given that in this work $\sigma_{ij}$ is assumed to be symmetric, without loss of generality, the variation of $W$ can be expressed as
 \begin{gather}\label{eq:potential_energy}
 \delta{}W\left(\varepsilon_{ij},\kappa_i\right)=\bar{\sigma}_{ij}\delta\varepsilon_{ij}-2\bar{\mu}_{i}\delta\kappa_i,
+\end{gather}
+or
+\begin{gather}
+\delta{}W\left(\varepsilon_{ij},k_i\right)=\bar{\sigma}_{ij}\delta\varepsilon_{ij}+\bar{\mu}_{i}\delta{}k_i,
 \end{gather}
 with $\bar{\sigma}_{ij}$ and $\bar{\mu}_{i}$ denoting stress and couple stress tensors obtained from typical strain driven constitutive model. For linear elasticity, they are simply
 \begin{gather*}
@@ -199,8 +207,17 @@ can be obtained by enforcing \eqsref{eq:varepsilon} and \eqsref{eq:kappa} in str
 +\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}+\varPi_{b.t.}.
 \end{multline}
 One can also apply divergence theorem to terms involving derivatives to convert between volume and surface integrals.
+
+If, instead of $\mathbold{\kappa}$, engineering mean curvature $\mathbold{k}$ is used, an equivalent form can be derived following the same procedure.
+\begin{multline}\label{eq:functional2}
+\varPi\left(\mathbold{u},\mathbold{\theta},\mathbold{\varepsilon},\mathbold{\sigma},\mathbold{k},\mathbold{\mu}\right)=\int_VW~\md{V}
++\int_V\mathbold{\sigma}^\mT\left(\nabla^s\mathbold{u}-\mathbold{\varepsilon}\right)~\md{V}\\
+-\int_V\mathbold{\mu}^\mT\left(\mathbold{k}+\nabla\times\mathbold{\theta}\right)~\md{V}
++\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}.
+\end{multline}
+As can be predicted, the difference is solely the term $\displaystyle\int_V2\mathbold{\mu}^\mT\mathbold{\kappa}~\md{V}=-\int_V\mathbold{\mu}^\mT\mathbold{k}~\md{V}$.
 \section{Finite Element Formulation}
-In this section, the linear equation system of the aforementioned general six--field variational principle is derived. Since there is no other local residual apart from the one due to potential inelastic constitutive models, a locally iterative algorithm is not required. The final elemental stiffness may possess a form similar to that of conventional displacement based elements.
+In this section, the linear equation system of the aforementioned general six--field variational principle \eqsref{eq:functional} is derived. Since there is no other local residual apart from the one due to potential inelastic constitutive models, a locally iterative algorithm is not required. The final elemental stiffness may possess a form similar to that of conventional displacement based elements.
 \subsection{Linear System}
 Let six fields be discretized as follows.
 \begin{gather}
@@ -251,7 +268,7 @@ Taking variations leads to the following system of equations.
 \end{array}
 \right.
 \end{gather}
-In the above system, $\mathbold{R}_\mathbold{u}$ and $\mathbold{R}_\mathbold{\theta}$ are nodal forces due to omitted boundary terms, $W_\mathbold{\kappa}$ and $W_\mathbold{\varepsilon}$ denote the partial derivatives respectively.
+In the above system, $\mathbold{R}_\mathbold{u}$ and $\mathbold{R}_\mathbold{\theta}$ are nodal forces/resistances due to omitted boundary terms, $W_\mathbold{\kappa}$ and $W_\mathbold{\varepsilon}$ denote the partial derivatives respectively.
 
 By further denoting
 \begin{gather*}
@@ -277,18 +294,16 @@ in which $\mathbold{C}$ and $\mathbold{D}$ denote material tangent moduli, the i
 \Delta\mathbold{p}\\\Delta\mathbold{q}\\\Delta\mathbold{r}\\\Delta\mathbold{s}\\\Delta\mathbold{\beta}\\\Delta\mathbold{\alpha}
 \end{bmatrix}=\mathbold{R}.
 \end{gather}
-In which, $\mathbold{R}$ is used to denote residual. As can be seen later, it is possible to compute resistance based on \eqsref{eq:stationary}.
+In which, $\mathbold{R}$ is used to denote residual whose discrete form is not shown. As can be seen later, it is possible to compute resistance based on \eqsref{eq:stationary}.
 \subsection{Solution Procedure}
 \subsubsection{Option One --- Invertible $\mathbold{E}_1$ and $\mathbold{E}_2$}
-Since $\mathbold{E}_1$ and $\mathbold{E}_2$ are guaranteed to be square matrices, typically they are invertible with sufficient integration points provided, performing static condensation leads to the following result.
+Since $\mathbold{E}_1$ and $\mathbold{E}_2$ are guaranteed to be square matrices, typically they are invertible with sufficient integration points provided, performing static condensation leads to the following elemental stiffness.
 \begin{gather}
+\mathbold{K}=
 \begin{bmatrix}
 \mathbold{H}_2\left(\mathbold{H}_5^\mT\mathbold{E}_1^{-1}\mathbold{H}_5\right)^{-1}\mathbold{H}_2^\mT+\mathbold{H}_1\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_1^\mT&\mathbold{H}_1\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_3^\mT\\
 \mathbold{H}_3\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_1^\mT&\mathbold{H}_3\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_3^\mT
-\end{bmatrix}
-\begin{bmatrix}
-\Delta\mathbold{p}\\\Delta\mathbold{q}
-\end{bmatrix}=\mathbold{R}.
+\end{bmatrix}.
 \end{gather}
 The above procedure requires matrix inversions to be conducted at element level whenever tangent moduli update. This is considered not very efficient for nonlinear analysis.
 \paragraph{Stability Condition}
@@ -350,7 +365,9 @@ Applying the same strategy to the fifth equation, one can obtain
 \end{gather}
 In the above equations, similar to \eqsref{eq:potential_energy}, $\bar{\mathbold{\sigma}}$ and $\bar{\mathbold{\mu}}$ denote the stress and couple stress obtained from material model. Inserting \eqsref{eq:s} and \eqsref{eq:alpha} back to the first two equations in \eqsref{eq:stationary}, one can obtain the elemental resistance as
 \begin{gather}
-\mathbold{R}=\begin{bmatrix}
+\begin{bmatrix}
+\mathbold{R}_\mathbold{u}\\\mathbold{R}_\mathbold{\theta}
+\end{bmatrix}=\begin{bmatrix}
 \displaystyle\mathbold{H}_2\mathbold{H}_4^{-1}\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT{}\bar{\mathbold{\mu}}~\md{V}+\mathbold{H}_1\mathbold{H}_5^{-1}\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT{}\bar{\mathbold{\sigma}}~\md{V}\\
 \displaystyle\mathbold{H}_3\mathbold{H}_4^{-1}\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT{}\bar{\mathbold{\mu}}~\md{V}
 \end{bmatrix}.
@@ -358,6 +375,12 @@ In the above equations, similar to \eqsref{eq:potential_energy}, $\bar{\mathbold
 One material response is computed, elemental resistance can be conveniently assembled without worrying about local residual.
 \subsubsection{Remarks}
 Although the second option appears to be more efficient and possesses a form similar to that of displacement based elements, both options can be chosen to formulate elemental stiffness matrix and they share the same stability condition. However, they may require different numbers of shape functions for the corresponding fields in order to construct square matrices. Depending on the type of element and the number of available integration points, one may switch from one option to another for optimal formulation.
+
+If \eqsref{eq:functional2} is used, expect for replacing all $\mathbold{\phi}_\mathbold{\kappa}$ with $\mathbold{\phi}_\mathbold{k}$, then only $\mathbold{H}_4$ needs to be modified.
+\begin{gather}
+\mathbold{H}_4=\int_V\mathbold{\phi}_\mathbold{k}^\mT\mathbold{\phi}_\mathbold{\mu}~\md{V},
+\end{gather}
+where $\mathbold{\phi}_\mathbold{k}$ is the interpolation of engineering mean curvature $\mathbold{k}$.
 \subsection{Some Basic Elements}
 Two elements named as couple stress triangle and quadrilateral (CSMT and CSMQ) are formulated as examples. Since the incremental form and the elemental stiffness are given in \eqsref{eq:incremental_form} and \eqsref{eq:stiffness}, there is no difficulty in constructing other types of elements such as serendipity quadrilaterals with various nodes, axisymmetric triangle/quadrilateral, eight-node brick/cube, four-node tetrahedron and higher order elements. The procedure follows a standard FEM approach.
 \subsubsection{An Elementary Membrane Element --- CSMT}
@@ -396,12 +419,12 @@ where $N_i$ is the complete first order shape function with modes $\begin{bmatri
 Given that $\mathbold{u}$ is linearly interpolated, $\mathbold{\varepsilon}$ and $\mathbold{\sigma}$ can be chosen to be constant fields.
 \begin{gather}
 \mathbold{\varepsilon}=\begin{bmatrix}
-1&&\\&1&\\&&1
+1&\cdot&\cdot\\\cdot&1&\cdot\\\cdot&\cdot&1
 \end{bmatrix}\begin{bmatrix}
 \beta_1\\\beta_2\\\beta_3
 \end{bmatrix},\qquad
 \mathbold{\sigma}=\begin{bmatrix}
-1&&\\&1&\\&&1
+1&\cdot&\cdot\\\cdot&1&\cdot\\\cdot&\cdot&1
 \end{bmatrix}\begin{bmatrix}
 \alpha_1\\\alpha_2\\\alpha_3
 \end{bmatrix}.
@@ -423,6 +446,10 @@ with $N_i=\left(1+\xi_i\xi\right)\left(1+\eta_i\eta\right)/4$ where $\xi$ and $\
 \end{bmatrix}.
 \end{gather}
 Based on previous discovery \citep{Chang2019}, $\mathbold{\phi}_\mathbold{\varepsilon}$ can be further modified to include the Poisson effect, which overcomes (near) incompressible problems. A \num{2x2} Gauss quadrature is used for numerical integration, this element is denoted as couple stress mixed quadrilateral (CSMQ) element.
+
+Given that the displacement interpolation only uses four modes $\begin{bmatrix}
+1&x&y&xy
+\end{bmatrix}$, one can further define internal degrees of freedom to complete the second order interpolation so that performance can be improved.
 \section{Numerical Examples}
 \section{Conclusions}
 In this work, based on the consistent couple stress theory, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated accordingly for problems with both linear and nonlienar materials, although it is still difficult to further investigate the performance of the couple stress theory beyond elasticity for the moment, given that most existing constitutive models are developed based on the Cauchy theory. It would be interesting to see work in that regard in future.
