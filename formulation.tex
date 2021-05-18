@@ -185,14 +185,14 @@ It shall be noted that all boundary terms are omitted for brevity. In vector/mat
 +\int_V2\mathbold{\mu}^\mT\left(\mathbold{\kappa}-\dfrac{1}{2}\nabla\times\mathbold{\theta}\right)~\md{V}
 +\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}.
 \end{multline}
-The $\nabla^s\mathbold{u}$ is used to denote the result of $\left(u_{i,j}+u_{j,i}\right)/2$ expressed in Voigt form.
+The symbol $\nabla^s\mathbold{u}$ is used to denote the result of $\left(u_{i,j}+u_{j,i}\right)/2$ expressed in Voigt form.
 
 It occupies a form similar to that of the functional used in the Hu--Washizu principle. Fields $\mathbold{u}$, $\mathbold{\theta}$ and $\mathbold{\mu}$ require $C^0$ continuity, while $\mathbold{\kappa}$, $\mathbold{\varepsilon}$ and $\mathbold{\sigma}$ can be constant fields. Starting from \eqsref{eq:functional}, various levels of simplifications can be conducted to derive both mixed--type and hybrid--type finite elements. For example, any of \eqsref{eq:varepsilon}, \eqsref{eq:kappa} and \eqsref{eq:theta} can be satisfied in strong forms thus the corresponding terms can be omitted from the functional. The mixed functional used by \citet{Darrall2013}, which is
 \begin{gather}
 \varPi\left(\mathbold{u},\mathbold{\theta},\mathbold{\mu}\right)=\int_VW~\md{V}
 +\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}+\varPi_{b.t.}.
 \end{gather}
-can be obtained by enforcing \eqsref{eq:varepsilon} and \eqsref{eq:kappa} in strong forms. By considering \eqsref{eq:varepsilon} only, another functional can be obtained.
+can be obtained by enforcing \eqsref{eq:varepsilon} and \eqsref{eq:kappa} in strong forms. Besides, by considering \eqsref{eq:varepsilon} only, another functional can be obtained.
 \begin{multline}
 \varPi\left(\mathbold{u},\mathbold{\theta},\mathbold{\kappa},\mathbold{\mu}\right)=\int_VW~\md{V}
 +\int_V2\mathbold{\mu}^\mT\left(\mathbold{\kappa}-\dfrac{1}{2}\nabla\times\mathbold{\theta}\right)~\md{V}\\
@@ -237,7 +237,7 @@ Now the functional can be rewritten as
 \end{multline}
 
 Taking variations leads to the following system of equations.
-\begin{gather}
+\begin{gather}\label{eq:stationary}
 \left\{
 \begin{array}{lll}
 \dfrac{\delta\varPi}{\delta{}\mathbold{p}}=0&\longrightarrow&\displaystyle\int_V\left(\mathbold{L}\mathbold{\phi}_\mathbold{u}\right)^\mT\mathbold{\phi}_\mathbold{\sigma}\mathbold{\alpha}-2\left(\mathbold{J}\mathbold{\phi}_\mathbold{u}\right)^\mT\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)\mathbold{s}~\md{V}=\mathbold{R}_\mathbold{u},\\[4mm]
@@ -263,7 +263,7 @@ By further denoting
 \mathbold{H}_4=-2\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT\mathbold{\phi}_\mathbold{\mu}~\md{V},\quad
 \mathbold{H}_5=\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT\mathbold{\phi}_\mathbold{\sigma}~\md{V},\quad
 \end{gather*}
-in which $\mathbold{C}$ and $\mathbold{D}$ denote material tangent moduli. The incremental form of linear equation system can be expressed as
+in which $\mathbold{C}$ and $\mathbold{D}$ denote material tangent moduli, the incremental form of linear system can be expressed as
 \begin{gather}\label{eq:incremental_form}
 \begin{bmatrix}
 \cdot&\cdot&\cdot&\mathbold{H}_1&\cdot&\mathbold{H}_2\\
@@ -275,13 +275,12 @@ in which $\mathbold{C}$ and $\mathbold{D}$ denote material tangent moduli. The i
 \end{bmatrix}
 \begin{bmatrix}
 \Delta\mathbold{p}\\\Delta\mathbold{q}\\\Delta\mathbold{r}\\\Delta\mathbold{s}\\\Delta\mathbold{\beta}\\\Delta\mathbold{\alpha}
-\end{bmatrix}=\begin{bmatrix}
-\Delta\mathbold{R}_\mathbold{u}\\\Delta\mathbold{R}_\mathbold{\theta}\\\mathbold{0}\\\mathbold{0}\\\mathbold{0}\\\mathbold{0}
-\end{bmatrix}.
+\end{bmatrix}=\mathbold{R}.
 \end{gather}
+In which, $\mathbold{R}$ is used to denote residual. As can be seen later, it is possible to compute resistance based on \eqsref{eq:stationary}.
 \subsection{Solution Procedure}
 \subsubsection{Option One --- Invertible $\mathbold{E}_1$ and $\mathbold{E}_2$}
-Since $\mathbold{E}_1$ and $\mathbold{E}_2$ are guaranteed to be square matrices, they are invertible with sufficient integration points provided, performing static condensation leads to the following result.
+Since $\mathbold{E}_1$ and $\mathbold{E}_2$ are guaranteed to be square matrices, typically they are invertible with sufficient integration points provided, performing static condensation leads to the following result.
 \begin{gather}
 \begin{bmatrix}
 \mathbold{H}_2\left(\mathbold{H}_5^\mT\mathbold{E}_1^{-1}\mathbold{H}_5\right)^{-1}\mathbold{H}_2^\mT+\mathbold{H}_1\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_1^\mT&\mathbold{H}_1\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_3^\mT\\
@@ -289,11 +288,9 @@ Since $\mathbold{E}_1$ and $\mathbold{E}_2$ are guaranteed to be square matrices
 \end{bmatrix}
 \begin{bmatrix}
 \Delta\mathbold{p}\\\Delta\mathbold{q}
-\end{bmatrix}=\begin{bmatrix}
-\Delta\mathbold{R}_\mathbold{u}\\\Delta\mathbold{R}_\mathbold{\theta}
-\end{bmatrix}.
+\end{bmatrix}=\mathbold{R}.
 \end{gather}
-The above procedure requires matrices inversions to be conducted at element level whenever tangent moduli update. This is considered not very efficient for nonlinear analysis.
+The above procedure requires matrix inversions to be conducted at element level whenever tangent moduli update. This is considered not very efficient for nonlinear analysis.
 \paragraph{Stability Condition}
 Let the size of $\mathbold{H}_5$ be $i\times{}j$, the size of $\mathbold{H}_4$ be $n\times{}m$ and the number of strain and mean curvature components be $d$, then the minimum number of integration points $n_{ip}$ must satisfy the following inequalities,
 \begin{gather}
@@ -316,9 +313,7 @@ By proper construction, $\mathbold{H}_4$ and $\mathbold{H}_5$ can be square and 
 \end{bmatrix}
 \begin{bmatrix}
 \Delta\mathbold{p}\\\Delta\mathbold{q}
-\end{bmatrix}=\begin{bmatrix}
-\Delta\mathbold{R}_\mathbold{u}\\\Delta\mathbold{R}_\mathbold{\theta}
-\end{bmatrix}.
+\end{bmatrix}=\mathbold{R}.
 \end{gather}
 
 The above system can be conveniently converted into a more expressive form, in which the elemental stiffness matrix $\mathbold{K}$ can be shown as
@@ -337,14 +332,32 @@ The above system can be conveniently converted into a more expressive form, in w
 \cdot&\cdot\\\mathbold{H}_4^{-\mT}\mathbold{H}_1^\mT&\mathbold{H}_4^{-\mT}\mathbold{H}_3^\mT
 \end{bmatrix}.
 \end{gather}
+The first term solely depends on conventional displacement, strain and stress as defined in Cauchy theory. Thus it can be derived from the Hu--Washizu theorem.
 
-Since all $\mathbold{H}_n$ matrices are constant once interpolations are determined, they only need to be computed once during the initialisation stage. Furthermore, $\mathbold{H}_n$ require no additional storage as $\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{\phi}_\mathbold{\varepsilon}^\mT$, $\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ and $\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ can be stored as `equivalent strain matrices' for each integration points. Once the elemental stiffness matrix is computed, reordering of degrees of freedom may be performed.
+Since all $\mathbold{H}_n$ matrices are constant once interpolations are determined, they only need to be computed once during the initialisation stage. Furthermore, $\mathbold{H}_n$ require no additional storage as $\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{\phi}_\mathbold{\varepsilon}^\mT$, $\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ and $\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ can be stored as `equivalent strain matrices' for each integration point. Once the elemental stiffness matrix is computed, reordering of degrees of freedom may be performed.
 
 It can be noted that the elemental stiffness possesses a symmetric structure although moduli $\mathbold{E}_1$ and $\mathbold{E}_2$ may be asymmetric due to for example non-associative plasticity in the case of material nonlinearity.
 \paragraph{Stability Condition}
 This option requires the inversion of $\mathbold{H}_4$ and $\mathbold{H}_5$ thus the stability condition is identical to \eqsref{eq:stability}.
+\subsubsection{Resistance}
+From the third equation of the stationary condition \eqsref{eq:stationary}, $\mathbold{s}$ solely depends on material response thus can be computed directly as
+\begin{gather}\label{eq:s}
+\mathbold{s}=\mathbold{H}_4^{-1}\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT{}\bar{\mathbold{\mu}}~\md{V}.
+\end{gather}
+Applying the same strategy to the fifth equation, one can obtain
+\begin{gather}\label{eq:alpha}
+\mathbold{\alpha}=\mathbold{H}_5^{-1}\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT{}\bar{\mathbold{\sigma}}~\md{V}.
+\end{gather}
+In the above equations, similar to \eqsref{eq:potential_energy}, $\bar{\mathbold{\sigma}}$ and $\bar{\mathbold{\mu}}$ denote the stress and couple stress obtained from material model. Inserting \eqsref{eq:s} and \eqsref{eq:alpha} back to the first two equations in \eqsref{eq:stationary}, one can obtain the elemental resistance as
+\begin{gather}
+\mathbold{R}=\begin{bmatrix}
+\displaystyle\mathbold{H}_2\mathbold{H}_4^{-1}\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT{}\bar{\mathbold{\mu}}~\md{V}+\mathbold{H}_1\mathbold{H}_5^{-1}\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT{}\bar{\mathbold{\sigma}}~\md{V}\\
+\displaystyle\mathbold{H}_3\mathbold{H}_4^{-1}\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT{}\bar{\mathbold{\mu}}~\md{V}
+\end{bmatrix}.
+\end{gather}
+One material response is computed, elemental resistance can be conveniently assembled without worrying about local residual.
 \subsubsection{Remarks}
-Although the second option appears to be more efficient, both options can be chosen to formulate elemental stiffness matrix and they share the same stability condition. However, they may require different numbers of shape functions for the corresponding fields in order to construct square matrices. Depending on the type of element and the number of available integration points, one may switch from one option to another for optimal formulation.
+Although the second option appears to be more efficient and possesses a form similar to that of displacement based elements, both options can be chosen to formulate elemental stiffness matrix and they share the same stability condition. However, they may require different numbers of shape functions for the corresponding fields in order to construct square matrices. Depending on the type of element and the number of available integration points, one may switch from one option to another for optimal formulation.
 \subsection{Some Basic Elements}
 Two elements named as couple stress triangle and quadrilateral (CSMT and CSMQ) are formulated as examples. Since the incremental form and the elemental stiffness are given in \eqsref{eq:incremental_form} and \eqsref{eq:stiffness}, there is no difficulty in constructing other types of elements such as serendipity quadrilaterals with various nodes, axisymmetric triangle/quadrilateral, eight-node brick/cube, four-node tetrahedron and higher order elements. The procedure follows a standard FEM approach.
 \subsubsection{An Elementary Membrane Element --- CSMT}
