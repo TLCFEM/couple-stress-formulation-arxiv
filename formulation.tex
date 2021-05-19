@@ -1,8 +1,8 @@
 \documentclass[3p,sort&compress,11pt,fleqn]{elsarticle}
-\usepackage{setspace,tikz,float,booktabs,amsmath,amssymb,mathpazo,siunitx}
-\usetikzlibrary{arrows.meta}
-\tikzset{>={Latex[width=2mm,length=2mm]},base/.style={rectangle,rounded corners,draw=black,minimum width=1cm,minimum height=1cm,text centered,font=\sffamily}
-}
+\usepackage{setspace,tikz,float,booktabs,amsmath,amssymb,mathpazo,siunitx,structmech}
+\usetikzlibrary{shapes,arrows.meta}
+%\tikzset{>={Latex[width=2mm,length=2mm]},base/.style={rectangle,rounded corners,draw=black,minimum width=1cm,minimum height=1cm,text centered,font=\sffamily}
+%}
 \bibliographystyle{elsarticle-num-names}
 \journal{IJNME}
 \newcommand*{\figref}[1]{Fig.~\ref{#1}}
@@ -452,6 +452,51 @@ Given that the displacement interpolation only uses four modes $\begin{bmatrix}
 \end{bmatrix}$, one can further define internal degrees of freedom to complete the second order interpolation so that performance can be improved.
 \section{Numerical Examples}
 Given that some preliminary results have been given by \citet{Darrall2013,Pedgaonkar2021}, we focus on the performance of drilling degrees of freedom offered by the consistent couple stress theory in this work.
+\subsection{Patch Test}
+As a convention, the classic constant strain patch test defines four elements in a rectangular panel as shown in \figref{fig:csmq_patch} is firstly presented.
+\begin{figure}[htb]
+\centering\scriptsize
+\begin{tikzpicture}[scale=1]
+\coordinate(N1)at(0,0);
+\coordinate(N2)at(1,0);
+\coordinate(N3)at(2,0);
+\coordinate(N4)at(0,1);
+\coordinate(N5)at(.8,1.1);
+\coordinate(N6)at(2,1);
+\coordinate(N7)at(0,2);
+\coordinate(N8)at(1,2);
+\coordinate(N9)at(2,2);
+\draw[thick](N1)--(N2)--(N3)--(N6)--(N9)--(N8)--(N7)--(N4)--cycle;
+\draw[thick](N2)--(N5)--(N8);
+\draw[thick](N4)--(N5)--(N6);
+\HingeSupport[-90]{N1};
+\RollerSupport[-90]{N4};
+\RollerSupport[-90]{N7};
+\begin{scope}[every node/.style={fill=white,circle,draw,inner sep=0,minimum size=3mm}]
+\node at(N1){\tiny1};
+\node at(N2){\tiny2};
+\node at(N3){\tiny3};
+\node at(N4){\tiny4};
+\node at(N5){\tiny5};
+\node at(N6){\tiny6};
+\node at(N7){\tiny7};
+\node at(N8){\tiny8};
+\node at(N9){\tiny9};
+\end{scope}
+\draw[->](2.5,0)--++(.6,0)node[below=2mm]{$P=1$};
+\draw[->](2.5,1)--++(.6,0)node[below=2mm]{$2P=2$};
+\draw[->](2.5,2)--++(.6,0)node[below=2mm]{$P=1$};
+\draw[|<->|](0,-.5)--++(1,0)node[midway,fill=white]{$1$};
+\draw[|<->|](1,-.5)--++(1,0)node[midway,fill=white]{$1$};
+\draw[|<->|](-1,0)--++(0,1)node[midway,fill=white]{$1$};
+\draw[|<->|](-1,1)--++(0,1)node[midway,fill=white]{$1$};
+\node[align=left]at(6,1){$E=10$, $\nu=0.25$\\[2mm]$b=h=2$, $t=1$};
+\end{tikzpicture}
+\caption{constant strain patch test}\label{fig:csmq_patch}
+\end{figure}
+The linear displacement field can be successfully computed by using CSMQ elements with arbitrary location of the middle node.
+
+Since the strain field remains constant, no couple stress would be generated in this example. As the result, whether nodal rotations are constrained has no impact on final results. Due to the same reason, any positive numbers can be chosen as the characteristic length $l$.
 \section{Conclusions}
 In this work, based on the consistent couple stress theory, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated accordingly for problems with both linear and nonlienar materials, although it is still difficult to further investigate the performance of the couple stress theory beyond elasticity for the moment, given that most existing constitutive models are developed based on the Cauchy theory. It would be interesting to see work in that regard in future.
 
