@@ -376,7 +376,7 @@ One material response is computed, elemental resistance can be conveniently asse
 \subsubsection{Remarks}
 Although the second option appears to be more efficient and possesses a form similar to that of displacement based elements, both options can be chosen to formulate elemental stiffness matrix and they share the same stability condition. However, they may require different numbers of shape functions for the corresponding fields in order to construct square matrices. Depending on the type of element and the number of available integration points, one may switch from one option to another for optimal formulation.
 
-If \eqsref{eq:functional2} is used, expect for replacing all $\mathbold{\phi}_\mathbold{\kappa}$ with $\mathbold{\phi}_\mathbold{k}$, then only $\mathbold{H}_4$ needs to be modified.
+If \eqsref{eq:functional2} is used, expect for replacing all $\mathbold{\phi}_\mathbold{\kappa}$ with $\mathbold{\phi}_\mathbold{k}$, only $\mathbold{H}_4$ needs to be modified.
 \begin{gather}
 \mathbold{H}_4=\int_V\mathbold{\phi}_\mathbold{k}^\mT\mathbold{\phi}_\mathbold{\mu}~\md{V},
 \end{gather}
@@ -451,6 +451,7 @@ Given that the displacement interpolation only uses four modes $\begin{bmatrix}
 1&x&y&xy
 \end{bmatrix}$, one can further define internal degrees of freedom to complete the second order interpolation so that performance can be improved.
 \section{Numerical Examples}
+Given that some preliminary results have been given by \citet{Darrall2013,Pedgaonkar2021}, we focus on the performance of drilling degrees of freedom offered by the consistent couple stress theory in this work.
 \section{Conclusions}
 In this work, based on the consistent couple stress theory, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated accordingly for problems with both linear and nonlienar materials, although it is still difficult to further investigate the performance of the couple stress theory beyond elasticity for the moment, given that most existing constitutive models are developed based on the Cauchy theory. It would be interesting to see work in that regard in future.
 
