@@ -305,17 +305,25 @@ Since $\mathbold{E}_1$ and $\mathbold{E}_2$ are guaranteed to be square matrices
 \end{gather}
 The above procedure requires matrix inversions to be conducted at element level whenever tangent moduli update. This is considered not very efficient for nonlinear analysis.
 \paragraph{Stability Condition}
-Let the size of $\mathbold{H}_5$ be $i\times{}j$, the size of $\mathbold{H}_4$ be $n\times{}m$ and the number of strain and mean curvature components be $d$, then the minimum number of integration points $n_{ip}$ must satisfy the following inequalities,
+Let the size of $\mathbold{\phi}_\mathbold{\varepsilon}$ be $i\times{}j$ and the size of $\mathbold{\phi}_\mathbold{\sigma}$ be $i\times{}k$, then the number of integration points $n_{ip}$ must satisfy the following inequality for $\mathbold{E}_1$ to be invertible,
 \begin{gather}
-n_{ip}\cdot{}d\geqslant{}\max\left(i,~j,~n,~m\right).
+n_{ip}\cdot{}\min\left(i,~j\right)\geqslant{}\max\left(i,~j\right).
+\end{gather}
+Furthermore, for $\mathbold{H}_5^\mT\mathbold{E}_1^{-1}\mathbold{H}_5$ to be invertible,
+\begin{gather}
+n_{ip}\cdot{}\min\left(i,~j,~k\right)\geqslant{}\max\left(i,~j,~k\right).
 \end{gather}
 This, however, only guarantees successful computation of elemental stiffness matrix thus is the minimum condition. Denoting the number of rigid body motion as $n_f$ and the size of elemental stiffness matrix as $n_k$, then for a single element, at least
 \begin{gather}
-n_{ip}\cdot{}d\geqslant{}n_k-n_f.
+n_{ip}\cdot{}\min\left(i,~j,~k\right)\geqslant{}n_k-n_f.
+\end{gather}
+Similar procedure can be applied to term $\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4$. Let the size of $\mathbold{\phi}_\mathbold{\kappa}$ be $l\times{}m$ and the size of $\mathbold{\phi}_\mathbold{\mu}$ be $l\times{}n$, then
+\begin{gather}
+n_{ip}\cdot{}\min\left(l,~m,~n\right)\geqslant{}\max\left(l,~m,~n,~n_k-n_f\right).
 \end{gather}
 Eventually,
 \begin{gather}\label{eq:stability}
-n_{ip}\cdot{}d\geqslant{}\max\left(i,~j,~n,~m,~n_k-n_f\right).
+n_{ip}\cdot{}\min\left(i,~j,~k,~l,~m,~n\right)\geqslant{}\max\left(i,~j,~k,~l,~m,~n,~n_k-n_f\right).
 \end{gather}
 \subsubsection{Option Two --- Invertible $\mathbold{H}_4$ and $\mathbold{H}_5$}
 By proper construction, $\mathbold{H}_4$ and $\mathbold{H}_5$ can be square and invertible. Similar to the work by the author \citep{Chang2019}, by static condensation, one can obtain
@@ -351,7 +359,10 @@ Since all $\mathbold{H}_n$ matrices are constant once interpolations are determi
 
 It can be noted that the elemental stiffness possesses a symmetric structure although moduli $\mathbold{E}_1$ and $\mathbold{E}_2$ may be asymmetric due to for example non-associative plasticity in the case of material nonlinearity.
 \paragraph{Stability Condition}
-This option requires the inversion of $\mathbold{H}_4$ and $\mathbold{H}_5$ thus the stability condition is identical to \eqsref{eq:stability}.
+This option only requires the inversion of square matrices $\mathbold{H}_4$ and $\mathbold{H}_5$. Thus $\mathbold{\phi}_\mathbold{\varepsilon}$ ($\mathbold{\phi}_\mathbold{\kappa}$) and $\mathbold{\phi}_\mathbold{\sigma}$ ($\mathbold{\phi}_\mathbold{\mu}$) have the same size. Let $i\times{}j$ be the size of $\mathbold{\phi}_\mathbold{\varepsilon}$ and $m\times{}n$ be the size of $\mathbold{\phi}_\mathbold{\kappa}$, then the stability condition becomes
+\begin{gather}\label{eq:stability2}
+n_{ip}\cdot{}\min\left(i,~j,~m,~n\right)\geqslant{}\max\left(i,~j,~m,~n,~n_k-n_f\right).
+\end{gather}
 \subsubsection{Resistance}
 From the third equation of the stationary condition \eqsref{eq:stationary}, $\mathbold{s}$ solely depends on material response thus can be computed directly as
 \begin{gather}\label{eq:s}
@@ -372,7 +383,7 @@ In the above equations, similar to \eqsref{eq:potential_energy}, $\bar{\mathbold
 \end{gather}
 One material response is computed, elemental resistance can be conveniently assembled without worrying about local residual.
 \subsubsection{Remarks}
-Although the second option appears to be more efficient and possesses a form similar to that of displacement based elements, both options can be chosen to formulate elemental stiffness matrix and they share the same stability condition. However, they may require different numbers of shape functions for the corresponding fields in order to construct square matrices. Depending on the type of element and the number of available integration points, one may switch from one option to another for optimal formulation.
+Although the second option appears to be more efficient and possesses a form similar to that of displacement based elements, both options can be chosen to formulate elemental stiffness matrix and they share similar stability conditions. However, they may require different numbers of shape functions for the corresponding fields in order to construct square matrices. Depending on the type of element and the number of available integration points, one may switch from one option to another for optimal formulation.
 
 If \eqsref{eq:functional2} is used, expect for replacing all $\mathbold{\phi}_\mathbold{\kappa}$ with $\mathbold{\phi}_\mathbold{k}$, only $\mathbold{H}_4$ needs to be modified.
 \begin{gather}
