@@ -16,7 +16,7 @@
 \onehalfspacing
 \begin{document}
 \begin{abstract}
-This work discusses the finite element formulation based on a six-field variational principle that incorporates the consistent couple stress theory.
+This work discusses the finite element formulation based on a six-field variational principle that incorporates the consistent couple stress theory. The corresponding solving procedure that covers both linear and nonlienar materials is derived. With the implemented membrane elements, the numerical experiments are conducted to investigate the performance of the in-plane drilling degrees of freedom introduced by the consistent couple stress theory.
 \end{abstract}
 \begin{keyword}
 mixed formulation\sep
@@ -30,13 +30,11 @@ size dependence
 \address{Department of Civil and Natural Resources Engineering, University of Canterbury, Christchurch, New Zealand, 8041.}
 \end{frontmatter}
 \section{Introduction}
-The Cauchy continuum mechanics has received wide recognition over the years and become the standard framework for many engineering problems. Both analytical and numerical solutions can be developed.
-
-However, due to the lack of proper measure of rotation/curvature (and its stress conjugate), certain difficulties are encountered in problems involving beams, plates, shells, etc. Besides, the Cauchy theory is incapable of describing the size effect, which is frequently seen in many materials and plays a vital role in fracture mechanics.
+The Cauchy continuum mechanics has received wide recognition over the years and becomes the standard framework for many engineering disciplines. For simple, idealised problems, analytical solutions can be constructed \citep[see, e.g.,][]{Timoshenko2010} with proper assumptions. The Cauchy theory also provides theoretical basis for the extensively used finite element methods. However, due to the lack of proper measure of rotation/curvature (and its force/stress conjugate), certain difficulties are encountered in problems involving beams, plates, shells, etc. Besides, the Cauchy theory is incapable of describing the size effect, which is frequently seen in many materials at various scales (from nano to macro) and plays a vital role in fracture mechanics \citep{Bazant1984}.
 
 The consistent couple stress theory \citep{Hadjesfandiari2011} provides a promising tool to address the aforementioned shortcomings of the Cauchy theory.
 
-Recent research work on membrane elements with drilling degrees of freedom can be seen in the review by \citet{Boutagouga2020}.
+Recent research work on membrane elements with in-plane drilling degrees of freedom can be seen in the review by \citet{Boutagouga2020}. For reviews on theoretical developments and experimental investigations regarding couple stress theory, interested authors can refer to the work by \citet{Pedgaonkar2021} and the references therein.
 
 The drilling degree of freedom defined within Cauchy theory shows significant size effect, which limits its application in modelling problems involving both membrane and beam elements \citep{Chang2020}.
 
@@ -257,14 +255,14 @@ Taking variations leads to the following system of equations.
 \begin{gather}\label{eq:stationary}
 \left\{
 \begin{array}{lll}
-\dfrac{\delta\varPi}{\delta{}\mathbold{p}}=0&\longrightarrow&\displaystyle\int_V\left(\mathbold{L}\mathbold{\phi}_\mathbold{u}\right)^\mT\mathbold{\phi}_\mathbold{\sigma}\mathbold{\alpha}-2\left(\mathbold{J}\mathbold{\phi}_\mathbold{u}\right)^\mT\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)\mathbold{s}~\md{V}=\mathbold{R}_\mathbold{u},\\[4mm]
-\dfrac{\delta\varPi}{\delta{}\mathbold{q}}=0&\longrightarrow&\displaystyle\int_V2\left(\mathbold{\phi}_\mathbold{\theta}^\mT\mathbold{J}\mathbold{\phi}_\mathbold{\mu}-\left(\mathbold{J}\mathbold{\phi}_\mathbold{\theta}\right)^\mT\mathbold{\phi}_\mathbold{\mu}\right)\mathbold{s}~\md{V}=\mathbold{R}_\mathbold{\theta},\\[4mm]
-\dfrac{\delta\varPi}{\delta{}\mathbold{r}}=0&\longrightarrow&\displaystyle\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT{}W_\mathbold{\kappa}+2\mathbold{\phi}_\mathbold{\kappa}^\mT\mathbold{\phi}_\mathbold{\mu}\mathbold{s}~\md{V}=\mathbold{0},\\[4mm]
-\dfrac{\delta\varPi}{\delta{}\mathbold{s}}=0&\longrightarrow&\displaystyle
+\dfrac{\delta\varPi}{\delta{}\mathbold{p}}=\mathbold{0}&\longrightarrow&\displaystyle\int_V\left(\mathbold{L}\mathbold{\phi}_\mathbold{u}\right)^\mT\mathbold{\phi}_\mathbold{\sigma}\mathbold{\alpha}-2\left(\mathbold{J}\mathbold{\phi}_\mathbold{u}\right)^\mT\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)\mathbold{s}~\md{V}=\mathbold{R}_\mathbold{u},\\[4mm]
+\dfrac{\delta\varPi}{\delta{}\mathbold{q}}=\mathbold{0}&\longrightarrow&\displaystyle\int_V2\left(\mathbold{\phi}_\mathbold{\theta}^\mT\mathbold{J}\mathbold{\phi}_\mathbold{\mu}-\left(\mathbold{J}\mathbold{\phi}_\mathbold{\theta}\right)^\mT\mathbold{\phi}_\mathbold{\mu}\right)\mathbold{s}~\md{V}=\mathbold{R}_\mathbold{\theta},\\[4mm]
+\dfrac{\delta\varPi}{\delta{}\mathbold{r}}=\mathbold{0}&\longrightarrow&\displaystyle\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT{}W_\mathbold{\kappa}+2\mathbold{\phi}_\mathbold{\kappa}^\mT\mathbold{\phi}_\mathbold{\mu}\mathbold{s}~\md{V}=\mathbold{0},\\[4mm]
+\dfrac{\delta\varPi}{\delta{}\mathbold{s}}=\mathbold{0}&\longrightarrow&\displaystyle
 \int_V2\left(\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)^\mT\mathbold{\phi}_\mathbold{\theta}-\mathbold{\phi}_\mathbold{\mu}^\mT\mathbold{J}\mathbold{\phi}_\mathbold{\theta}\right)\mathbold{q}+2\mathbold{\phi}_\mathbold{\mu}^\mT\mathbold{\phi}_\mathbold{\kappa}\mathbold{r}-2\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)^\mT\mathbold{J}\mathbold{\phi}_\mathbold{u}\mathbold{p}~\md{V}=\mathbold{0},\\[4mm]
-\dfrac{\delta\varPi}{\delta{}\mathbold{\beta}}=0&\longrightarrow&\displaystyle\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT{}W_{\mathbold{\varepsilon}}~\md{V}
+\dfrac{\delta\varPi}{\delta{}\mathbold{\beta}}=\mathbold{0}&\longrightarrow&\displaystyle\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT{}W_{\mathbold{\varepsilon}}~\md{V}
 -\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT\mathbold{\phi}_\mathbold{\sigma}\mathbold{\alpha}~\md{V}=\mathbold{0},\\[4mm]
-\dfrac{\delta\varPi}{\delta{}\mathbold{\alpha}}=0&\longrightarrow&\displaystyle\int_V\mathbold{\phi}_\mathbold{\sigma}^\mT\mathbold{L}\mathbold{\phi}_\mathbold{u}\mathbold{p}-\mathbold{\phi}_\mathbold{\sigma}^\mT\mathbold{\phi}_\mathbold{\varepsilon}\mathbold{\beta}~\md{V}=\mathbold{0}.
+\dfrac{\delta\varPi}{\delta{}\mathbold{\alpha}}=\mathbold{0}&\longrightarrow&\displaystyle\int_V\mathbold{\phi}_\mathbold{\sigma}^\mT\mathbold{L}\mathbold{\phi}_\mathbold{u}\mathbold{p}-\mathbold{\phi}_\mathbold{\sigma}^\mT\mathbold{\phi}_\mathbold{\varepsilon}\mathbold{\beta}~\md{V}=\mathbold{0}.
 \end{array}
 \right.
 \end{gather}
@@ -294,7 +292,7 @@ in which $\mathbold{C}$ and $\mathbold{D}$ denote material tangent moduli, the i
 \Delta\mathbold{p}\\\Delta\mathbold{q}\\\Delta\mathbold{r}\\\Delta\mathbold{s}\\\Delta\mathbold{\beta}\\\Delta\mathbold{\alpha}
 \end{bmatrix}=\mathbold{R}.
 \end{gather}
-In which, $\mathbold{R}$ is used to denote residual whose discrete form is not shown. As can be seen later, it is possible to compute resistance based on \eqsref{eq:stationary}.
+In which, $\mathbold{R}$ is used to denote residual whose discrete form is not shown. As can be seen later, it is possible to compute resistance directly based on \eqsref{eq:stationary}.
 \subsection{Solution Procedure}
 \subsubsection{Option One --- Invertible $\mathbold{E}_1$ and $\mathbold{E}_2$}
 Since $\mathbold{E}_1$ and $\mathbold{E}_2$ are guaranteed to be square matrices, typically they are invertible with sufficient integration points provided, performing static condensation leads to the following elemental stiffness.
@@ -382,8 +380,8 @@ If \eqsref{eq:functional2} is used, expect for replacing all $\mathbold{\phi}_\m
 \end{gather}
 where $\mathbold{\phi}_\mathbold{k}$ is the interpolation of engineering mean curvature $\mathbold{k}$.
 \subsection{Some Basic Elements}
-Two elements named as couple stress triangle and quadrilateral (CSMT and CSMQ) are formulated as examples. Since the incremental form and the elemental stiffness are given in \eqsref{eq:incremental_form} and \eqsref{eq:stiffness}, there is no difficulty in constructing other types of elements such as serendipity quadrilaterals with various nodes, axisymmetric triangle/quadrilateral, eight-node brick/cube, four-node tetrahedron and higher order elements. The procedure follows a standard FEM approach.
-\subsubsection{An Elementary Membrane Element --- CSMT}
+Two elements named as couple stress triangle and quadrilateral (CSMT3 and CSMQ4) are formulated as examples. Since the incremental form and the elemental stiffness are given in \eqsref{eq:incremental_form} and \eqsref{eq:stiffness}, there is no difficulty in constructing other types of elements such as serendipity quadrilaterals with various nodes, axisymmetric triangle/quadrilateral, eight-node brick/cube, four-node tetrahedron and higher order elements. The procedure follows a standard FEM approach.
+\subsubsection{An Elementary Membrane Element --- CSMT3}
 Not all couple stress theories support membrane problems, the popular modified couple stress theory \citep{Yang2002} adopts a symmetric couple stress tensor, with which in-plane response cannot be fully decoupled from out-of-plane response. Discussions of relevant topics can be seen elsewhere \citep{Hadjesfandiari2016}. The consistent couple stress theory is free from similar issues, which makes it more appealing for a wide range of general continuum problems.
 
 The simplest membrane element may be the three-node triangular element. For plane stress problem, given the constitutive equation between mean curvature vector $\kappa_i$ and couple stress vector $\mu_i$ occupies the form shown in \eqsref{eq:constitutive_couple}, it is clear that in-plane and out-of-plane actions are decoupled. Thus six fields reduce to the following Voigt forms.
@@ -431,10 +429,10 @@ Given that $\mathbold{u}$ is linearly interpolated, $\mathbold{\varepsilon}$ and
 \end{gather}
 In this case, $\beta_i$ and $\alpha_i$ are essentially strain and stress components.
 
-The explicit forms are not listed here for brevity. Interested readers are referred to typical textbooks on finite element methods for details of formulating interpolation matrices \citep[see, e.g.,][section 5.1.3.1]{Zienkiewicz2013}. Three integration points are used for numerical integration. This element is denoted as couple stress mixed triangle (CSMT) element.
+The explicit forms are not listed here for brevity. Interested readers are referred to typical textbooks on finite element methods for details of formulating interpolation matrices \citep[see, e.g.,][section 5.1.3.1]{Zienkiewicz2013}. Three integration points are used for numerical integration. This element is denoted as couple stress mixed triangle (CSMT3) element.
 
-The CSMT element is essentially an extension of constant strain triangle (CST) element (CPS3 and CPE3 in ABAQUS notion) with additional fields incorporates mean curvature and couple stress. Given that only linear and constant interpolations are used, its performance shall be similar to that of CST.
-\subsubsection{A Four-Node Quadrilateral Membrane Element --- CSMQ}
+The CSMT3 element is essentially an extension of constant strain triangle (CST) element (CPS3 and CPE3 in ABAQUS notion) with additional fields incorporates mean curvature and couple stress. Given that only linear and constant interpolations are used, its performance shall be similar to that of CST.
+\subsubsection{A Four-Node Quadrilateral Membrane Element --- CSMQ4}
 Similarly, the aforementioned formulation can be applied to four-node quadrilaterals. The standard isoparametric mapping can be applied.
 \begin{gather}
 \chi=\sum_{i=1}^4N_i\chi_i
@@ -445,7 +443,7 @@ with $N_i=\left(1+\xi_i\xi\right)\left(1+\eta_i\eta\right)/4$ where $\xi$ and $\
 1&\cdot&\cdot&\cdot&y&\cdot&x\\\cdot&1&\cdot&x&\cdot&y&\cdot\\\cdot&\cdot&1&\cdot&\cdot&-x&-y
 \end{bmatrix}.
 \end{gather}
-Based on previous discovery \citep{Chang2019}, $\mathbold{\phi}_\mathbold{\varepsilon}$ can be further modified to include the Poisson effect, which overcomes (near) incompressible problems. A \num{2x2} Gauss quadrature is used for numerical integration, this element is denoted as couple stress mixed quadrilateral (CSMQ) element.
+Based on previous discovery \citep{Chang2019}, $\mathbold{\phi}_\mathbold{\varepsilon}$ can be further modified to include the Poisson effect, which overcomes (near) incompressible problems. A \num{2x2} Gauss quadrature is used for numerical integration, this element is denoted as couple stress mixed quadrilateral (CSMQ4) element.
 
 Given that the displacement interpolation only uses four modes $\begin{bmatrix}
 1&x&y&xy
@@ -494,9 +492,9 @@ As a convention, the classic constant strain patch test defines four elements in
 \end{tikzpicture}
 \caption{constant strain patch test}\label{fig:csmq_patch}
 \end{figure}
-The linear displacement field can be successfully computed by using CSMQ elements with arbitrary location of the middle node.
+The linear displacement field can be successfully computed by using CSMQ4 elements with arbitrary location of the middle node.
 
-Since the strain field remains constant, no couple stress would be generated in this example. As the result, whether nodal rotations are constrained has no impact on final results. Due to the same reason, any positive numbers can be chosen as the characteristic length $l$.
+Since strain field remains constant, no couple stress would be generated in this example. As the result, whether nodal rotations are constrained has no impact on final results. Due to the same reason, any positive numbers can be chosen as the characteristic length $l$.
 \section{Conclusions}
 In this work, based on the consistent couple stress theory, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated accordingly for problems with both linear and nonlienar materials, although it is still difficult to further investigate the performance of the couple stress theory beyond elasticity for the moment, given that most existing constitutive models are developed based on the Cauchy theory. It would be interesting to see work in that regard in future.
 
