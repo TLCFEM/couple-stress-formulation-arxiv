@@ -339,13 +339,18 @@ By proper construction, $\mathbold{H}_4$ and $\mathbold{H}_5$ can be square and 
 
 The above system can be conveniently converted into a more expressive form, in which the elemental stiffness matrix $\mathbold{K}$ can be shown as
 \begin{gather}\label{eq:stiffness}
-\mathbold{K}=\begin{bmatrix}
+\mathbold{K}=\mathbold{K}_1+\mathbold{K}_2
+\end{gather}
+with
+\begin{gather}
+\mathbold{K}_1=\begin{bmatrix}
 \mathbold{H}_2\mathbold{H}_5^{-1}&\cdot\\\cdot&\cdot
 \end{bmatrix}\begin{bmatrix}
 \mathbold{E}_1&\cdot\\\cdot&\cdot
 \end{bmatrix}\begin{bmatrix}
 \mathbold{H}_5^{-\mT}\mathbold{H}_2^\mT&\cdot\\\cdot&\cdot
-\end{bmatrix}+\begin{bmatrix}
+\end{bmatrix},\\
+\mathbold{K}_2=\begin{bmatrix}
 \cdot&\mathbold{H}_1\mathbold{H}_4^{-1}\\\cdot&\mathbold{H}_3\mathbold{H}_4^{-1}
 \end{bmatrix}\begin{bmatrix}
 \cdot&\cdot\\\cdot&\mathbold{E}_2
@@ -353,7 +358,7 @@ The above system can be conveniently converted into a more expressive form, in w
 \cdot&\cdot\\\mathbold{H}_4^{-\mT}\mathbold{H}_1^\mT&\mathbold{H}_4^{-\mT}\mathbold{H}_3^\mT
 \end{bmatrix}.
 \end{gather}
-The first term solely depends on conventional displacement, strain and stress as defined in Cauchy theory. Thus it can be derived from the Hu--Washizu theorem.
+The first term $\mathbold{K}_1$ solely depends on conventional displacement, strain and stress as defined in the Cauchy theory. Thus it can be derived from the Hu--Washizu theorem.
 
 Since all $\mathbold{H}_n$ matrices are constant once interpolations are determined, they only need to be computed once during the initialisation stage. Furthermore, $\mathbold{H}_n$ require no additional storage as $\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{\phi}_\mathbold{\varepsilon}^\mT$, $\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ and $\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ can be stored as `equivalent strain matrices' for each integration point. Once the elemental stiffness matrix is computed, reordering of degrees of freedom may be performed.
 
