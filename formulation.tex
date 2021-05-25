@@ -16,7 +16,7 @@
 \onehalfspacing
 \begin{document}
 \begin{abstract}
-This work discusses the finite element formulation based on a six-field variational principle that incorporates the consistent couple stress theory. The corresponding solving procedure that covers both linear and nonlienar materials is derived. With the implemented membrane elements, the numerical experiments are conducted to investigate the performance of the in-plane drilling degrees of freedom introduced by the consistent couple stress theory.
+This work discusses the finite element formulation based on a six-field variational principle that incorporates the consistent couple stress theory. A simple, efficient, local iteration free solving procedure that covers both linear and nonlienar materials is derived. With proper interpolations, two example membrane elements are proposed. With the implemented elements, numerical experiments are conducted to investigate the performance of the in-plane drilling degrees of freedom introduced by the consistent couple stress theory.
 \end{abstract}
 \begin{keyword}
 mixed formulation\sep
@@ -30,17 +30,17 @@ size dependence
 \address{Department of Civil and Natural Resources Engineering, University of Canterbury, Christchurch, New Zealand, 8041.}
 \end{frontmatter}
 \section{Introduction}
-The Cauchy continuum mechanics has received wide recognition over the years and becomes the standard framework for many engineering disciplines. For simple, idealised problems, analytical solutions can be constructed \citep[see, e.g.,][]{Timoshenko2010} with proper assumptions. The Cauchy theory also provides theoretical basis for the extensively used finite element methods. However, due to the lack of proper measure of rotation/curvature (and its force/stress conjugate), certain difficulties are encountered in problems involving beams, plates, shells, etc. Besides, the Cauchy theory is incapable of describing the size effect, which is frequently seen in many materials at various scales (from nano to macro) and plays a vital role in fracture mechanics \citep{Bazant1984}.
+The Cauchy continuum mechanics has received wide recognition over the years and becomes the standard framework for many engineering disciplines. For simple, idealised problems, analytical solutions can be constructed \citep[see, e.g.,][]{Timoshenko2010} with proper assumptions. The Cauchy theory also provides theoretical basis for the extensively used finite element methods. However, due to the lack of proper measure of rotation/curvature (and its force/stress conjugate), the Cauchy theory is incapable of describing the size effect, which is frequently seen in many materials at various scales (from nano to macro) and plays a vital role in fracture mechanics \citep{Bazant1984}. Besides, certain difficulties (e.g., kinematic compatibility among different types of elements) are encountered in problems involving beams, plates, shells, etc.
 
-The consistent couple stress theory \citep{Hadjesfandiari2011} provides a promising tool to address the aforementioned shortcomings of the Cauchy theory.
+To overcome the shortcomings of the Cauchy theory, researchers have been investigating alternatives, which are often called nonlocal theories. A recent review \citep{Shaat2020} on relevant topics can be seen elsewhere. Among many different proposals, although disputed by others \citep{Neff2016}, the consistent couple stress theory \citep{Hadjesfandiari2011} provides a promising framework.
 
 Recent research work on membrane elements with in-plane drilling degrees of freedom can be seen in the review by \citet{Boutagouga2020}. For reviews on theoretical developments and experimental investigations regarding couple stress theory, interested authors can refer to the work by \citet{Pedgaonkar2021} and the references therein.
 
 The drilling degree of freedom defined within Cauchy theory shows significant size effect, which limits its application in modelling problems involving both membrane and beam elements \citep{Chang2020}.
 
-This paper is organised as follows. The consistent couple stress theory is briefly reviewed by summarising key equations and quantities that are later used in finite element formulation. Based on this theory, a general mixed variational principle involving six independent fields are derived. Two elements couple stress triangle and quadrilateral elements are developed after formulating system of linear equations. With the proposed elements, the performance of the drilling degree of freedom is further investigated by conducting numerical experiments.
+This paper is organised as follows. The consistent couple stress theory is briefly reviewed by summarising key equations and quantities that are later used in finite element formulation. Based on this theory, a general mixed variational principle involving six independent fields are derived. After formulating system of linear equations, a simple, local iteration free solving strategy is designed for general nonlinear material models. Two membrane elements, named as couple stress triangle and quadrilateral, are implemented by choosing proper interpolations. With the proposed elements, the performance of the drilling degree of freedom is further investigated by conducting numerical experiments.
 \section{The Couple Stress Theory}
-Details of the adopted consistent couple stress theory can be seen in the work by \citet{Hadjesfandiari2011}. Here a brief summary of all necessary expressions utilised in finite element formulation is presented.
+Details of the adopted consistent couple stress theory can be seen elsewhere \citep{Hadjesfandiari2011}. Here a brief summary of all necessary expressions utilised in finite element formulation is presented. No new contents are introduced in this section.
 \subsection{Kinematics}
 Within the infinitesimal strain framework, the couple stress theory \citep{Hadjesfandiari2011} accounts for both symmetric and skew--symmetric parts of displacement gradient in kinematics, that is
 \begin{gather}\label{eq:varepsilon}
@@ -511,6 +511,8 @@ As a convention, the classic constant strain patch test defines four elements in
 The linear displacement field can be successfully computed by using CSMQ4 elements with arbitrary location of the middle node.
 
 Since strain field remains constant, no couple stress would be generated in this example. As the result, whether nodal rotations are constrained has no impact on final results. Due to the same reason, any positive numbers can be chosen as the characteristic length $l$.
+\subsection{Membrane--Beam Joint}
+Since the drilling degree of freedom defined in the consistent couple stress theory has an energetic conjugate --- curl of couple stress $\nabla\times\mathbold{\mu}$ as can be seen in \eqsref{eq:functional2}, size dependence can be successfully captured by its nature. In this example, the performance of drilling DoFs is investigated. Although it is possible to directly apply loads to drilling DoFs as 'moments', a membrane--beam joint, which is frequently encountered in structural engineering, is used instead.
 \section{Conclusions}
 In this work, based on the consistent couple stress theory, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated accordingly for problems with both linear and nonlienar materials, although it is still difficult to further investigate the performance of the couple stress theory beyond elasticity for the moment, given that most existing constitutive models are developed based on the Cauchy theory. It would be interesting to see work in that regard in future.
 
