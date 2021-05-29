@@ -1,0 +1,33 @@
+# file DRILLING1.supan
+# file DRILLING2.supan
+# file DRILLING4.supan
+# file DRILLING8.supan
+# file DRILLING16.supan
+# file DRILLING32.supan
+# file DRILLING64.supan
+file DRILLING128.supan
+
+node 20000 11 10
+
+section Rectangle2D 1 1 2 2
+
+element B21 5 3 20000 1 6
+
+material Elastic2D 1 10000 0
+material Elastic1D 2 1000
+
+generatebyrule nodegroup 1 2 1. 0.
+
+groupmultiplierbc 1 P 1
+
+displacement 1 0 1 2 20000
+
+step static 1
+set ini_step_size 1
+set symm_mat 1
+
+analyze
+
+peek node 20000
+
+exit

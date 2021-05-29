@@ -1,0 +1,6 @@
+node	1	0	0
+node	2	10	0
+node	3	10	10
+node	4	0	10
+
+element SGCMQG 1 1 2 3 4 1 1 5E-1

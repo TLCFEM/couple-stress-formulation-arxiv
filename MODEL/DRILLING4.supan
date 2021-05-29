@@ -1,0 +1,42 @@
+node	1	0	0
+node	2	10	0
+node	3	10	10
+node	4	0	10
+node	5	2.5	0
+node	6	5	0
+node	7	7.5	0
+node	8	10	2.5
+node	9	10	5
+node	10	10	7.5
+node	11	7.5	10
+node	12	5	10
+node	13	2.5	10
+node	14	0	7.5
+node	15	0	5
+node	16	0	2.5
+node	17	2.5	2.5
+node	18	2.5	5
+node	19	2.5	7.5
+node	20	5	2.5
+node	21	5	5
+node	22	5	7.5
+node	23	7.5	2.5
+node	24	7.5	5
+node	25	7.5	7.5
+
+element SGCMQG	21	1	5	17	16	1	1	5E-1
+element SGCMQG	22	16	17	18	15	1	1	5E-1
+element SGCMQG	23	15	18	19	14	1	1	5E-1
+element SGCMQG	24	14	19	13	4	1	1	5E-1
+element SGCMQG	25	5	6	20	17	1	1	5E-1
+element SGCMQG	26	17	20	21	18	1	1	5E-1
+element SGCMQG	27	18	21	22	19	1	1	5E-1
+element SGCMQG	28	19	22	12	13	1	1	5E-1
+element SGCMQG	29	6	7	23	20	1	1	5E-1
+element SGCMQG	30	20	23	24	21	1	1	5E-1
+element SGCMQG	31	21	24	25	22	1	1	5E-1
+element SGCMQG	32	22	25	11	12	1	1	5E-1
+element SGCMQG	33	7	2	8	23	1	1	5E-1
+element SGCMQG	34	23	8	9	24	1	1	5E-1
+element SGCMQG	35	24	9	10	25	1	1	5E-1
+element SGCMQG	36	25	10	3	11	1	1	5E-1
