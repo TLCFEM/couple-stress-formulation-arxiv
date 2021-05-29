@@ -22,7 +22,7 @@ couple stress theory\sep
 size dependence
 \end{keyword}
 \begin{frontmatter}
-\title{Mixed formulation of finite elements based on couple stress theory}
+\title{Mixed formulation of finite elements based on the consistent couple stress theory}
 \author[]{T.~L.~Chang\corref{tlc}}\ead{tlcfem@gmail.com}
 %\cortext[tlc]{corresponding author}
 \address{Department of Civil and Natural Resources Engineering, University of Canterbury, Christchurch, New Zealand, 8041.}
@@ -455,7 +455,7 @@ with $N_i=\left(1+\xi_i\xi\right)\left(1+\eta_i\eta\right)/4$ where $\xi$ and $\
 1&\cdot&\cdot&\cdot&y&\cdot&x\\\cdot&1&\cdot&x&\cdot&y&\cdot\\\cdot&\cdot&1&\cdot&\cdot&-x&-y
 \end{bmatrix}.
 \end{gather}
-Based on previous discovery \citep{Chang2019}, $\mathbold{\phi}_\mathbold{\varepsilon}$ can be further modified to include the Poisson effect, which overcomes (near) incompressible problems. A \num{2x2} Gauss quadrature is used for numerical integration, this element is denoted as couple stress mixed quadrilateral (CSMQ4) element.
+Based on previous discovery \citep{Chang2019}, $\mathbold{\phi}_\mathbold{\varepsilon}$ can be further modified to include the Poisson effect, which overcomes (near) incompressible problems. A \numproduct{2x2} Gauss quadrature is used for numerical integration, this element is denoted as couple stress mixed quadrilateral (CSMQ4) element.
 
 Given that the displacement interpolation only uses four modes $\begin{bmatrix}
 1&x&y&xy
