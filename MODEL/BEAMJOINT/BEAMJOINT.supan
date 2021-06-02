@@ -7,13 +7,13 @@ file DRILLING1.supan
 # file DRILLING64.supan
 # file DRILLING128.supan
 
-node 20000 11 10
+node 20000 14 10
 
-section Rectangle2D 1 1 2 2
+section Rectangle2D 1 1 1 2
 
 element B21 5 3 20000 1 6
 
-material Elastic2D 1 10000 0
+material Elastic2D 1 100 0
 material Elastic1D 2 1000
 
 generatebyrule nodegroup 1 2 1. 0.

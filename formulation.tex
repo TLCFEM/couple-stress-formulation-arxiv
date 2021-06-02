@@ -1,5 +1,5 @@
 \documentclass[3p,sort&compress,11pt,fleqn]{elsarticle}
-\usepackage{setspace,tikz,float,lmodern,booktabs,amsmath,amssymb,siunitx,structmech,mathpazo}
+\usepackage{setspace,tikz,float,lmodern,booktabs,amsmath,amssymb,siunitx,structmech,mathpazo,gnuplot-lua-tikz,subcaption}
 \usetikzlibrary{shapes,arrows.meta}
 \bibliographystyle{elsarticle-num-names}
 \journal{IJNME}
@@ -11,6 +11,7 @@
 \newcommand*{\mT}{\mathrm{T}}
 \newcommand*{\md}[1]{\mathrm{d}#1}
 \newcommand*{\pfrac}[2]{\dfrac{\partial#1}{\partial#2}}
+\tikzset{FFIXED/.style={postaction={draw,decorate,decoration={border,angle=-60,amplitude=2mm,segment length=1.9mm}}}}
 \onehalfspacing
 \begin{document}
 \begin{abstract}
@@ -75,7 +76,7 @@ The corresponding equilibrium equation can be shown as
 where $f_i$ is the body force field.
 \subsection{Linear Elasticity}
 The stored energy function $W$ can be defined as a function of $\varepsilon_{ij}$ and $\kappa_i$ such that
-\begin{gather}
+\begin{gather}\label{eq:stored_energy}
 W\left(\varepsilon_{ij},\kappa_i\right)=\dfrac{1}{2}\lambda\varepsilon_{ii}\varepsilon_{jj}+\mu\varepsilon_{ij}\varepsilon_{ij}+8\eta\kappa_i\kappa_i,
 \end{gather}
 where $\lambda$ and $\mu$ are Lam\'{e} constants, $\eta$ is the additional material constant. The corresponding constitutive relations for linear elasticity can then be derived to be
@@ -87,6 +88,7 @@ where $\delta_{ij}$ is the Kronecker delta. The additional constant $\eta$ can b
 \begin{gather}
 \eta=l^2\mu.
 \end{gather}
+It is worth mentioning that $l$ may not be a material constant and depends on geometry of structures \citep{Khorshidi2018}. Its determination is thus not further extended in this work.
 
 Given that in this work $\sigma_{ij}$ is assumed to be symmetric, without loss of generality, the variation of $W$ can be expressed as
 \begin{gather}\label{eq:potential_energy}
@@ -392,7 +394,7 @@ If \eqsref{eq:functional2} is used, expect for replacing all $\mathbold{\phi}_\m
 \end{gather}
 where $\mathbold{\phi}_\mathbold{k}$ is the interpolation of engineering mean curvature $\mathbold{k}$.
 \subsection{Some Basic Elements}
-Two elements named as couple stress triangle and quadrilateral (CSMT3 and CSMQ4) are formulated as examples. Since the incremental form and the elemental stiffness are given in \eqsref{eq:incremental_form} and \eqsref{eq:stiffness}, there is no difficulty in constructing other types of elements such as serendipity quadrilaterals with various nodes, axisymmetric triangle/quadrilateral, eight-node brick/cube, four-node tetrahedron and higher order elements. The procedure follows a standard FEM approach.
+Since the incremental form and the elemental stiffness are given in \eqsref{eq:incremental_form} and \eqsref{eq:stiffness}, there is no difficulty in constructing various types of elements such as serendipity quadrilaterals with various nodes, axisymmetric triangle/quadrilateral, eight-node brick/cube, four-node tetrahedron and higher order elements. The procedure follows a standard FEM approach. Two elements named as couple stress triangle and quadrilateral (CSMT3 and CSMQ4) are formulated as examples. Other elements implemented \citep{Chang2021} include: three-node second order triangle (CSMT6), serendipity quadrilaterals with five to eight nodes (CSMQ5, CSMQ6, CSMQ7, CSMQ8).
 \subsubsection{An Elementary Membrane Element --- CSMT3}
 Not all couple stress theories support membrane problems, the popular modified couple stress theory \citep{Yang2002} adopts a symmetric couple stress tensor, with which in-plane response cannot be fully decoupled from out-of-plane response. Discussions of relevant topics can be seen elsewhere \citep{Hadjesfandiari2016}. The consistent couple stress theory is free from similar issues, which makes it more appealing for a wide range of general continuum problems.
 
@@ -455,7 +457,7 @@ with $N_i=\left(1+\xi_i\xi\right)\left(1+\eta_i\eta\right)/4$ where $\xi$ and $\
 1&\cdot&\cdot&\cdot&y&\cdot&x\\\cdot&1&\cdot&x&\cdot&y&\cdot\\\cdot&\cdot&1&\cdot&\cdot&-x&-y
 \end{bmatrix}.
 \end{gather}
-Based on previous discovery \citep{Chang2019}, $\mathbold{\phi}_\mathbold{\varepsilon}$ can be further modified to include the Poisson effect, which overcomes (near) incompressible problems. A \numproduct{2x2} Gauss quadrature is used for numerical integration, this element is denoted as couple stress mixed quadrilateral (CSMQ4) element.
+It shall be mentioned that the stress defined above satisfies the Airy stress function, however, in the consistent couple stress theory, $\mathbold{\sigma}$ is not only governed by the Airy stress function but also an additional stress function \citep{Hadjesfandiari2011} from which $\mathbold{\mu}$ can be derived. Based on previous discovery \citep{Chang2019}, $\mathbold{\phi}_\mathbold{\varepsilon}$ can be further modified to include the Poisson effect, which overcomes (near) incompressible problems. A \numproduct{2x2} Gauss quadrature is used for numerical integration, this element is denoted as couple stress mixed quadrilateral (CSMQ4) element.
 
 Given that the displacement interpolation only uses four modes $\begin{bmatrix}
 1&x&y&xy
@@ -507,8 +509,64 @@ As a convention, the classic constant strain patch test defines four elements in
 The linear displacement field can be successfully computed by using CSMQ4 elements with arbitrary location of the middle node.
 
 Since strain field remains constant, no couple stress would be generated in this example. As the result, whether nodal rotations are constrained has no impact on final results. Due to the same reason, any positive numbers can be chosen as the characteristic length $l$.
+\subsection{Ring}
+For the purpose of validation of implemented elements, the plane ring example is modeled. The analytical solution can be seen elsewhere \citep{Hadjesfandiari2011}. The ring shown in \figref{fig:ring} is subjected to plane strain condition with inner radius $r_1=1$, outer radius $r_2=2$, shear modulus $\mu=1$ and Poisson's ratio $\nu=0.4$. The outer boundary is fixed thus translation is zero. A uniform horizontal displacement is applied to the inner boundary while the vertical displacement is constrained. As free couple traction is assumed on both boundaries, the corresponding rotation is not necessarily zero.
+
+Due to symmetry, the finite element model defines the geometry of half of the ring with a structured grid of size \numproduct{25x100}.
+\begin{figure}[H]
+\centering\footnotesize
+\begin{tikzpicture}
+\draw[very thick,FFIXED](0,0)circle(2);
+\draw[very thick](0,0)circle(1);
+\draw[dashed,thick](0.4,0)circle(1);
+\foreach \i in {0,20,...,340}{\draw[->](\i:1)--++(0.4,0);}
+\draw[->](0,0)--(30:1)node[midway,fill=white]{$r_1$};
+\draw[->](0,0)--(110:2)node[near end,fill=white]{$r_2$};
+\end{tikzpicture}
+\caption{plane ring subjected to uniform horizontal displacement}\label{fig:ring}
+\end{figure}
+
+\begin{figure}[H]
+\centering\footnotesize
+\includegraphics[width=7cm]{MODEL/RING/MODEL}
+\caption{deformed half ring model}
+\end{figure}
+
+Numerical results of the transverse displacement along the vertical center line is presented in \figref{fig:u_theta} with analytical solution obtained by choosing $l=\num{0.1}$. Three different element types are listed. The numerical solution matches the analytical one well, indicating the implementation is correct. Since no dedicated optimisation is designed to improve the performance apart from the mixed formulation, still a relatively dense mesh grid needs to be used to reduce error. Second order quadrilateral CSMQ8 shows higher accuracy as can be predicted based on experience with the Cauchy framework.
+\begin{figure}[H]
+\centering\footnotesize
+\begin{subfigure}[b]{.49\textwidth}\centering
+\input{PIC/RINGA}
+\caption{$u_\theta$ at vertical center line with $l=\num{0.1}$}\label{fig:u_theta_a}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{.49\textwidth}\centering
+\input{PIC/RINGB}
+\caption{$u_\theta$ at vertical center line with $l=\num{0.5}$}\label{fig:u_theta_b}
+\end{subfigure}
+\end{figure}
 \subsection{Membrane--Beam Joint}
 Since the drilling degree of freedom defined in the consistent couple stress theory has an energetic conjugate --- curl of couple stress $\nabla\times\mathbold{\mu}$ as can be seen in \eqsref{eq:functional2}, size dependence can be successfully captured by its nature. In this example, the performance of drilling DoFs is investigated. Although it is possible to directly apply loads to drilling DoFs as 'moments', a membrane--beam joint, which is frequently encountered in structural engineering, is used instead.
+\begin{figure}[htb]
+\centering\footnotesize
+\begin{tikzpicture}
+\FixedSupport{1.5,0}{4}
+\draw[very thick](0,0)rectangle(3,3);
+\draw[very thick](3,3)--(4.2,3);
+\draw[->](4.7,2.7)--(4.7,3.3)node[right=2mm]{$\delta=1$};
+\node[]at(1.5,1.5){$E_p$};
+\node[]at(3.75,2.5){$E_b$};
+\draw[|<->|](-.3,0)--++(0,3)node[midway,fill=white]{$10$};
+\draw[|<->|](0,-.4)--++(3,0)node[midway,fill=white]{$10$};
+\draw[|<->|](3,-.4)--++(1.2,0)node[midway,fill=white]{$4$};
+\end{tikzpicture}
+\caption{panel joint with attached beam}\label{fig:joint_example}
+\end{figure}
+
+Nodal rotations formulated within the Cauchy theory exhibit significant size dependency. The corresponding rotational stiffness decreases (thus deformation localises) with refined meshes. It can be seen from the figure and no sign of convergence can be spotted. On the contrary, CSMQ4 is less sensitive to mesh sizes.
+\subsection{Inelastic Response}
+Noting that in \eqsref{eq:stored_energy} the stored energy function can be split into two parts and each is independent from the other, it would be interesting to investigate whether objective results can be obtained for softening response with the assist of couple stress.
+
+It is simply assumed that the couple part of $W$ remains 'elastic' so that $\eta$ is a constant.
 \section{Conclusions}
 In this work, based on the consistent couple stress theory, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated accordingly for problems with both linear and nonlienar materials, although it is still difficult to further investigate the performance of the couple stress theory beyond elasticity for the moment, given that most existing constitutive models are developed based on the Cauchy theory. It would be interesting to see work in that regard in future.
 
