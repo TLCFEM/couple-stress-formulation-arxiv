@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.5.29)  2 JUN 2021 21:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.3) (preloaded format=pdflatex 2021.5.29)  2 JUN 2021 22:06
 entering extended mode
 **./formulation.tex
 (formulation.tex
@@ -1036,18 +1036,13 @@ Overfull \hbox (2.0805pt too wide) has occurred while \output is active
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
- [14]
-<MODEL/RING/MODEL.png, id=61, 1104.125pt x 692.5875pt>
+<MODEL/RING/MODEL.png, id=58, 1104.125pt x 692.5875pt>
 File: MODEL/RING/MODEL.png Graphic file (type png)
 <use MODEL/RING/MODEL.png>
-Package pdftex.def Info: MODEL/RING/MODEL.png  used on input line 531.
+Package pdftex.def Info: MODEL/RING/MODEL.png  used on input line 529.
 (pdftex.def)             Requested size: 199.16928pt x 124.92456pt.
-
-
-LaTeX Warning: Reference `fig:u_theta' on page 15 undefined on input line 535.
-
-(PIC/RINGA.tex) (PIC/RINGB.tex) [15 <./MODEL/RING/MODEL.png>] (formulation.bbl
-[16]
+ [14] (PIC/RINGA.tex) (PIC/RINGB.tex) [15 <./MODEL/RING/MODEL.png>] (formulatio
+n.bbl [16]
 Underfull \hbox (badness 2608) in paragraph at lines 108--116
 []\OT1/ppl/m/n/9 B. T. Dar-rall, G. F. Dar-gush, A. R. Had-jes-fan-di-ari,  Fi-
 nite el-e-ment la-grange mul-ti-plier for-mu-la-tion
@@ -1059,36 +1054,33 @@ Underfull \hbox (badness 1253) in paragraph at lines 108--116
 -ity,  Acta Me-chan-ica 225 (2013) 195--212.
  []
 
-) [17] (formulation.aux)
-
-LaTeX Warning: There were undefined references.
-
- ) 
+) [17] (formulation.aux) ) 
 Here is how much of TeX's memory you used:
- 24689 strings out of 479163
- 550213 string characters out of 2853998
- 902030 words of memory out of 3000000
- 41798 multiletter control sequences out of 15000+600000
- 457695 words of font info for 133 fonts, out of 8000000 for 9000
+ 24683 strings out of 479163
+ 550145 string characters out of 2853998
+ 891336 words of memory out of 3000000
+ 41795 multiletter control sequences out of 15000+600000
+ 456410 words of font info for 130 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,18n,131p,1166b,1486s stack positions out of 5000i,500n,10000p,200000b,80000s
-{C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rmtt.enc}
-{C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:/U
-sers/tlcfe/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.
-pfb><C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/c
-m/cmr10.pfb><C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts/type1/public/am
-sfonts/cm/cmsy10.pfb><C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts/type1/
-public/mathpazo/fplmbi.pfb><C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts/
-type1/public/mathpazo/fplmr.pfb><C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/mathpazo/fplmri.pfb><C:/Users/tlcfe/AppData/Local/Programs/Mi
-KTeX/fonts/type1/public/lm/lmtt10.pfb><C:/Users/tlcfe/AppData/Local/Programs/Mi
-KTeX/fonts/type1/public/lm/lmtt9.pfb><C:/Users/tlcfe/AppData/Local/Programs/MiK
-TeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/tlcfe/AppData/Loca
-l/Programs/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><C:/Users/tlcfe/AppData/L
-ocal/Programs/MiKTeX/fonts/type1/urw/palatino/uplbi8a.pfb><C:/Users/tlcfe/AppDa
-ta/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8a.pfb><C:/Users/tlcfe/Ap
-pData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on formulation.pdf (17 pages, 344150 bytes).
+{C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts/e
+nc/dvips/lm/lm-rmtt.enc}{C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts/enc
+/dvips/base/8r.enc}<C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts/type1/pu
+blic/amsfonts/cm/cmex10.pfb><C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts
+/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/tlcfe/AppData/Local/Programs/MiKT
+eX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/tlcfe/AppData/Local/Prog
+rams/MiKTeX/fonts/type1/public/mathpazo/fplmbi.pfb><C:/Users/tlcfe/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmr.pfb><C:/Users/tlcfe/AppData
+/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmri.pfb><C:/Users/tlcfe/A
+ppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><C:/Users/tlcfe/A
+ppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt9.pfb><C:/Users/tlcfe/Ap
+pData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/
+Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><
+C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplbi8a.p
+fb><C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8
+a.pfb><C:/Users/tlcfe/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/up
+lri8a.pfb>
+Output written on formulation.pdf (17 pages, 343701 bytes).
 PDF statistics:
  117 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
