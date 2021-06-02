@@ -510,9 +510,7 @@ The linear displacement field can be successfully computed by using CSMQ4 elemen
 
 Since strain field remains constant, no couple stress would be generated in this example. As the result, whether nodal rotations are constrained has no impact on final results. Due to the same reason, any positive numbers can be chosen as the characteristic length $l$.
 \subsection{Ring}
-For the purpose of validation of implemented elements, the plane ring example is modeled. The analytical solution can be seen elsewhere \citep{Hadjesfandiari2011}. The ring shown in \figref{fig:ring} is subjected to plane strain condition with inner radius $r_1=1$, outer radius $r_2=2$, shear modulus $\mu=1$ and Poisson's ratio $\nu=0.4$. The outer boundary is fixed thus translation is zero. A uniform horizontal displacement is applied to the inner boundary while the vertical displacement is constrained. As free couple traction is assumed on both boundaries, the corresponding rotation is not necessarily zero.
-
-Due to symmetry, the finite element model defines the geometry of half of the ring with a structured grid of size \numproduct{25x100}.
+For the purpose of validation of implemented elements, the plane ring example is modeled. The analytical solution can be seen elsewhere \citep{Hadjesfandiari2011}. The ring shown in \figref{fig:ring} is subjected to plane strain condition with inner radius $r_1=1$, outer radius $r_2=2$, shear modulus $\mu=1$ and Poisson's ratio $\nu=0.4$.
 \begin{figure}[H]
 \centering\footnotesize
 \begin{tikzpicture}
@@ -525,24 +523,25 @@ Due to symmetry, the finite element model defines the geometry of half of the ri
 \end{tikzpicture}
 \caption{plane ring subjected to uniform horizontal displacement}\label{fig:ring}
 \end{figure}
-
+The outer boundary is fixed thus translation is zero. A uniform horizontal displacement is applied to the inner boundary while the vertical displacement is constrained. As free couple traction is assumed on both boundaries, the corresponding rotation is not necessarily zero. Due to symmetry, the finite element model defines the geometry of half of the ring with a structured grid of size \numproduct{25x100}. Three elements are tested: CSMT3, CSMQ4 and CSMQ8. The deformed model can be seen in \figref{fig:deformed_ring}.
 \begin{figure}[H]
 \centering\footnotesize
 \includegraphics[width=7cm]{MODEL/RING/MODEL}
-\caption{deformed half ring model}
+\caption{deformed half ring model with $l=\num{0.1}$}\label{fig:deformed_ring}
 \end{figure}
 
-Numerical results of the transverse displacement along the vertical center line is presented in \figref{fig:u_theta} with analytical solution obtained by choosing $l=\num{0.1}$. Three different element types are listed. The numerical solution matches the analytical one well, indicating the implementation is correct. Since no dedicated optimisation is designed to improve the performance apart from the mixed formulation, still a relatively dense mesh grid needs to be used to reduce error. Second order quadrilateral CSMQ8 shows higher accuracy as can be predicted based on experience with the Cauchy framework.
+Numerical results of the transverse displacement along the vertical center line are presented in \figref{fig:u_theta} with analytical solution obtained by using proper $l$. The numerical solution matches the analytical one well, indicating the implementation is correct. Since no dedicated optimisation is designed to improve the performance apart from the mixed formulation, relatively dense mesh grids are required to reduce error. The second order quadrilateral CSMQ8 shows higher accuracy as can be predicted based on experience with the Cauchy framework.
 \begin{figure}[H]
 \centering\footnotesize
 \begin{subfigure}[b]{.49\textwidth}\centering
 \input{PIC/RINGA}
-\caption{$u_\theta$ at vertical center line with $l=\num{0.1}$}\label{fig:u_theta_a}
+\caption{$l=\num{0.1}$}
 \end{subfigure}\hfill
 \begin{subfigure}[b]{.49\textwidth}\centering
 \input{PIC/RINGB}
-\caption{$u_\theta$ at vertical center line with $l=\num{0.5}$}\label{fig:u_theta_b}
+\caption{$l=\num{0.5}$}
 \end{subfigure}
+\caption{$u_\theta$ at vertical center line}\label{fig:u_theta}
 \end{figure}
 \subsection{Membrane--Beam Joint}
 Since the drilling degree of freedom defined in the consistent couple stress theory has an energetic conjugate --- curl of couple stress $\nabla\times\mathbold{\mu}$ as can be seen in \eqsref{eq:functional2}, size dependence can be successfully captured by its nature. In this example, the performance of drilling DoFs is investigated. Although it is possible to directly apply loads to drilling DoFs as 'moments', a membrane--beam joint, which is frequently encountered in structural engineering, is used instead.
