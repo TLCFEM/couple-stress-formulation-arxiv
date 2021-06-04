@@ -1,11 +1,11 @@
-file DRILLING1.supan
+# file DRILLING1.supan
 # file DRILLING2.supan
 # file DRILLING4.supan
 # file DRILLING8.supan
 # file DRILLING16.supan
 # file DRILLING32.supan
 # file DRILLING64.supan
-# file DRILLING128.supan
+file DRILLING128.supan
 
 node 20000 14 10
 
@@ -29,5 +29,7 @@ set symm_mat 1
 analyze
 
 peek node 20000
+
+plot type U2 scale 10 material 1 save A.vtk
 
 exit
