@@ -394,7 +394,7 @@ If \eqsref{eq:functional2} is used, expect for replacing all $\mathbold{\phi}_\m
 \end{gather}
 where $\mathbold{\phi}_\mathbold{k}$ is the interpolation of engineering mean curvature $\mathbold{k}$.
 \subsection{Some Basic Elements}
-Since the incremental form and the elemental stiffness are given in \eqsref{eq:incremental_form} and \eqsref{eq:stiffness}, there is no difficulty in constructing various types of elements such as serendipity quadrilaterals with various nodes, axisymmetric triangle/quadrilateral, eight-node brick/cube, four-node tetrahedron and higher order elements. The procedure follows a standard FEM approach. Two elements named as couple stress triangle and quadrilateral (CSMT3 and CSMQ4) are formulated as examples. Other elements implemented \citep{Chang2021} include: three-node second order triangle (CSMT6), serendipity quadrilaterals with five to eight nodes (CSMQ5, CSMQ6, CSMQ7, CSMQ8).
+Since the incremental form and elemental stiffness are given in \eqsref{eq:incremental_form} and \eqsref{eq:stiffness}, there is no difficulty in constructing various types of elements such as serendipity quadrilaterals with various nodes, axisymmetric triangle/quadrilateral, eight-node brick/cube, four-node tetrahedron and higher order elements. The procedure follows a standard FEM approach. Two elements named as couple stress triangle and quadrilateral (CSMT3 and CSMQ4) are formulated as examples. Other elements implemented \citep{Chang2021} include: three-node second order triangle (CSMT6), serendipity quadrilaterals with five to eight nodes (CSMQ5, CSMQ6, CSMQ7, CSMQ8).
 \subsubsection{An Elementary Membrane Element --- CSMT3}
 Not all couple stress theories support membrane problems, the popular modified couple stress theory \citep{Yang2002} adopts a symmetric couple stress tensor, with which in-plane response cannot be fully decoupled from out-of-plane response. Discussions of relevant topics can be seen elsewhere \citep{Hadjesfandiari2016}. The consistent couple stress theory is free from similar issues, which makes it more appealing for a wide range of general continuum problems.
 
@@ -511,7 +511,7 @@ The linear displacement field can be successfully computed by using CSMQ4 elemen
 Since strain field remains constant, no couple stress would be generated in this example. As the result, whether nodal rotations are constrained has no impact on final results. Due to the same reason, any positive numbers can be chosen as the characteristic length $l$.
 \subsection{Plane Ring}
 For the purpose of validation of implemented elements, the plane ring example is modeled. The analytical solution can be seen elsewhere \citep{Hadjesfandiari2011}. The ring shown in \figref{fig:ring} is subjected to plane strain condition with inner radius $r_1=1$, outer radius $r_2=2$, shear modulus $\mu=1$ and Poisson's ratio $\nu=0.4$.
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering\footnotesize
 \begin{tikzpicture}
 \draw[very thick,FFIXED](0,0)circle(2);
@@ -524,14 +524,14 @@ For the purpose of validation of implemented elements, the plane ring example is
 \caption{plane ring subjected to uniform horizontal displacement}\label{fig:ring}
 \end{figure}
 The outer boundary is fixed thus translation is zero. A uniform horizontal displacement is applied to the inner boundary while the vertical displacement is constrained. As free couple traction is assumed on both boundaries, the corresponding rotation is not necessarily zero. Due to symmetry, the finite element model defines the geometry of half of the ring with a structured grid of size \numproduct{25x100}. Three elements are tested: CSMT3, CSMQ4 and CSMQ8. The deformed model can be seen in \figref{fig:deformed_ring}.
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering\footnotesize
 \includegraphics[width=7cm]{MODEL/RING/MODEL}
 \caption{deformed half ring model with $l=\num{0.1}$}\label{fig:deformed_ring}
 \end{figure}
 
 Numerical results of the transverse displacement $u_\theta$ along the vertical center line are presented in \figref{fig:u_theta} with analytical solution obtained by using proper $l$. The numerical solution matches the analytical one well, indicating the implementation is correct. Since no dedicated optimisation is designed to improve the performance apart from the mixed formulation, relatively dense mesh grids are required to reduce error. The second order quadrilateral CSMQ8 shows higher accuracy as can be predicted based on experience with the Cauchy framework.
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering\footnotesize
 \begin{subfigure}[b]{.49\textwidth}\centering
 \input{PIC/RINGA}
@@ -564,12 +564,21 @@ The model shown in \figref{fig:joint_example} consists of a square panel of size
 \end{tikzpicture}
 \caption{panel joint with attached beam}\label{fig:joint_example}
 \end{figure}
-A unit displacement is applied to the free end of beam and the corresponding resistance is recorded for comparison. The panel is modelled by a structured grid of with various numbers of membrane elements (SGCMQG \citep{Chang2020} and CSMQ4) along each direction while the beam is modelled by an elastic Euler--Bernoulli beam. A mixed action (rotation and translation) is experience by the panel.
+A unit displacement is applied to the free end of beam and the corresponding resistance is recorded for comparison. The panel is modelled by a structured grid of with various numbers of membrane elements (SGCMQG \citep{Chang2020} and CSMQ4) along each direction while the beam is modelled by an elastic Euler--Bernoulli beam. Nodal rotations formulated within the Cauchy theory exhibit significant size dependency. Here, SGCMQ element is used as a reference. A mixed action (rotation and translation) is experienced by the panel.
 
-Three pairs of panel and beam elastic moduli are chosen to represent different deformation patterns. The analysis is performed with characteristic length $l$ ranging from \num[print-unity-mantissa=false]{E3} to \num[print-unity-mantissa=false]{E-3}. Numerical results are presented in \figref{fig:joint}.
+Three pairs of panel and beam elastic moduli are chosen to represent different deformation patterns. The analysis is performed with characteristic length $l$ ranging from \num[print-unity-mantissa=false]{E3} to \num[print-unity-mantissa=false]{E-3}. Numerical results are presented in \figref{fig:joint}. The following observations can be made.
+\begin{enumerate}
+\item When either $l$ or $E_p/E_b$ is large, the panel is sufficiently rigid so that deformation is mainly contributed by the beam, resulting in a cantilever like structure, the corresponding resistance is close to the upper bound \num{3.9063} computed via a cantilever model.
+\item For Cauchy theory based elements, the corresponding rotational stiffness decreases (thus deformation localises) with refined meshes. On the contrary, CSMQ4 is less sensitive to mesh sizes. With fixed $l$, the variation of resistance generated by CSMQ4 is significantly smaller than that of SGCMQG.
+\item With GCMQ4, mesh refinement has the most noticeable impact on numerical results when $l=\numrange{0.1}{1}$.
+\end{enumerate}
 
-Nodal rotations formulated within the Cauchy theory exhibit significant size dependency. Here, SGCMQ element is used as a reference. The corresponding rotational stiffness decreases (thus deformation localises) with refined meshes. On the contrary, CSMQ4 is less sensitive to mesh sizes.
-\begin{figure}[H]
+It can be further inferred that with sufficient number of elements, both SGCMQG and CSMQ4 with a small $l$ would converge to the same solution in which deformation is localised in a small region around the top right corner.
+
+Given that GCMQ elements can converge to analytical solutions as can be seen in the previous example, it is no doubt that the consistent couple stress theory provides an appealing (and maybe more realistic) approach when it comes to similar problems involving in-plane rotations.
+
+However, the determination of characteristic length $l$ could be a challenge task. The corresponding experimental theories shall be investigated in future.
+\begin{figure}[ht]
 \centering\footnotesize
 \begin{subfigure}[b]{.99\textwidth}\centering
 \input{PIC/JOINTA}
