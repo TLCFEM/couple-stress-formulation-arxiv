@@ -140,7 +140,7 @@ By performing integration by parts and applying the divergence theorem, one can 
 -\dfrac{1}{2}\int_V\epsilon_{ijk}\beta_i\delta\theta_{k,j}~\md{V}=\dfrac{1}{2}\int_V\epsilon_{ijk}\beta_{i,j}\delta\theta_k~\md{V}-\dfrac{1}{2}\int_S\epsilon_{ijk}\beta_in_j\delta\theta_k~\md{S},\\
 -\dfrac{1}{2}\int_V\epsilon_{ijk}\gamma_i\delta{}u_{k,j}~\md{V}=\dfrac{1}{2}\int_V\epsilon_{ijk}\gamma_{i,j}\delta{}u_k~\md{V}-\dfrac{1}{2}\int_S\epsilon_{ijk}\gamma_in_j\delta{}u_k~\md{S}.
 \end{gather}
-Here $S$ is not further refined for simplicity.
+Here the boundary $S$ is not further refined for simplicity.
 
 Inserting the above expressions back to \eqsref{eq:variation} gives
 \begin{gather}
@@ -546,7 +546,7 @@ Numerical results of the transverse displacement $u_\theta$ along the vertical c
 \subsection{Membrane--Beam Joint}
 From the previous two examples, it can be concluded that the formulation developed in this work and the corresponding implementation are both correct. Since the drilling degree of freedom defined in the consistent couple stress theory has an energetic conjugate --- curl of couple stress $\nabla\times\mathbold{\mu}$ as can be seen in \eqsref{eq:functional2}, size dependence can be successfully captured by its nature. In this example, the performance of drilling DoFs is investigated. Although it is possible to directly apply loads to drilling DoFs as 'moments', a membrane--beam joint, which is frequently encountered in structural engineering, is used instead.
 
-The model shown in \figref{fig:joint_example} consists of a square panel of size \numproduct{10x10} and a beam of length \num{4}. The height of beam section is \num{1} while the thickness along $z$-axis is chosen to be unity.
+The model shown in \figref{fig:joint_example} is subjected to plane stress condition and consists of a square panel of size \numproduct{10x10} and a beam of length \num{4}. The height of beam section is \num{1} while the thickness along $z$-axis is chosen to be unity.
 \begin{figure}[htb]
 \centering\footnotesize
 \begin{tikzpicture}
@@ -577,7 +577,7 @@ It can be further inferred that with sufficient number of elements, both SGCMQG 
 
 Given that GCMQ elements can converge to analytical solutions as can be seen in the previous example, it is no doubt that the consistent couple stress theory provides an appealing (and maybe more realistic) approach when it comes to similar problems involving in-plane rotations.
 
-However, the determination of characteristic length $l$ could be a challenge task. The corresponding experimental theories shall be investigated in future.
+However, the determination of characteristic length $l$ could be a challenge task. The corresponding experimental theories shall be investigated in future. With properly defined $l$, it is believed that the implemented couple stress elements can model in-plane rotation with acceptable accuracy. As discussed by others \citep[e.g.,]{Darrall2013}, a large $l$ would suppress bending action, resulting in a shear dominated deformation pattern.
 \begin{figure}[ht]
 \centering\footnotesize
 \begin{subfigure}[b]{.99\textwidth}\centering
@@ -597,7 +597,7 @@ However, the determination of characteristic length $l$ could be a challenge tas
 \subsection{Inelastic Response}
 Noting that in \eqsref{eq:stored_energy} the stored energy function can be split into two parts and each is independent from the other, it would be interesting to investigate whether objective results can be obtained for softening response with the assist of couple stress.
 
-It is simply assumed that the couple part of $W$ remains 'elastic' so that $\eta$ is a constant.
+In this example, it is simply assumed that the couple part of $W$ remains 'elastic' so that $\eta$ is a constant.
 \section{Conclusions}
 In this work, based on the consistent couple stress theory, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated accordingly for problems with both linear and nonlienar materials, although it is still difficult to further investigate the performance of the couple stress theory beyond elasticity for the moment, given that most existing constitutive models are developed based on the Cauchy theory. It would be interesting to see work in that regard in future.
 
