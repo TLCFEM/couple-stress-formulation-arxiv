@@ -463,7 +463,7 @@ Given that the displacement interpolation only uses four modes $\begin{bmatrix}
 1&x&y&xy
 \end{bmatrix}$, one can further define internal degrees of freedom to complete the second order interpolation so that performance can be improved.
 \section{Numerical Examples}
-Given that some preliminary results have been given by \citet{Darrall2013,Pedgaonkar2021}, we focus on the performance of drilling degrees of freedom offered by the consistent couple stress theory in this work.
+Given that some preliminary results have been given by \citet{Darrall2013,Pedgaonkar2021}, we focus on the performance of drilling degrees of freedom offered by the consistent couple stress theory and the objectivity of the corresponding numerical results in this work.
 \subsection{Patch Test}
 As a convention, the classic constant strain patch test defines four elements in a rectangular panel as shown in \figref{fig:csmq_patch} is firstly presented.
 \begin{figure}[htb]
@@ -576,8 +576,6 @@ Three pairs of panel and beam elastic moduli are chosen to represent different d
 It can be further inferred that with sufficient number of elements, both SGCMQG and CSMQ4 with a small $l$ would converge to the same solution in which deformation is localised in a small region around the top right corner.
 
 Given that GCMQ elements can converge to analytical solutions as can be seen in the previous example, it is no doubt that the consistent couple stress theory provides an appealing (and maybe more realistic) approach when it comes to similar problems involving in-plane rotations.
-
-However, the determination of characteristic length $l$ could be a challenge task. The corresponding experimental theories shall be investigated in future. With properly defined $l$, it is believed that the implemented couple stress elements can model in-plane rotation with acceptable accuracy. As discussed by others \citep[e.g.,]{Darrall2013}, a large $l$ would suppress bending action, resulting in a shear dominated deformation pattern.
 \begin{figure}[ht]
 \centering\footnotesize
 \begin{subfigure}[b]{.99\textwidth}\centering
@@ -594,12 +592,44 @@ However, the determination of characteristic length $l$ could be a challenge tas
 \end{subfigure}
 \caption{beam end resistance subjected to unit vertical displacement}\label{fig:joint}
 \end{figure}
+
+However, the determination of characteristic length $l$ could be a challenge task. The corresponding experimental theories shall be investigated in future. With properly defined $l$, it is believed that the implemented couple stress elements can model in-plane rotation with acceptable accuracy. As discussed by others \citep[e.g.,][]{Darrall2013}, a large $l$ would suppress bending action, resulting in a shear dominated deformation pattern.
 \subsection{Inelastic Response}
 Noting that in \eqsref{eq:stored_energy} the stored energy function can be split into two parts and each is independent from the other, it would be interesting to investigate whether objective results can be obtained for softening response with the assist of couple stress.
 
-In this example, it is simply assumed that the couple part of $W$ remains 'elastic' so that $\eta$ is a constant.
+\begin{figure}[htb]
+\centering\footnotesize
+\begin{tikzpicture}
+\def\a{2.0};\def\b{\a}
+\draw[very thick](-\b,-\a)rectangle(\b,\a)(0,0)circle(\a/4);
+\draw[|<->|](-\b,-1.3*\a)--++(2*\b,0)node[midway,fill=white]{$H=\num{10}$};
+\draw[|<->|](-1.5*\b,-\a)--++(0,2*\a)node[midway,fill=white,rotate=90]{$L=\num{10}$};
+%\draw[dashed](0,0)circle(\a);
+\foreach\x in{-2,-1.5,-1,-.5,0,.5,1,1.5,2}{
+\draw[->](\b,\x)--++(.5,0);
+}
+\HingeSupport[-90]{-\b,-\a};
+\RollerSupport[-90]{-\b,-.5*\a};
+\RollerSupport[-90]{-\b,0};
+\RollerSupport[-90]{-\b,.5*\a};
+\RollerSupport[-90]{-\b,\a};
+\node at(1.4*\b,0){$u$};
+\draw[|<->|](-\a/1.8,-\a/4)--++(0,\a/2)node[midway,fill=white,inner sep=0]{$2a=2$};
+\CoorOrigin{0,0}
+\end{tikzpicture}
+\caption{square plate with circular hole}\label{fig:plate_with_hole}
+\end{figure}
+In this example, it is simply assumed that the couple part of $W$ remains 'elastic' so that $\eta$ is a constant. The uniform extension of a square plate with a hole of unit radius, depicted in \figref{fig:plate_with_hole}, subjected to plane stress condition is simulated with a softening isotropic J2 plasticity model. The following material parameters are chosen: elastic modulus $E=\num{1000}$, Poisson's ratio $\nu=\num{0.2}$, yield stress $\sigma_y=\num{1}$, hardening ratio $b=\num{-0.03}$. The thickness $t$ is set to unity.
+
+
+\begin{figure}[ht]
+\centering\footnotesize
+\input{PIC/PLATEWITHHOLE}
+\caption{a quarter of plane simulated with three different meshes}
+\end{figure}
+
 \section{Conclusions}
-In this work, based on the consistent couple stress theory, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated accordingly for problems with both linear and nonlienar materials, although it is still difficult to further investigate the performance of the couple stress theory beyond elasticity for the moment, given that most existing constitutive models are developed based on the Cauchy theory. It would be interesting to see work in that regard in future.
+In this work, based on the consistent couple stress theory, a mixed variational theorem is developed with six independent fields. Finite elements of various types can be formulated accordingly for problems with both linear and nonlinear materials, although it is still difficult to further investigate the performance of the couple stress theory beyond elasticity for the moment, given that most existing constitutive models are developed based on the Cauchy theory. It would be interesting to see work in that regard in future.
 
 The proposed elements have been implemented in \texttt{suanPan} \citep{Chang2021}. Sample model scripts can be found online\footnote{Link to the repository would be added after acceptance}.
 \bibliography{S}
