@@ -12,7 +12,7 @@
 \newcommand*{\md}[1]{\mathrm{d}#1}
 \newcommand*{\pfrac}[2]{\dfrac{\partial#1}{\partial#2}}
 \tikzset{FFIXED/.style={postaction={draw,decorate,decoration={border,angle=-60,amplitude=2mm,segment length=1.9mm}}}}
-\onehalfspacing
+\onehalfspacing\doublespacing
 \begin{document}
 \begin{abstract}
 This work presents the finite element formulation based on a six-field variational principle that incorporates the consistent couple stress theory. A simple, efficient, local iteration free solving procedure that covers both elastic and inelastic materials is derived. With proper interpolations, membrane elements of various nodes are proposed. The implemented finite elements are used to conduct numerical experiments to investigate the performance of the in-plane drilling degrees of freedom introduced by the consistent couple stress theory. The mesh dependency issue is also studied. It is shown that the consistent couple stress theory provides an objective definition of rotation but additional regularisation (or other techniques) is required to overcome mesh/size dependency in fracture/damage related problems.
@@ -32,9 +32,9 @@ mesh dependency
 \section{Introduction}
 The Cauchy continuum mechanics has received wide recognition over the years and becomes the standard framework for many engineering disciplines. For simple, idealised problems, analytical solutions can be constructed \citep[see, e.g.,][]{Timoshenko2010} with proper assumptions. The Cauchy theory also provides theoretical basis for the extensively used finite element methods. However, due to the lack of proper measure of rotation/curvature (and its force/stress conjugate), the Cauchy theory is incapable of describing the size effect, which is frequently seen in many materials at various scales (from nano to macro) and plays a vital role in fracture mechanics \citep{Bazant1984}. Besides, certain difficulties (e.g., kinematic compatibility among different types of elements) are encountered in problems involving elements with/without rotation field.
 
-To overcome the shortcomings of the Cauchy theory, researchers have been investigating alternatives, which are often called nonlocal theories. Recent reviews on relevant topics can be seen elsewhere \citep{Shaat2020}. Among many different proposals, although disputed by others \citep{Neff2016}, the consistent couple stress theory \citep{Hadjesfandiari2011} provides a promising framework by introducing curvature and couple stress vectors into the formulation. For further reviews on theoretical developments and experimental investigations regarding couple stress theory, interested readers can refer to the work by \citet{Pedgaonkar2021} and the references therein.
+To overcome the shortcomings of the Cauchy theory, researchers have been investigating alternatives, which are often called nonlocal theories. Recent reviews on relevant topics can be seen elsewhere \citep{Maugin2010,Altenbach2011,Srinivasa2017,Shaat2020}. Among many different proposals, although disputed by others \citep{Neff2016}, the consistent couple stress theory \citep{Hadjesfandiari2011} provides a promising framework by introducing curvature and couple stress vectors into the formulation. For further reviews on theoretical developments and experimental investigations regarding couple stress theory, interested readers can refer to the work by \citet{Pedgaonkar2021} and the references therein.
 
-Due to the additional curvature introduced, nonlocal theories allow construction of both in-plane and out-of-plane rotation field. It is no doubt that in-plane rotations can be constructed within the Cauchy framework. Early attempts date back to the work by \citet{Allman1984}. Recent research work on membrane elements with in-plane drilling degrees of freedom is reviewed by \citet{Boutagouga2020}. However, the drilling degree of freedom defined within Cauchy theory shows significant mesh dependency, which limits its application in modelling problems involving, for example, both membrane and beam elements \citep{Chang2020}. This is, interestingly, not well discussed by researchers and drilling DoFs serve more like additional auxiliary DoFs to enrich displacement field.
+Due to the additional curvature introduced, nonlocal theories allow construction of both in-plane and out-of-plane rotation field. It is no doubt that in-plane rotations can be constructed within the Cauchy framework. Early attempts date back to the work by \citet{Allman1984}. Recent research work on membrane elements with in-plane drilling degrees of freedom is reviewed by \citet{Boutagouga2020}. However, the drilling degree of freedom defined within Cauchy theory shows significant mesh dependency, which limits its application in modelling problems involving, for example, both membrane and beam elements \citep{Chang2020}. This is, interestingly, not well discussed by researchers and drilling DoFs serve more like additional auxiliary DoFs to enrich displacement field in current elements.
 
 In the couple stress theory, although the corresponding rigid body like rotation measures are defined as functions of translational displacements, by using either the Lagrangian multiplier method or the penalty function method, it is possible to interpolate rotation fields independently. This provides additional degrees of freedom which can be used to construct, for examples, shell and membrane elements with in-plane rotations. It would be interesting to investigate how the drilling degrees of freedom defined in the consistent couple stress theory would perform subjected to moment/rotation like loads and whether the associated mesh size dependency could be alleviated.
 
@@ -397,7 +397,7 @@ If \eqsref{eq:functional2} is used, except for replacing all $\mathbold{\phi}_\m
 \end{gather}
 where $\mathbold{\phi}_\mathbold{k}$ is the interpolation of engineering mean curvature $\mathbold{k}$.
 \subsection{Some Basic Elements}
-\subsubsection{An Elementary Membrane Element --- CSMT3}
+\subsubsection{An Elementary Triangular Membrane Element --- CSMT3}
 Not all couple stress theories support membrane problems, the popular modified couple stress theory \citep{Yang2002} adopts a symmetric couple stress tensor, with which in-plane response cannot be fully decoupled from out-of-plane response. Discussions of relevant topics can be seen elsewhere \citep{Hadjesfandiari2016}. The consistent couple stress theory is free from similar issues, which makes it more appealing for a wide range of general continuum problems.
 
 The simplest membrane element may be the three-node triangular element. For plane stress problem, given the constitutive equation between mean curvature vector $\kappa_i$ and couple stress vector $\mu_i$ occupies the form shown in \eqsref{eq:constitutive_couple}, it is clear that in-plane and out-of-plane actions are decoupled. Thus six fields reduce to the following Voigt forms.
@@ -456,17 +456,19 @@ Similarly, the aforementioned formulation can be applied to four-node quadrilate
 with $N_i=\left(1+\xi_i\xi\right)\left(1+\eta_i\eta\right)/4$ where $\xi$ and $\eta$ are parent coordinates while $\xi_i$ and $\eta_i$ are values of parent coordinates of target node. Again, $\chi$ can be any of $x$, $y$, $u_x$, $u_y$, $\theta_z$, $\kappa_x$, $\kappa_y$, $\mu_x$ and $\mu_y$. A complete first order interpolation can be chosen for both strain and stress.
 \begin{gather}
 \mathbold{\phi}_\mathbold{\varepsilon}=\mathbold{\phi}_\mathbold{\sigma}=\begin{bmatrix}
-1&\cdot&\cdot&\cdot&y&\cdot&x\\\cdot&1&\cdot&x&\cdot&y&\cdot\\\cdot&\cdot&1&\cdot&\cdot&-x&-y
+1&\cdot&\cdot&x&\cdot&\cdot&y&\cdot&\cdot\\
+\cdot&1&\cdot&\cdot&x&\cdot&\cdot&y&\cdot\\
+\cdot&\cdot&1&\cdot&\cdot&x&\cdot&\cdot&y
 \end{bmatrix}.
 \end{gather}
-It shall be mentioned that the stress defined above satisfies the Airy stress function, however, in the consistent couple stress theory, $\mathbold{\sigma}$ is not only governed by the Airy stress function but also an additional stress function \citep{Hadjesfandiari2011} from which $\mathbold{\mu}$ can be derived. Based on previous discovery \citep{Chang2019}, $\mathbold{\phi}_\mathbold{\varepsilon}$ can be further modified to include the Poisson effect, which overcomes (near) incompressible problems. A \numproduct{2x2} Gauss quadrature is used for numerical integration, this element is denoted as couple stress mixed quadrilateral (CSMQ4) element.
+It shall be mentioned that in the consistent couple stress theory, $\mathbold{\sigma}$ is not only governed by the Airy stress function but also an additional stress function \citep{Hadjesfandiari2011} from which $\mathbold{\mu}$ can be derived. Based on the previous discovery \citep{Chang2019}, $\mathbold{\phi}_\mathbold{\varepsilon}$ can be further modified to include the Poisson effect, which overcomes (near) incompressible problems. A \numproduct{2x2} Gauss quadrature is used for numerical integration, this element is denoted as couple stress mixed quadrilateral (CSMQ4) element.
 
 Given that the displacement interpolation only uses four modes $\begin{bmatrix}
 1&x&y&xy
-\end{bmatrix}$, one can further define internal degrees of freedom to complete the second order interpolation so that performance can be improved.
+\end{bmatrix}$, one can further define internal degrees of freedom to complete the second order interpolation so that performance can be potentially improved.
 \subsection{Other Elements}
 Since the incremental form and elemental stiffness are given in \eqsref{eq:incremental_form} and \eqsref{eq:stiffness}, there is no difficulty in constructing various types of elements such as serendipity quadrilaterals with various nodes, axisymmetric triangle/quadrilateral, eight-node brick/cube, four-node tetrahedron and higher order elements. The procedure follows a standard FEM approach. Apart from the above two elements (CSMT3 and CSMQ4), other elements implemented \citep{Chang2021} include: six-node second order triangle (CSMT6), serendipity quadrilaterals with five to eight nodes (CSMQ5, CSMQ6, CSMQ7, CSMQ8). The following table summaries the specifications of those elements. The quadrature schemes listed are the ones used in implementation, they can be replaced by other schemes depending on different interpolations.
-\begin{table}[htbp]
+\begin{table}[H]
 \centering\footnotesize\caption{summary of implemented elements}\label{tab:summary}
 \begin{tabular}{m{2cm}m{2cm}m{6cm}m{3cm}}
 	\toprule
@@ -483,7 +485,9 @@ Since the incremental form and elemental stiffness are given in \eqsref{eq:incre
 \section{Numerical Examples}
 Given that some preliminary results have been given by \citet{Darrall2013,Pedgaonkar2021}, numerical examples presented in this work focus on the performance of drilling degrees of freedom offered by the consistent couple stress theory and the size dependence related topics.
 \subsection{Patch Test}
-As a convention, the classic constant strain patch test defines four elements in a rectangular panel as shown in \figref{fig:csmq_patch} is firstly presented.
+As a convention, the classic constant strain patch test defines four elements in a rectangular panel as shown in \figref{fig:csmq_patch} is firstly presented. The linear displacement field can be successfully computed by using CSMQ4 elements with arbitrary location of the middle node.
+
+Since strain field remains constant, no couple stress would be generated in this example. As the result, whether nodal rotations are constrained has no impact on final results. Due to the same reason, any positive numbers can be chosen as the characteristic length $l$.
 \begin{figure}[htb]
 \centering\scriptsize
 \begin{tikzpicture}[scale=1]
@@ -524,9 +528,6 @@ As a convention, the classic constant strain patch test defines four elements in
 \end{tikzpicture}
 \caption{constant strain patch test}\label{fig:csmq_patch}
 \end{figure}
-The linear displacement field can be successfully computed by using CSMQ4 elements with arbitrary location of the middle node.
-
-Since strain field remains constant, no couple stress would be generated in this example. As the result, whether nodal rotations are constrained has no impact on final results. Due to the same reason, any positive numbers can be chosen as the characteristic length $l$.
 \subsection{Plane Ring}
 For the purpose of validation of implemented elements, the plane ring example is modeled. The analytical solution can be seen elsewhere \citep{Hadjesfandiari2011}. The ring shown in \figref{fig:ring} is subjected to plane strain condition with inner radius $r_1=1$, outer radius $r_2=2$, shear modulus $\mu=1$ and Poisson's ratio $\nu=0.4$.
 \begin{figure}[htb]
@@ -559,7 +560,7 @@ Numerical results of the transverse displacement $u_\theta$ along the vertical c
 \input{PIC/RINGB}
 \caption{$l=\num{0.5}$}
 \end{subfigure}
-\caption{$u_\theta$ at vertical center line}\label{fig:u_theta}
+\caption{$u_\theta$ along the vertical center line}\label{fig:u_theta}
 \end{figure}
 The numerical solution matches the analytical one well, indicating the implementation is correct. Since no dedicated optimisation is designed to improve the performance apart from the mixed formulation, relatively dense mesh grids are required to reduce error. The second order quadrilateral CSMQ8 shows higher accuracy as can be predicted based on experience with the Cauchy framework.
 \subsection{Membrane--Beam Joint}
@@ -597,7 +598,7 @@ It can be further inferred that with sufficient number of elements, both SGCMQG 
 Given that SGCMQG elements can converge to analytical solutions as can be seen in the previous example, it is no doubt that the consistent couple stress theory provides an appealing (and maybe more realistic) approach when it comes to similar problems involving in-plane rotations.
 
 However, the determination of characteristic length $l$ could be a challenge task. The corresponding experimental theories shall be investigated in future. With properly defined $l$, it is believed that the implemented couple stress elements can model in-plane rotation with acceptable accuracy. As discussed by others \citep[e.g.,][]{Darrall2013}, a large $l$ would suppress bending action, resulting in a shear dominated deformation pattern.
-\begin{figure}[htb]
+\begin{figure}[H]
 \centering\footnotesize
 \begin{subfigure}[b]{.99\textwidth}\centering
 \input{PIC/JOINTA}
@@ -639,7 +640,7 @@ Noting that in \eqsref{eq:stored_energy} the stored energy function can be split
 \end{tikzpicture}
 \caption{square plate with circular hole}\label{fig:plate_with_hole}
 \end{figure}
-In this example, it is simply assumed that the couple part of $W$ remains 'elastic' so that $\eta$ is a constant. Such an assumption is, at least, reasonable for some polymers, interested readers can refer to, for example, the work by \citet{Alisafaei2016} and the references therein. The uniform extension of a square plate with a hole of unit radius, depicted in \figref{fig:plate_with_hole}, subjected to plane stress condition is simulated with a softening isotropic J2 plasticity model. The following material parameters are chosen: elastic modulus $E=\num{1000}$, Poisson's ratio $\nu=\num{0.2}$, yield stress $\sigma_y=\num{1}$, hardening ratio $b=\num{-0.03}$. The thickness $t$ is set to unity.
+In this example, it is simply assumed that the couple part of $W$ remains 'elastic' so that $\eta$ is a constant. Such an assumption is, at least, reasonable for some polymers, interested readers can refer to, for example, the work by \citet{Alisafaei2016} and the references therein. The uniform extension of a square plate with a hole of unit radius, depicted in \figref{fig:plate_with_hole}, subjected to plane stress condition is simulated with a softening isotropic J2 plasticity model. The following material parameters are chosen: elastic modulus $E=\num{1000}$, Poisson's ratio $\nu=\num{0.2}$, yield stress $\sigma_y=\num{1}$, hardening ratio $b=\num{-0.02}$. The thickness $t$ is set to unity.
 %
 %
 %\begin{figure}[ht]
@@ -648,25 +649,62 @@ In this example, it is simply assumed that the couple part of $W$ remains 'elast
 %\caption{a quarter of plane simulated with three different meshes}
 %\end{figure}
 
-From the last example, one could infer that the plate would exhibit a uniform tension like response with sufficiently large $l$ values, as in which case the last term in \eqsref{eq:stored_energy} serves as a penalty term that suppresses bending action. As can be seen in \figref{fig:plate_resistance_large_l}, with $l=\num{5}$, the displacement--resistance response of the plate resembles the strain--stress constitutive relationship.
+From the last example, one could infer that the plate would exhibit a uniform tension like response with sufficiently large $l$ values, as in which case the last term in \eqsref{eq:stored_energy} serves as a penalty term that suppresses bending action. As can be seen in \figref{fig:plate_resistance_large_l}, with $l=\num{2}$, the displacement--resistance response of the plate resembles the strain--stress constitutive relationship regardless of element density.
 \begin{figure}[ht]
 \centering\footnotesize
-\caption{resistance}\label{fig:plate_resistance_large_l}
+\input{PIC/PLATEA}
+\caption{horizontal resistance of plate with various numbers of elements per edge and $l=\num{2}$}\label{fig:plate_resistance_large_l}
 \end{figure}
 
 However, mesh dependency cannot be resolved by the consistent couple stress theory, at least under the assumption that the couple part is `elastic'. For moderate and small $l$ values, different mesh sizes lead to different softening curves.
 \begin{figure}[ht]
 \centering\footnotesize
-\caption{resistance}\label{fig:plate_resistance_small_l}
+\input{PIC/PLATEB}
+\caption{horizontal resistance of plate with various numbers of elements per edge and $l=\num{0.2}$}\label{fig:plate_resistance_small_l}
 \end{figure}
-Given that the consistent couple stress theory itself does not provide any regularisation of material response, such results can be predicted. A combination of couple stress theory and phase field theory \citep{Bourdin2008} can be an appealing approach in terms of modelling mesh objective softening response.
+
+The distribution of equivalent plastic strain (PEEQ in ABAQUS notation) is depicted in \figref{fig:peeq16} and \figref{fig:peeq32}.
+\begin{figure}[H]
+\centering\footnotesize
+\begin{subfigure}[b]{.33\textwidth}\centering
+\includegraphics[width=4cm]{PIC/P1640}
+\caption{$u=\num{0.08}$}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{.33\textwidth}\centering
+\includegraphics[width=4cm]{PIC/P1670}
+\caption{$u=\num{0.14}$}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{.33\textwidth}\centering
+\includegraphics[width=4cm]{PIC/P16100}
+\caption{$u=\num{0.20}$}
+\end{subfigure}
+\caption{distribution of equivalent plastic strain (16 elements per edge)}\label{fig:peeq16}
+%\end{figure}
+%\begin{figure}[ht]
+%\centering\footnotesize
+\begin{subfigure}[b]{.33\textwidth}\centering
+\includegraphics[width=4cm]{PIC/P3240}
+\caption{$u=\num{0.08}$}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{.33\textwidth}\centering
+\includegraphics[width=4cm]{PIC/P3270}
+\caption{$u=\num{0.14}$}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{.33\textwidth}\centering
+\includegraphics[width=4cm]{PIC/P32100}
+\caption{$u=\num{0.20}$}
+\end{subfigure}
+\caption{distribution of equivalent plastic strain (32 elements per edge)}\label{fig:peeq32}
+\end{figure}
+Localisation of deformation, which cannot be alleviated by the introduction of couple stress field, can be identified with denser mesh grids. As the result, mesh objective results can hardly be obtained if $l$ is not large enough. Given that the consistent couple stress theory itself does not provide any regularisation of material response, such results can be predicted. A combination of couple stress theory and phase field theory \citep{Bourdin2008} can be an appealing approach in terms of modelling mesh objective softening response.
 \section{Conclusions}
 Based on the consistent couple stress theory, a mixed variational theorem with six independent fields is developed in this work. A simple, local iteration free solution strategy is proposed and examples of membrane element formulation, including three-node triangle CSMT3 and four-node quadrilateral CSMQ4, are presented. Other elements can be constructed following a similar procedure. Although the majority of existing constitutive models are developed based on the Cauchy theory, the proposed formulation is sufficiently versatile to accommodate both elastic and inelastic materials.
 
 The performance of drilling degrees of freedom is evaluated via numerical examples. It is shown that the couple stress theory offers a better definition of rotation (in-plane rotation in particular) which is significantly less sensitive to mesh grid size.
 
-From the inelastic example, it could be concluded that the introduction of couple stress alone is not complete to address the mesh dependency issue in softening/fracture related problems. If $l$ is strictly defined as a material constant, let it be called material characteristic length, then there exists a mesh characteristic length that shall be used to regularise material response to achieve an objective energy release rate.
+From the inelastic example, it could be concluded that the introduction of couple stress alone is not complete to address the mesh dependency issue in softening/fracture related problems. If $l$ is strictly defined as a material constant, let it be called material characteristic length, then there exists a mesh characteristic length that shall be used to regularise material response to achieve an objective energy release rate. Since they serve different purposes, they can hardly be the same quantity.
 
 The proposed elements have been implemented in \texttt{suanPan} \citep{Chang2021}. Sample model scripts can be found online\footnote{Link to the repository would be added after acceptance}.
+
 \bibliography{S}
 \end{document}
