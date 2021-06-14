@@ -652,19 +652,20 @@ In this example, it is simply assumed that the couple part of $W$ remains 'elast
 From the last example, one could infer that the plate would exhibit a uniform tension like response with sufficiently large $l$ values, as in which case the last term in \eqsref{eq:stored_energy} serves as a penalty term that suppresses bending action. As can be seen in \figref{fig:plate_resistance_large_l}, with $l=\num{2}$, the displacement--resistance response of the plate resembles the strain--stress constitutive relationship regardless of element density.
 \begin{figure}[ht]
 \centering\footnotesize
+\begin{subfigure}[b]{.48\textwidth}\centering
 \input{PIC/PLATEA}
-\caption{horizontal resistance of plate with various numbers of elements per edge and $l=\num{2}$}\label{fig:plate_resistance_large_l}
-\end{figure}
-
-However, mesh dependency cannot be resolved by the consistent couple stress theory, at least under the assumption that the couple part is `elastic'. For moderate and small $l$ values, different mesh sizes lead to different softening curves.
-\begin{figure}[ht]
-\centering\footnotesize
+\caption{$l=\num{2}$}\label{fig:plate_resistance_large_l}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{.48\textwidth}\centering
 \input{PIC/PLATEB}
-\caption{horizontal resistance of plate with various numbers of elements per edge and $l=\num{0.2}$}\label{fig:plate_resistance_small_l}
+\caption{$l=\num{0.2}$}\label{fig:plate_resistance_small_l}
+\end{subfigure}
+\caption{horizontal resistance of plate with various numbers of elements per edge}
 \end{figure}
+However, mesh dependency cannot be resolved by the consistent couple stress theory, at least under the assumption that the couple part is `elastic'. For moderate and small $l$ values, different mesh sizes lead to different softening curves.
 
 The distribution of equivalent plastic strain (PEEQ in ABAQUS notation) is depicted in \figref{fig:peeq16} and \figref{fig:peeq32}.
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering\footnotesize
 \begin{subfigure}[b]{.33\textwidth}\centering
 \includegraphics[width=4cm]{PIC/P1640}
@@ -700,7 +701,7 @@ Localisation of deformation, which cannot be alleviated by the introduction of c
 \section{Conclusions}
 Based on the consistent couple stress theory, a mixed variational theorem with six independent fields is developed in this work. A simple, local iteration free solution strategy is proposed and examples of membrane element formulation, including three-node triangle CSMT3 and four-node quadrilateral CSMQ4, are presented. Other elements can be constructed following a similar procedure. Although the majority of existing constitutive models are developed based on the Cauchy theory, the proposed formulation is sufficiently versatile to accommodate both elastic and inelastic materials.
 
-The performance of drilling degrees of freedom is evaluated via numerical examples. It is shown that the couple stress theory offers a better definition of rotation (in-plane rotation in particular) which is significantly less sensitive to mesh grid size.
+The performance of drilling degrees of freedom is evaluated via numerical examples. It is shown that the couple stress theory offers a better definition of rotation (in-plane rotation in particular) which is significantly less sensitive to mesh grid size. This allows analysts to perform numerical analysis of structures consists of various types of degrees of freedom. Once $l$ is properly determined, more accurate results can be obtained via the couple stress theory.
 
 From the inelastic example, it could be concluded that the introduction of couple stress alone is not complete to address the mesh dependency issue in softening/fracture related problems. If $l$ is strictly defined as a material constant, let it be called material characteristic length, then there exists a mesh characteristic length that shall be used to regularise material response to achieve an objective energy release rate. Since they serve different purposes, they can hardly be the same quantity.
 
