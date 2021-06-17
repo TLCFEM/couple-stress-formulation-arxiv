@@ -15,7 +15,7 @@
 \onehalfspacing\doublespacing
 \begin{document}
 \begin{abstract}
-This work presents the finite element formulation based on a six-field variational principle that incorporates the consistent couple stress theory. A simple, efficient, local iteration free solving procedure that covers both elastic and inelastic materials is derived. With proper interpolations, membrane elements of various nodes are proposed. The implemented finite elements are used to conduct numerical experiments to investigate the performance of the in-plane drilling degrees of freedom introduced by the consistent couple stress theory. The mesh dependency issue is also studied. It is shown that the consistent couple stress theory provides an objective definition of rotation but additional regularisation (or other techniques) is required to overcome mesh/size dependency in fracture/damage related problems.
+This work presents a finite element formulation based on a six-field variational principle that incorporates the consistent couple stress theory. A simple, efficient and local iteration free solving procedure that covers both elastic and inelastic materials is derived. With proper interpolations, membrane elements of various nodes are proposed. The implemented finite elements are used to conduct numerical experiments to investigate the performance of the in-plane drilling degrees of freedom introduced by the consistent couple stress theory. The mesh dependency issue is also studied. It is shown that the consistent couple stress theory provides an objective definition of rotation but additional regularisation (or other techniques) is required to overcome mesh/size dependency in fracture/damage related problems.
 \end{abstract}
 \begin{keyword}
 mixed formulation\sep
@@ -24,9 +24,10 @@ size dependency\sep
 mesh dependency
 \end{keyword}
 \begin{frontmatter}
-\title{Mixed formulation of finite elements based on the consistent couple stress theory and its mesh dependency}
+\title{New mixed formulation and mesh dependency of finite elements based on the consistent couple stress theory}
 \author[]{T.~L.~Chang\corref{tlc}}\ead{tlcfem@gmail.com}
-%\cortext[tlc]{corresponding author}
+\author[]{C.-L.~Lee}
+\cortext[tlc]{corresponding author}
 \address{Department of Civil and Natural Resources Engineering, University of Canterbury, Christchurch, New Zealand, 8041.}
 \end{frontmatter}
 \section{Introduction}
@@ -36,11 +37,13 @@ To overcome the shortcomings of the Cauchy theory, researchers have been investi
 
 Due to the additional curvature introduced, nonlocal theories allow construction of both in-plane and out-of-plane rotation field. It is no doubt that in-plane rotations can be constructed within the Cauchy framework. Early attempts date back to the work by \citet{Allman1984}. Recent research work on membrane elements with in-plane drilling degrees of freedom is reviewed by \citet{Boutagouga2020}. However, the drilling degree of freedom defined within Cauchy theory shows significant mesh dependency, which limits its application in modelling problems involving, for example, both membrane and beam elements \citep{Chang2020}. This is, interestingly, not well discussed by researchers and drilling DoFs serve more like additional auxiliary DoFs to enrich displacement field in current elements.
 
-In the couple stress theory, although the corresponding rigid body like rotation measures are defined as functions of translational displacements, by using either the Lagrangian multiplier method or the penalty function method, it is possible to interpolate rotation fields independently. This provides additional degrees of freedom which can be used to construct, for examples, shell and membrane elements with in-plane rotations. It would be interesting to investigate how the drilling degrees of freedom defined in the consistent couple stress theory would perform subjected to moment/rotation like loads and whether the associated mesh size dependency could be alleviated.
+In the couple stress theory, although the corresponding rigid body like rotation measures are defined as functions of translational displacements, by using either the Lagrange multiplier method or the penalty function method, it is possible to interpolate rotation fields independently. This provides additional degrees of freedom which can be used to construct, for examples, shell and membrane elements with in-plane rotations. It would be interesting to investigate how the drilling degrees of freedom defined in the consistent couple stress theory would perform subjected to moment/rotation like loads and whether the associated mesh size dependency could be alleviated.
 
-Based on the above motivations, this paper is aimed to develop a general variational framework that is flexible enough to accommodate various interpolation schemes with the assist of the consistent couple stress theory \citep{Hadjesfandiari2011} and explore the performance of derived finite elements. This paper is organised as follows. The consistent couple stress theory is briefly reviewed by summarising key equations and quantities that are later used in finite element formulation. Based on this theory, a general mixed variational principle involving six independent fields are derived. After formulating system of linear equations, a simple, local iteration free solving strategy is designed for general nonlinear material models. Two membrane elements, named as couple stress triangle (CSMT3) and quadrilateral (CSMQ4), are implemented by choosing proper interpolations. The performance of the proposed elements is further investigated by conducting numerical experiments with the focus on drilling degrees of freedom and mesh dependency.
+Based on the above motivations, this paper reports a new general variational framework that is flexible enough to accommodate various interpolation schemes with the assist of the consistent couple stress theory \citep{Hadjesfandiari2011} and explore the performance of derived finite elements.
+
+This paper is organised as follows. The consistent couple stress theory is briefly reviewed by summarising key equations and quantities that are later used in finite element formulation. Based on this theory, a general mixed variational principle involving six independent fields are derived. After formulating a system of linear equations, a simple, local iteration free solving strategy is designed for general nonlinear material models. Two membrane elements, named as couple stress triangle (CSMT3) and quadrilateral (CSMQ4), are implemented by choosing proper interpolations. The performance of the proposed elements is further investigated by conducting numerical experiments with the focus on drilling degrees of freedom and mesh dependency.
 \section{The Couple Stress Theory}
-Details of the adopted consistent couple stress theory can be seen elsewhere \citep{Hadjesfandiari2011}. Here a brief summary of all necessary expressions later utilised in finite element formulation is presented. No new contents are introduced in this section.
+Details of the adopted consistent couple stress theory can be seen elsewhere \citep{Hadjesfandiari2011}. Here a brief summary of all necessary equations later utilised in finite element formulation is presented. No new contents are introduced in this section.
 \subsection{Kinematics}
 Within the infinitesimal strain framework, the couple stress theory \citep{Hadjesfandiari2011} accounts for both symmetric and skew--symmetric parts of displacement gradient in kinematics, that is
 \begin{gather}\label{eq:varepsilon}
@@ -106,17 +109,17 @@ with $\bar{\sigma}_{ij}$ and $\bar{\mu}_{i}$ denoting stress and couple stress t
 \bar{\sigma}_{ij}=\sigma_{ij},\qquad\bar{\mu}_{i}=\mu_{i}.
 \end{gather*}
 \subsection{Remarks}
-It could be noted that $C^1$ continuity is required by the displacement field $u_i$ due to the presence of the second order derivatives in $\kappa_i$. Shape functions based on such as NURBS \citep[see][]{Dargush2021} that support $C^1$ continuity can be adopted to construct properly finite elements. Alternatively, $\theta_i$ can be treated as an independent field and the corresponding kinematic equations can be introduced into the functional via the method of Lagrangian multiplier, applications of which can be seen for example in the work by \citet{Darrall2013,Deng2016,Pedgaonkar2021}. Further discussions of such a consistent couple stress theory can be also seen in the work by \citet{Hadjesfandiari2016}.
+It could be noted that $C^1$ continuity is required by the displacement field $u_i$ due to the presence of the second order derivatives in $\kappa_i$. Shape functions based on functions, such as NURBS \citep[see][]{Dargush2021}, that support $C^1$ continuity can be adopted to construct proper finite elements. Alternatively, $\theta_i$ can be treated as an independent field and the corresponding kinematic equations can be introduced into the functional via the method of Lagrange multiplier, applications of which can be seen for example in the work by \citet{Darrall2013,Deng2016,Pedgaonkar2021}. Further discussions of such a consistent couple stress theory can also be seen in the work by \citet{Hadjesfandiari2016}.
 \section{A Six--Field Mixed Framework}
-In this section, the variational theorem developed by \citet{Darrall2013} is further extended to a more general form which resembles the Hu--Washizu variational theorem in the classic Cauchy theory.
+In this section, the variational theorem developed by \citet{Darrall2013} is extended in this study to a more general form which resembles the Hu--Washizu variational theorem in the classic Cauchy theory.
 
-By assuming the essential boundary conditions can be satisfied by proper construction, in absence of body force and surface force/moment traction, the total potential energy functional over an arbitrary domain $V$ can be simply expressed as
+By assuming that the essential boundary conditions can be satisfied by proper construction, in absence of body force and surface force/moment traction, the total potential energy functional over an arbitrary domain $V$ can be simply expressed as
 \begin{gather}
 \varPi\left(\varepsilon_{ij},\kappa_i\right)=\int_VW~\md{V}
 \end{gather}
 where $W\left(\varepsilon_{ij},\kappa_i\right)$ is defined in \eqsref{eq:potential_energy} for linear elastic material. Since $\varepsilon_{ij}\left(u_i\right)$ and $\kappa_i\left(u_i\right)$ are functions of $u_i$, $u_i$ is the only independent field in the above functional.
 
-Now consider the case in which $u_i$, $\theta_i$, $\varepsilon_{ij}$, and $\kappa_i$ are all treated as independent fields, the kinematic equations \eqsref{eq:varepsilon}, \eqsref{eq:kappa} and \eqsref{eq:theta} need to be satisfied in a weak form. By introducing three Lagrangian multipliers $\alpha_{ij}$, $\beta_i$ and $\gamma_i$, those equations can be appended to the above functional so that
+Now consider the case in which $u_i$, $\theta_i$, $\varepsilon_{ij}$, and $\kappa_i$ are all treated as independent fields, the kinematic equations \eqsref{eq:varepsilon}, \eqsref{eq:kappa} and \eqsref{eq:theta} need to be satisfied in a weak form. By introducing three Lagrange multipliers $\alpha_{ij}$, $\beta_i$ and $\gamma_i$, those equations can be appended to the above functional so that
 \begin{multline}
 \varPi\left(u_i,\theta_i,\varepsilon_{ij},\kappa_i,\alpha_{ij},\beta_i,\gamma_i\right)=\int_VW~\md{V}
 +\int_V\alpha_{ij}\left(\varepsilon_{ij}-\dfrac{1}{2}\left(u_{i,j}+u_{j,i}\right)\right)~\md{V}\\
@@ -161,8 +164,8 @@ Inserting the above expressions back to \eqsref{eq:variation} gives
 \end{split}
 \end{gather}
 
-Since the variations $\delta{}u_i$, $\delta{}\theta_i$, $\delta{}\varepsilon_{ij}$, $\delta{}\kappa_i$, $\delta{}\alpha_{ij}$, $\delta{}\beta_i$ and $\delta{}\gamma_i$ are arbitrary, the stationary condition requires the following equations involving Lagrangian multipliers to hold.
-\begin{gather}
+Since the variations $\delta{}u_i$, $\delta{}\theta_i$, $\delta{}\varepsilon_{ij}$, $\delta{}\kappa_i$, $\delta{}\alpha_{ij}$, $\delta{}\beta_i$ and $\delta{}\gamma_i$ are arbitrary, the stationary condition requires the following equations involving Lagrange multipliers to hold.
+\begin{gather}\label{eq:langrange}
 %\left\{\begin{array}{l}
 \bar{\sigma}_{ij}+\alpha_{ij}=0,\quad
 -2\bar{\mu}_i+\beta_i=0,\quad
@@ -170,7 +173,7 @@ Since the variations $\delta{}u_i$, $\delta{}\theta_i$, $\delta{}\varepsilon_{ij
 \gamma_k+\dfrac{1}{2}\epsilon_{ijk}\beta_{i,j}=0.
 %\end{array}\right.
 \end{gather}
-It can be identified that $\alpha_{ij}=-\sigma_{ij}$, $\beta_i=2\mu_i$ and $\gamma_i=\epsilon_{ijk}\mu_{k,j}$ with $\sigma_{ij}$ and $\mu_i$ be independent fields. The third equation is essentially
+It can be identified that $\alpha_{ij}=-\sigma_{ij}$, $\beta_i=2\mu_i$ and $\gamma_i=\epsilon_{ijk}\mu_{k,j}$ with $\sigma_{ij}$ and $\mu_i$ be independent fields. The third equation in \eqsref{eq:langrange} is essentially
 \begin{gather*}
 \begin{split}
 0=\left(\alpha_{kj}+\alpha_{jk}\right)_{,j}+\epsilon_{ijk}\epsilon_{imn}\mu_{m,nj}=\left(\alpha_{ji}+\alpha_{ij}\right)_{,j}+\left(\mu_{j,i}-\mu_{i,j}\right)_{,j},
@@ -192,9 +195,9 @@ It shall be noted that all boundary terms are omitted for brevity. In vector/mat
 +\int_V2\mathbold{\mu}^\mT\left(\mathbold{\kappa}-\dfrac{1}{2}\nabla\times\mathbold{\theta}\right)~\md{V}
 +\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}.
 \end{multline}
-The symbol $\nabla^s\mathbold{u}$ is used to denote the result of $\left(u_{i,j}+u_{j,i}\right)/2$ expressed in Voigt form.
+The symbol $\nabla^s\mathbold{u}$ is used to denote the result of $\left(u_{i,j}+u_{j,i}\right)/2$ expressed in the Voigt form.
 
-It occupies a form similar to that of the functional used in the Hu--Washizu principle. Fields $\mathbold{u}$, $\mathbold{\theta}$ and $\mathbold{\mu}$ require $C^0$ continuity, while $\mathbold{\kappa}$, $\mathbold{\varepsilon}$ and $\mathbold{\sigma}$ can be constant fields. Starting from \eqsref{eq:functional}, various levels of simplifications can be conducted to derive both mixed--type and hybrid--type finite elements. For example, any of \eqsref{eq:varepsilon}, \eqsref{eq:kappa} and \eqsref{eq:theta} can be satisfied in strong forms thus the corresponding terms can be omitted from the functional. The mixed functional used by \citet{Darrall2013}, which is
+\eqsref{eq:functional} occupies a form similar to that of the functional used in the Hu--Washizu principle. Fields $\mathbold{u}$, $\mathbold{\theta}$ and $\mathbold{\mu}$ require $C^0$ continuity, while $\mathbold{\kappa}$, $\mathbold{\varepsilon}$ and $\mathbold{\sigma}$ can be constant fields. Starting from \eqsref{eq:functional}, various levels of simplifications can be conducted to derive both mixed--type and hybrid--type finite elements. For example, any of \eqsref{eq:varepsilon}, \eqsref{eq:kappa} and \eqsref{eq:theta} can be satisfied in strong forms thus the corresponding terms can be omitted from the functional. The mixed functional used by \citet{Darrall2013}, which is
 \begin{gather}
 \varPi\left(\mathbold{u},\mathbold{\theta},\mathbold{\mu}\right)=\int_VW~\md{V}
 +\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}+\varPi_{b.t.}.
@@ -214,7 +217,7 @@ If, instead of $\mathbold{\kappa}$, engineering mean curvature $\mathbold{k}$ is
 -\int_V\mathbold{\mu}^\mT\left(\mathbold{k}+\nabla\times\mathbold{\theta}\right)~\md{V}
 +\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}.
 \end{multline}
-As can be predicted, the difference is solely the term $\displaystyle\int_V2\mathbold{\mu}^\mT\mathbold{\kappa}~\md{V}=-\int_V\mathbold{\mu}^\mT\mathbold{k}~\md{V}$.
+The difference between \eqsref{eq:functional} and \eqsref{eq:functional2} is solely the term $\displaystyle\int_V2\mathbold{\mu}^\mT\mathbold{\kappa}~\md{V}=-\int_V\mathbold{\mu}^\mT\mathbold{k}~\md{V}$.
 \section{Finite Element Formulation}
 In this section, the linear equation system of the aforementioned general six--field variational principle \eqsref{eq:functional} is derived. Since there is no other local residual apart from the one due to potential inelastic constitutive models, a locally iterative algorithm is not required. The final elemental stiffness may possess a form similar to that of conventional displacement based elements.
 \subsection{Linear System}
@@ -363,7 +366,7 @@ The first term $\mathbold{K}_1$ solely depends on conventional displacement, str
 
 Since all $\mathbold{H}_n$ matrices are constant once interpolations are determined, they only need to be computed once during the initialisation stage. Furthermore, $\mathbold{H}_n$ require no additional storage as $\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{\phi}_\mathbold{\varepsilon}^\mT$, $\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ and $\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ can be stored as `equivalent strain matrices' for each integration point. Once the elemental stiffness matrix is computed, reordering of degrees of freedom may be performed.
 
-It can be noted that the elemental stiffness possesses a symmetric structure although moduli $\mathbold{E}_1$ and $\mathbold{E}_2$ may be asymmetric due to for example non-associative plasticity in the case of material nonlinearity.
+It can be noted that the elemental stiffness possesses a symmetric structure although moduli $\mathbold{E}_1$ and $\mathbold{E}_2$ may be asymmetric due to, for example, non-associative plasticity in the case of material nonlinearity.
 \paragraph{Stability Condition}
 This option only requires the inversion of square matrices $\mathbold{H}_4$ and $\mathbold{H}_5$. Thus $\mathbold{\phi}_\mathbold{\varepsilon}$ ($\mathbold{\phi}_\mathbold{\kappa}$) and $\mathbold{\phi}_\mathbold{\sigma}$ ($\mathbold{\phi}_\mathbold{\mu}$) have the same size. Let $i\times{}j$ be the size of $\mathbold{\phi}_\mathbold{\varepsilon}$ and $m\times{}n$ be the size of $\mathbold{\phi}_\mathbold{\kappa}$, then the stability condition becomes
 \begin{gather}\label{eq:stability2}
@@ -447,7 +450,7 @@ In this case, $\beta_i$ and $\alpha_i$ are essentially strain and stress compone
 
 The explicit forms are not listed here for brevity. Interested readers are referred to typical textbooks on finite element methods for details of formulating interpolation matrices \citep[see, e.g.,][section 5.1.3.1]{Zienkiewicz2013}. Three integration points are used for numerical integration. This element is denoted as couple stress mixed triangle (CSMT3) element.
 
-The CSMT3 element is essentially an extension of constant strain triangle (CST) element (CPS3 and CPE3 in ABAQUS notion) with additional fields incorporates mean curvature and couple stress. Given that only linear and constant interpolations are used, its performance shall be similar to that of CST.
+The CSMT3 element is essentially an extension of constant strain triangle (CST) element (CPS3 and CPE3 in ABAQUS notion) with additional fields incorporates mean curvature and couple stress. Given that only linear and constant interpolations are used, its performance shall be similar to that of mixed version of CST.
 \subsubsection{A Four-Node Quadrilateral Membrane Element --- CSMQ4}
 Similarly, the aforementioned formulation can be applied to four-node quadrilaterals. The standard isoparametric mapping can be applied.
 \begin{gather}
@@ -584,20 +587,20 @@ The model shown in \figref{fig:joint_example} is subjected to plane stress condi
 \end{tikzpicture}
 \caption{panel joint with attached beam}\label{fig:joint_example}
 \end{figure}
-A unit displacement is applied to the free end of beam and the corresponding resistance is recorded for comparison. The panel is modelled by a structured grid of with various numbers of membrane elements (SGCMQG \citep{Chang2020} and CSMQ4) along each direction while the beam is modelled by a single elastic Euler--Bernoulli beam element. Nodal rotations formulated within the Cauchy theory exhibit significant size/mesh dependency. Here, SGCMQG element is used as a reference. A mixed action (rotation and translation) is experienced by the panel.
+A unit displacement is applied to the free end of beam and the corresponding resistance is recorded for comparison. The panel is modelled by a structured grid with various numbers of membrane elements (simplified generalised conforming mixed quadrilateral with Gauss quadrature, SGCMQG \citep{Chang2020} and CSMQ4) along each direction while the beam is modelled by a single elastic Euler--Bernoulli beam element. Nodal rotations formulated within the Cauchy theory exhibit significant size/mesh dependency. Here, SGCMQG element is used as a reference. A mixed action (rotation and translation) is experienced by the panel.
 
-Three pairs of panel and beam elastic moduli are chosen to represent different deformation patterns. The analysis is performed with characteristic length $l$ ranging from \num[print-unity-mantissa=false]{E3} to \num[print-unity-mantissa=false]{E-3}. Numerical results are presented in \figref{fig:joint}. The following observations can be made.
+Three pairs of panel and beam elastic moduli are chosen to represent different deformation patterns. The analysis is performed with characteristic length $l$ ranging from \num[print-unity-mantissa=false]{E3} to \num[print-unity-mantissa=false]{E-3} for CSMQ4. Numerical results are presented in \figref{fig:joint}. The following observations can be made.
 \begin{enumerate}
 \item When either $l$ or $E_p/E_b$ is large, the panel is sufficiently rigid so that deformation is mainly contributed by the beam, resulting in a cantilever like structure, the corresponding resistance is close to the upper bound \num{3.9063} computed via a cantilever model.
 \item For Cauchy theory based elements, the corresponding rotational stiffness decreases (thus deformation localises) with refined meshes. On the contrary, CSMQ4 is less sensitive to mesh sizes. With fixed $l$, the variation of resistance generated by CSMQ4 is significantly smaller than that of SGCMQG.
-\item With GCMQ4, mesh refinement has the most noticeable impact on numerical results when $l=\numrange{0.1}{1}$.
+\item With CSMQ4, mesh refinement has the most noticeable impact on numerical results when $l=\numrange{0.1}{1}$.
 \end{enumerate}
 
 It can be further inferred that with sufficient number of elements, both SGCMQG and CSMQ4 with a small $l$ would converge to the same solution in which deformation is localised in a small region around the top right corner.
 
 Given that SGCMQG elements can converge to analytical solutions as can be seen in the previous example, it is no doubt that the consistent couple stress theory provides an appealing (and maybe more realistic) approach when it comes to similar problems involving in-plane rotations.
 
-However, the determination of characteristic length $l$ could be a challenge task. The corresponding experimental theories shall be investigated in future. With properly defined $l$, it is believed that the implemented couple stress elements can model in-plane rotation with acceptable accuracy. As discussed by others \citep[e.g.,][]{Darrall2013}, a large $l$ would suppress bending action, resulting in a shear dominated deformation pattern.
+However, the determination of characteristic length $l$ could be a challenging task. The corresponding experimental theories shall be investigated in the future. With a properly defined $l$, it is believed that the implemented couple stress elements can model in-plane rotation with acceptable accuracy. As discussed by others \citep[e.g.,][]{Darrall2013}, a large $l$ would suppress bending action, resulting in a shear dominated deformation pattern.
 \begin{figure}[H]
 \centering\footnotesize
 \begin{subfigure}[b]{.99\textwidth}\centering
@@ -640,7 +643,7 @@ Noting that in \eqsref{eq:stored_energy} the stored energy function can be split
 \end{tikzpicture}
 \caption{square plate with circular hole}\label{fig:plate_with_hole}
 \end{figure}
-In this example, it is simply assumed that the couple part of $W$ remains 'elastic' so that $\eta$ is a constant. Such an assumption is, at least, reasonable for some polymers, interested readers can refer to, for example, the work by \citet{Alisafaei2016} and the references therein. The uniform extension of a square plate with a hole of unit radius, depicted in \figref{fig:plate_with_hole}, subjected to plane stress condition is simulated with a softening isotropic J2 plasticity model. The following material parameters are chosen: elastic modulus $E=\num{1000}$, Poisson's ratio $\nu=\num{0.2}$, yield stress $\sigma_y=\num{1}$, hardening ratio $b=\num{-0.02}$. The thickness $t$ is set to unity.
+In this example, it is assumed that the couple stress part of $W$ remains 'elastic' so that $\eta$ is a constant. Such an assumption is, at least, reasonable for some polymers, interested readers can refer to, for example, the work by \citet{Alisafaei2016} and the references therein. The uniform extension of a square plate with a hole of unit radius, depicted in \figref{fig:plate_with_hole}, subjected to plane stress condition is simulated with a softening isotropic J2 plasticity model. The following material parameters are chosen: elastic modulus $E=\num{1000}$, Poisson's ratio $\nu=\num{0.2}$, yield stress $\sigma_y=\num{1}$, hardening ratio $b=\num{-0.02}$. The thickness $t$ is set to unity.
 %
 %
 %\begin{figure}[ht]
@@ -698,6 +701,8 @@ The distribution of equivalent plastic strain (PEEQ in ABAQUS notation) is depic
 \caption{distribution of equivalent plastic strain (32 elements per edge)}\label{fig:peeq32}
 \end{figure}
 Localisation of deformation, which cannot be alleviated by the introduction of couple stress field, can be identified with denser mesh grids. As the result, mesh objective results can hardly be obtained if $l$ is not large enough. Given that the consistent couple stress theory itself does not provide any regularisation of material response, such results can be predicted. A combination of couple stress theory and phase field theory \citep{Bourdin2008} can be an appealing approach in terms of modelling mesh objective softening response.
+
+From numerical experiments, it can be inferred that $l$ seems to be more than a material constant. The geometry of the problem domain may have some effect on simulation results. Thus, the determination of $l$ may take the inherent material property (if there exists one) and the distance to boundary of problem domain (or some other similar characteristics) into consideration.
 \section{Conclusions}
 Based on the consistent couple stress theory, a mixed variational theorem with six independent fields is developed in this work. A simple, local iteration free solution strategy is proposed and examples of membrane element formulation, including three-node triangle CSMT3 and four-node quadrilateral CSMQ4, are presented. Other elements can be constructed following a similar procedure. Although the majority of existing constitutive models are developed based on the Cauchy theory, the proposed formulation is sufficiently versatile to accommodate both elastic and inelastic materials.
 
