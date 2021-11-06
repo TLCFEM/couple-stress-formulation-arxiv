@@ -1,5 +1,5 @@
 \documentclass[3p,sort&compress,11pt,fleqn]{elsarticle}
-\usepackage{setspace,tikz,float,lmodern,booktabs,amsmath,amssymb,siunitx,structmech,mathpazo,gnuplot-lua-tikz,subcaption}
+\usepackage{setspace,tikz,float,lmodern,booktabs,amsmath,amssymb,siunitx,structmech,gnuplot-lua-tikz,subcaption}
 \usetikzlibrary{shapes,arrows.meta}
 \bibliographystyle{elsarticle-num-names}
 \journal{European Journal of Mechanics - A/Solids}
@@ -7,7 +7,8 @@
 \newcommand*{\eqsref}[1]{Eq.~(\ref{#1})}
 \newcommand*{\tabref}[1]{Table~\ref{#1}}
 \newcommand*{\class}[1]{\texttt{#1}}
-%\newcommand*{\mathbold}[1]{\mathbf{#1}}
+\usepackage{mathpazo}
+%\newcommand*{\mathbold}[1]{\boldsymbol{#1}}
 \newcommand*{\mT}{\mathrm{T}}
 \newcommand*{\md}[1]{\mathrm{d}#1}
 \newcommand*{\pfrac}[2]{\dfrac{\partial#1}{\partial#2}}
@@ -25,8 +26,8 @@ mesh dependency
 \end{keyword}
 \begin{frontmatter}
 \title{New mixed formulation and mesh dependency of finite elements based on the consistent couple stress theory}
-\author[]{T.~L.~Chang\corref{tlc}}\ead{tlcfem@gmail.com}
-\author[]{C.-L.~Lee}
+\author[]{Theodore~L.~Chang\corref{tlc}}\ead{tlcfem@gmail.com}
+\author[]{Chin-Long~Lee}
 \cortext[tlc]{corresponding author}
 \address{Department of Civil and Natural Resources Engineering, University of Canterbury, Christchurch, New Zealand, 8041.}
 \end{frontmatter}
