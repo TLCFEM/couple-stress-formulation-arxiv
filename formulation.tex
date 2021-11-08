@@ -1,4 +1,4 @@
-\documentclass[3p,sort&compress,11pt,fleqn]{elsarticle}
+\documentclass[3p,sort&compress,11pt,fleqn,review]{elsarticle}
 \usepackage{setspace,tikz,float,lmodern,booktabs,amsmath,amssymb,siunitx,structmech,gnuplot-lua-tikz,subcaption}
 \usetikzlibrary{shapes,arrows.meta}
 \bibliographystyle{elsarticle-num-names}
@@ -7,13 +7,11 @@
 \newcommand*{\eqsref}[1]{Eq.~(\ref{#1})}
 \newcommand*{\tabref}[1]{Table~\ref{#1}}
 \newcommand*{\class}[1]{\texttt{#1}}
-\usepackage{mathpazo}
-%\newcommand*{\mathbold}[1]{\boldsymbol{#1}}
+\newcommand*{\mb}[1]{\boldsymbol{#1}}
 \newcommand*{\mT}{\mathrm{T}}
 \newcommand*{\md}[1]{\mathrm{d}#1}
 \newcommand*{\pfrac}[2]{\dfrac{\partial#1}{\partial#2}}
 \tikzset{FFIXED/.style={postaction={draw,decorate,decoration={border,angle=-60,amplitude=2mm,segment length=1.9mm}}}}
-\onehalfspacing\doublespacing
 \begin{document}
 \begin{abstract}
 This work presents a finite element formulation based on a six-field variational principle that incorporates the consistent couple stress theory. A simple, efficient and local iteration free solving procedure that covers both elastic and inelastic materials is derived. With proper interpolations, membrane elements of various nodes are proposed. The implemented finite elements are used to conduct numerical experiments to investigate the performance of the in-plane drilling degrees of freedom introduced by the consistent couple stress theory. The mesh dependency issue is also studied. It is shown that the consistent couple stress theory provides an objective definition of rotation but additional regularisation (or other techniques) is required to overcome mesh/size dependency in fracture/damage related problems.
@@ -191,57 +189,57 @@ The functional in its general form is then
 \end{multline}
 It shall be noted that all boundary terms are omitted for brevity. In vector/matrix form, it can also be written as
 \begin{multline}\label{eq:functional}
-\varPi\left(\mathbold{u},\mathbold{\theta},\mathbold{\varepsilon},\mathbold{\sigma},\mathbold{\kappa},\mathbold{\mu}\right)=\int_VW~\md{V}
-+\int_V\mathbold{\sigma}^\mT\left(\nabla^s\mathbold{u}-\mathbold{\varepsilon}\right)~\md{V}\\
-+\int_V2\mathbold{\mu}^\mT\left(\mathbold{\kappa}-\dfrac{1}{2}\nabla\times\mathbold{\theta}\right)~\md{V}
-+\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}.
+\varPi\left(\mb{u},\mb{\theta},\mb{\varepsilon},\mb{\sigma},\mb{\kappa},\mb{\mu}\right)=\int_VW~\md{V}
++\int_V\mb{\sigma}^\mT\left(\nabla^s\mb{u}-\mb{\varepsilon}\right)~\md{V}\\
++\int_V2\mb{\mu}^\mT\left(\mb{\kappa}-\dfrac{1}{2}\nabla\times\mb{\theta}\right)~\md{V}
++\int_V\left(\nabla\times\mb{\mu}\right)^\mT\left(\mb{\theta}-\dfrac{1}{2}\nabla\times\mb{u}\right)~\md{V}.
 \end{multline}
-The symbol $\nabla^s\mathbold{u}$ is used to denote the result of $\left(u_{i,j}+u_{j,i}\right)/2$ expressed in the Voigt form.
+The symbol $\nabla^s\mb{u}$ is used to denote the result of $\left(u_{i,j}+u_{j,i}\right)/2$ expressed in the Voigt form.
 
-\eqsref{eq:functional} occupies a form similar to that of the functional used in the Hu--Washizu principle. Fields $\mathbold{u}$, $\mathbold{\theta}$ and $\mathbold{\mu}$ require $C^0$ continuity, while $\mathbold{\kappa}$, $\mathbold{\varepsilon}$ and $\mathbold{\sigma}$ can be constant fields. Starting from \eqsref{eq:functional}, various levels of simplifications can be conducted to derive both mixed--type and hybrid--type finite elements. For example, any of \eqsref{eq:varepsilon}, \eqsref{eq:kappa} and \eqsref{eq:theta} can be satisfied in strong forms thus the corresponding terms can be omitted from the functional. The mixed functional used by \citet{Darrall2013}, which is
+\eqsref{eq:functional} occupies a form similar to that of the functional used in the Hu--Washizu principle. Fields $\mb{u}$, $\mb{\theta}$ and $\mb{\mu}$ require $C^0$ continuity, while $\mb{\kappa}$, $\mb{\varepsilon}$ and $\mb{\sigma}$ can be constant fields. Starting from \eqsref{eq:functional}, various levels of simplifications can be conducted to derive both mixed--type and hybrid--type finite elements. For example, any of \eqsref{eq:varepsilon}, \eqsref{eq:kappa} and \eqsref{eq:theta} can be satisfied in strong forms thus the corresponding terms can be omitted from the functional. The mixed functional used by \citet{Darrall2013}, which is
 \begin{gather}
-\varPi\left(\mathbold{u},\mathbold{\theta},\mathbold{\mu}\right)=\int_VW~\md{V}
-+\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}+\varPi_{b.t.}.
+\varPi\left(\mb{u},\mb{\theta},\mb{\mu}\right)=\int_VW~\md{V}
++\int_V\left(\nabla\times\mb{\mu}\right)^\mT\left(\mb{\theta}-\dfrac{1}{2}\nabla\times\mb{u}\right)~\md{V}+\varPi_{b.t.}.
 \end{gather}
 can be obtained by enforcing \eqsref{eq:varepsilon} and \eqsref{eq:kappa} in strong forms. Besides, by considering \eqsref{eq:varepsilon} only, another functional can be obtained.
 \begin{multline}
-\varPi\left(\mathbold{u},\mathbold{\theta},\mathbold{\kappa},\mathbold{\mu}\right)=\int_VW~\md{V}
-+\int_V2\mathbold{\mu}^\mT\left(\mathbold{\kappa}-\dfrac{1}{2}\nabla\times\mathbold{\theta}\right)~\md{V}\\
-+\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}+\varPi_{b.t.}.
+\varPi\left(\mb{u},\mb{\theta},\mb{\kappa},\mb{\mu}\right)=\int_VW~\md{V}
++\int_V2\mb{\mu}^\mT\left(\mb{\kappa}-\dfrac{1}{2}\nabla\times\mb{\theta}\right)~\md{V}\\
++\int_V\left(\nabla\times\mb{\mu}\right)^\mT\left(\mb{\theta}-\dfrac{1}{2}\nabla\times\mb{u}\right)~\md{V}+\varPi_{b.t.}.
 \end{multline}
 One can also apply divergence theorem to terms involving derivatives to convert between volume and surface integrals.
 
-If, instead of $\mathbold{\kappa}$, engineering mean curvature $\mathbold{k}$ is used, an equivalent form can be derived following the same procedure.
+If, instead of $\mb{\kappa}$, engineering mean curvature $\mb{k}$ is used, an equivalent form can be derived following the same procedure.
 \begin{multline}\label{eq:functional2}
-\varPi\left(\mathbold{u},\mathbold{\theta},\mathbold{\varepsilon},\mathbold{\sigma},\mathbold{k},\mathbold{\mu}\right)=\int_VW~\md{V}
-+\int_V\mathbold{\sigma}^\mT\left(\nabla^s\mathbold{u}-\mathbold{\varepsilon}\right)~\md{V}\\
--\int_V\mathbold{\mu}^\mT\left(\mathbold{k}+\nabla\times\mathbold{\theta}\right)~\md{V}
-+\int_V\left(\nabla\times\mathbold{\mu}\right)^\mT\left(\mathbold{\theta}-\dfrac{1}{2}\nabla\times\mathbold{u}\right)~\md{V}.
+\varPi\left(\mb{u},\mb{\theta},\mb{\varepsilon},\mb{\sigma},\mb{k},\mb{\mu}\right)=\int_VW~\md{V}
++\int_V\mb{\sigma}^\mT\left(\nabla^s\mb{u}-\mb{\varepsilon}\right)~\md{V}\\
+-\int_V\mb{\mu}^\mT\left(\mb{k}+\nabla\times\mb{\theta}\right)~\md{V}
++\int_V\left(\nabla\times\mb{\mu}\right)^\mT\left(\mb{\theta}-\dfrac{1}{2}\nabla\times\mb{u}\right)~\md{V}.
 \end{multline}
-The difference between \eqsref{eq:functional} and \eqsref{eq:functional2} is solely the term $\displaystyle\int_V2\mathbold{\mu}^\mT\mathbold{\kappa}~\md{V}=-\int_V\mathbold{\mu}^\mT\mathbold{k}~\md{V}$.
+The difference between \eqsref{eq:functional} and \eqsref{eq:functional2} is solely the term $\displaystyle\int_V2\mb{\mu}^\mT\mb{\kappa}~\md{V}=-\int_V\mb{\mu}^\mT\mb{k}~\md{V}$.
 \section{Finite Element Formulation}
 In this section, the linear equation system of the aforementioned general six--field variational principle \eqsref{eq:functional} is derived. Since there is no other local residual apart from the one due to potential inelastic constitutive models, a locally iterative algorithm is not required. The final elemental stiffness may possess a form similar to that of conventional displacement based elements.
 \subsection{Linear System}
 Let six fields be discretized as follows.
 \begin{gather}
-\mathbold{u}=\mathbold{\phi}_\mathbold{u}\mathbold{p},\quad
-\mathbold{\theta}=\mathbold{\phi}_\mathbold{\theta}\mathbold{q},\quad
-\mathbold{\kappa}=\mathbold{\phi}_\mathbold{\kappa}\mathbold{r},\quad
-\mathbold{\mu}=\mathbold{\phi}_\mathbold{\mu}\mathbold{s},\quad
-\mathbold{\varepsilon}=\mathbold{\phi}_\mathbold{\varepsilon}\mathbold{\beta},\quad
-\mathbold{\sigma}=\mathbold{\phi}_\mathbold{\sigma}\mathbold{\alpha}.
+\mb{u}=\mb{\phi}_{\mb{u}}\mb{p},\quad
+\mb{\theta}=\mb{\phi}_{\mb{\theta}}\mb{q},\quad
+\mb{\kappa}=\mb{\phi}_{\mb{\kappa}}\mb{r},\quad
+\mb{\mu}=\mb{\phi}_{\mb{\mu}}\mb{s},\quad
+\mb{\varepsilon}=\mb{\phi}_{\mb{\varepsilon}}\mb{\beta},\quad
+\mb{\sigma}=\mb{\phi}_{\mb{\sigma}}\mb{\alpha}.
 \end{gather}
-Then, naturally, $\nabla^s\mathbold{u}=\mathbold{L}\mathbold{\phi}_\mathbold{u}\mathbold{p}$ where $\mathbold{L}$ is the differential operator which can be expressed as
+Then, naturally, $\nabla^s\mb{u}=\mb{L}\mb{\phi}_{\mb{u}}\mb{p}$ where $\mb{L}$ is the differential operator which can be expressed as
 \begin{gather}
-\mathbold{L}=\begin{bmatrix}
+\mb{L}=\begin{bmatrix}
 \pfrac{}{x}&\cdot&\cdot&\pfrac{}{y}&\cdot&\pfrac{}{z}\\[4mm]
 \cdot&\pfrac{}{y}&\cdot&\pfrac{}{x}&\pfrac{}{z}&\cdot\\[4mm]
 \cdot&\cdot&\pfrac{}{z}&\cdot&\pfrac{}{y}&\pfrac{}{x}
 \end{bmatrix}^\mT
 \end{gather}
-in 3D space. Similarly, the curl operator can be expressed as $\dfrac{1}{2}\nabla\times\left(\cdot\right)=\mathbold{J}\left(\cdot\right)$ with
+in 3D space. Similarly, the curl operator can be expressed as $\dfrac{1}{2}\nabla\times\left(\cdot\right)=\mb{J}\left(\cdot\right)$ with
 \begin{gather}
-\mathbold{J}=\dfrac{1}{2}\begin{bmatrix}
+\mb{J}=\dfrac{1}{2}\begin{bmatrix}
 \cdot&-\pfrac{}{z}&\pfrac{}{y}\\[4mm]
 \pfrac{}{z}&\cdot&-\pfrac{}{x}\\[4mm]
 -\pfrac{}{y}&\pfrac{}{x}&\cdot
@@ -250,71 +248,71 @@ in 3D space. Similarly, the curl operator can be expressed as $\dfrac{1}{2}\nabl
 
 Now the functional can be rewritten as
 \begin{multline}\label{eq:functional_new}
-\varPi\left(\mathbold{p},\mathbold{q},\mathbold{r},\mathbold{s},\mathbold{\beta},\mathbold{\alpha}\right)=\int_VW~\md{V}
-+\int_V\mathbold{\alpha}^\mT\mathbold{\phi}_\mathbold{\sigma}^\mT\left(\mathbold{L}\mathbold{\phi}_\mathbold{u}\mathbold{p}-\mathbold{\phi}_\mathbold{\varepsilon}\mathbold{\beta}\right)~\md{V}\\
-+\int_V2\mathbold{s}^\mT\mathbold{\phi}_\mathbold{\mu}^\mT\left(\mathbold{\phi}_\mathbold{\kappa}\mathbold{r}-\mathbold{J}\mathbold{\phi}_\mathbold{\theta}\mathbold{q}\right)~\md{V}
-+\int_V2\mathbold{s}^\mT\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)^\mT\left(\mathbold{\phi}_\mathbold{\theta}\mathbold{q}-\mathbold{J}\mathbold{\phi}_\mathbold{u}\mathbold{p}\right)~\md{V}.
+\varPi\left(\mb{p},\mb{q},\mb{r},\mb{s},\mb{\beta},\mb{\alpha}\right)=\int_VW~\md{V}
++\int_V\mb{\alpha}^\mT\mb{\phi}_{\mb{\sigma}}^\mT\left(\mb{L}\mb{\phi}_{\mb{u}}\mb{p}-\mb{\phi}_{\mb{\varepsilon}}\mb{\beta}\right)~\md{V}\\
++\int_V2\mb{s}^\mT\mb{\phi}_{\mb{\mu}}^\mT\left(\mb{\phi}_{\mb{\kappa}}\mb{r}-\mb{J}\mb{\phi}_{\mb{\theta}}\mb{q}\right)~\md{V}
++\int_V2\mb{s}^\mT\left(\mb{J}\mb{\phi}_{\mb{\mu}}\right)^\mT\left(\mb{\phi}_{\mb{\theta}}\mb{q}-\mb{J}\mb{\phi}_{\mb{u}}\mb{p}\right)~\md{V}.
 \end{multline}
 
 Taking variations leads to the following system of equations.
 \begin{gather}\label{eq:stationary}
 \left\{
 \begin{array}{lll}
-\dfrac{\delta\varPi}{\delta{}\mathbold{p}}=\mathbold{0}&\longrightarrow&\displaystyle\int_V\left(\mathbold{L}\mathbold{\phi}_\mathbold{u}\right)^\mT\mathbold{\phi}_\mathbold{\sigma}\mathbold{\alpha}-2\left(\mathbold{J}\mathbold{\phi}_\mathbold{u}\right)^\mT\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)\mathbold{s}~\md{V}=\mathbold{R}_\mathbold{u},\\[4mm]
-\dfrac{\delta\varPi}{\delta{}\mathbold{q}}=\mathbold{0}&\longrightarrow&\displaystyle\int_V2\left(\mathbold{\phi}_\mathbold{\theta}^\mT\mathbold{J}\mathbold{\phi}_\mathbold{\mu}-\left(\mathbold{J}\mathbold{\phi}_\mathbold{\theta}\right)^\mT\mathbold{\phi}_\mathbold{\mu}\right)\mathbold{s}~\md{V}=\mathbold{R}_\mathbold{\theta},\\[4mm]
-\dfrac{\delta\varPi}{\delta{}\mathbold{r}}=\mathbold{0}&\longrightarrow&\displaystyle\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT{}W_\mathbold{\kappa}+2\mathbold{\phi}_\mathbold{\kappa}^\mT\mathbold{\phi}_\mathbold{\mu}\mathbold{s}~\md{V}=\mathbold{0},\\[4mm]
-\dfrac{\delta\varPi}{\delta{}\mathbold{s}}=\mathbold{0}&\longrightarrow&\displaystyle
-\int_V2\left(\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)^\mT\mathbold{\phi}_\mathbold{\theta}-\mathbold{\phi}_\mathbold{\mu}^\mT\mathbold{J}\mathbold{\phi}_\mathbold{\theta}\right)\mathbold{q}+2\mathbold{\phi}_\mathbold{\mu}^\mT\mathbold{\phi}_\mathbold{\kappa}\mathbold{r}-2\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)^\mT\mathbold{J}\mathbold{\phi}_\mathbold{u}\mathbold{p}~\md{V}=\mathbold{0},\\[4mm]
-\dfrac{\delta\varPi}{\delta{}\mathbold{\beta}}=\mathbold{0}&\longrightarrow&\displaystyle\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT{}W_{\mathbold{\varepsilon}}~\md{V}
--\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT\mathbold{\phi}_\mathbold{\sigma}\mathbold{\alpha}~\md{V}=\mathbold{0},\\[4mm]
-\dfrac{\delta\varPi}{\delta{}\mathbold{\alpha}}=\mathbold{0}&\longrightarrow&\displaystyle\int_V\mathbold{\phi}_\mathbold{\sigma}^\mT\mathbold{L}\mathbold{\phi}_\mathbold{u}\mathbold{p}-\mathbold{\phi}_\mathbold{\sigma}^\mT\mathbold{\phi}_\mathbold{\varepsilon}\mathbold{\beta}~\md{V}=\mathbold{0}.
+\dfrac{\delta\varPi}{\delta{}\mb{p}}=\mb{0}&\longrightarrow&\displaystyle\int_V\left(\mb{L}\mb{\phi}_{\mb{u}}\right)^\mT\mb{\phi}_{\mb{\sigma}}\mb{\alpha}-2\left(\mb{J}\mb{\phi}_{\mb{u}}\right)^\mT\left(\mb{J}\mb{\phi}_{\mb{\mu}}\right)\mb{s}~\md{V}=\mb{R}_{\mb{u}},\\[4mm]
+\dfrac{\delta\varPi}{\delta{}\mb{q}}=\mb{0}&\longrightarrow&\displaystyle\int_V2\left(\mb{\phi}_{\mb{\theta}}^\mT\mb{J}\mb{\phi}_{\mb{\mu}}-\left(\mb{J}\mb{\phi}_{\mb{\theta}}\right)^\mT\mb{\phi}_{\mb{\mu}}\right)\mb{s}~\md{V}=\mb{R}_{\mb{\theta}},\\[4mm]
+\dfrac{\delta\varPi}{\delta{}\mb{r}}=\mb{0}&\longrightarrow&\displaystyle\int_V\mb{\phi}_{\mb{\kappa}}^\mT{}W_{\mb{\kappa}}+2\mb{\phi}_{\mb{\kappa}}^\mT\mb{\phi}_{\mb{\mu}}\mb{s}~\md{V}=\mb{0},\\[4mm]
+\dfrac{\delta\varPi}{\delta{}\mb{s}}=\mb{0}&\longrightarrow&\displaystyle
+\int_V2\left(\left(\mb{J}\mb{\phi}_{\mb{\mu}}\right)^\mT\mb{\phi}_{\mb{\theta}}-\mb{\phi}_{\mb{\mu}}^\mT\mb{J}\mb{\phi}_{\mb{\theta}}\right)\mb{q}+2\mb{\phi}_{\mb{\mu}}^\mT\mb{\phi}_{\mb{\kappa}}\mb{r}-2\left(\mb{J}\mb{\phi}_{\mb{\mu}}\right)^\mT\mb{J}\mb{\phi}_{\mb{u}}\mb{p}~\md{V}=\mb{0},\\[4mm]
+\dfrac{\delta\varPi}{\delta{}\mb{\beta}}=\mb{0}&\longrightarrow&\displaystyle\int_V\mb{\phi}_{\mb{\varepsilon}}^\mT{}W_{\mb{\varepsilon}}~\md{V}
+-\int_V\mb{\phi}_{\mb{\varepsilon}}^\mT\mb{\phi}_{\mb{\sigma}}\mb{\alpha}~\md{V}=\mb{0},\\[4mm]
+\dfrac{\delta\varPi}{\delta{}\mb{\alpha}}=\mb{0}&\longrightarrow&\displaystyle\int_V\mb{\phi}_{\mb{\sigma}}^\mT\mb{L}\mb{\phi}_{\mb{u}}\mb{p}-\mb{\phi}_{\mb{\sigma}}^\mT\mb{\phi}_{\mb{\varepsilon}}\mb{\beta}~\md{V}=\mb{0}.
 \end{array}
 \right.
 \end{gather}
-In the above system, $\mathbold{R}_\mathbold{u}$ and $\mathbold{R}_\mathbold{\theta}$ are nodal forces/resistances due to omitted boundary terms, $W_\mathbold{\kappa}$ and $W_\mathbold{\varepsilon}$ denote the partial derivatives respectively.
+In the above system, $\mb{R}_{\mb{u}}$ and $\mb{R}_{\mb{\theta}}$ are nodal forces/resistances due to omitted boundary terms, $W_{\mb{\kappa}}$ and $W_{\mb{\varepsilon}}$ denote the partial derivatives respectively.
 
 By further denoting
 \begin{gather*}
-\mathbold{E}_1=\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT\mathbold{C}\mathbold{\phi}_\mathbold{\varepsilon}~\md{V},\quad
-\mathbold{E}_2=\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT\mathbold{D}\mathbold{\phi}_\mathbold{\kappa}~\md{V},\quad
-\mathbold{H}_1=-2\int_V\left(\mathbold{J}\mathbold{\phi}_\mathbold{u}\right)^\mT\left(\mathbold{J}\mathbold{\phi}_\mathbold{\mu}\right)~\md{V},\\
-\mathbold{H}_2=\int_V\left(\mathbold{L}\mathbold{\phi}_\mathbold{u}\right)^\mT\mathbold{\phi}_\mathbold{\sigma}~\md{V},\quad
-\mathbold{H}_3=2\int_V\mathbold{\phi}_\mathbold{\theta}^\mT\mathbold{J}\mathbold{\phi}_\mathbold{\mu}-\left(\mathbold{J}\mathbold{\phi}_\mathbold{\theta}\right)^\mT\mathbold{\phi}_\mathbold{\mu}~\md{V},\\
-\mathbold{H}_4=-2\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT\mathbold{\phi}_\mathbold{\mu}~\md{V},\quad
-\mathbold{H}_5=\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT\mathbold{\phi}_\mathbold{\sigma}~\md{V},\quad
+\mb{E}_1=\int_V\mb{\phi}_{\mb{\varepsilon}}^\mT\mb{C}\mb{\phi}_{\mb{\varepsilon}}~\md{V},\quad
+\mb{E}_2=\int_V\mb{\phi}_{\mb{\kappa}}^\mT\mb{D}\mb{\phi}_{\mb{\kappa}}~\md{V},\quad
+\mb{H}_1=-2\int_V\left(\mb{J}\mb{\phi}_{\mb{u}}\right)^\mT\left(\mb{J}\mb{\phi}_{\mb{\mu}}\right)~\md{V},\\
+\mb{H}_2=\int_V\left(\mb{L}\mb{\phi}_{\mb{u}}\right)^\mT\mb{\phi}_{\mb{\sigma}}~\md{V},\quad
+\mb{H}_3=2\int_V\mb{\phi}_{\mb{\theta}}^\mT\mb{J}\mb{\phi}_{\mb{\mu}}-\left(\mb{J}\mb{\phi}_{\mb{\theta}}\right)^\mT\mb{\phi}_{\mb{\mu}}~\md{V},\\
+\mb{H}_4=-2\int_V\mb{\phi}_{\mb{\kappa}}^\mT\mb{\phi}_{\mb{\mu}}~\md{V},\quad
+\mb{H}_5=\int_V\mb{\phi}_{\mb{\varepsilon}}^\mT\mb{\phi}_{\mb{\sigma}}~\md{V},\quad
 \end{gather*}
-in which $\mathbold{C}$ and $\mathbold{D}$ denote material tangent moduli, the incremental form of linear system can be expressed as
+in which $\mb{C}$ and $\mb{D}$ denote material tangent moduli, the incremental form of linear system can be expressed as
 \begin{gather}\label{eq:incremental_form}
 \begin{bmatrix}
-\cdot&\cdot&\cdot&\mathbold{H}_1&\cdot&\mathbold{H}_2\\
-\cdot&\cdot&\cdot&\mathbold{H}_3&\cdot&\cdot\\
-\cdot&\cdot&\mathbold{E}_2&-\mathbold{H}_4&\cdot&\cdot\\
-\mathbold{H}_1^\mT&\mathbold{H}_3^\mT&-\mathbold{H}_4^\mT&\cdot&\cdot&\cdot\\
-\cdot&\cdot&\cdot&\cdot&\mathbold{E}_1&-\mathbold{H}_5\\
-\mathbold{H}_2^\mT&\cdot&\cdot&\cdot&-\mathbold{H}_5^\mT&\cdot
+\cdot&\cdot&\cdot&\mb{H}_1&\cdot&\mb{H}_2\\
+\cdot&\cdot&\cdot&\mb{H}_3&\cdot&\cdot\\
+\cdot&\cdot&\mb{E}_2&-\mb{H}_4&\cdot&\cdot\\
+\mb{H}_1^\mT&\mb{H}_3^\mT&-\mb{H}_4^\mT&\cdot&\cdot&\cdot\\
+\cdot&\cdot&\cdot&\cdot&\mb{E}_1&-\mb{H}_5\\
+\mb{H}_2^\mT&\cdot&\cdot&\cdot&-\mb{H}_5^\mT&\cdot
 \end{bmatrix}
 \begin{bmatrix}
-\Delta\mathbold{p}\\\Delta\mathbold{q}\\\Delta\mathbold{r}\\\Delta\mathbold{s}\\\Delta\mathbold{\beta}\\\Delta\mathbold{\alpha}
-\end{bmatrix}=\mathbold{R}.
+\Delta\mb{p}\\\Delta\mb{q}\\\Delta\mb{r}\\\Delta\mb{s}\\\Delta\mb{\beta}\\\Delta\mb{\alpha}
+\end{bmatrix}=\mb{R}.
 \end{gather}
-In which, $\mathbold{R}$ is used to denote residual whose discrete form is not shown. As can be seen later, it is possible to compute resistance directly based on \eqsref{eq:stationary}.
+In which, $\mb{R}$ is used to denote residual whose discrete form is not shown. As can be seen later, it is possible to compute resistance directly based on \eqsref{eq:stationary}.
 \subsection{Solution Procedure}
-\subsubsection{Option One --- Invertible $\mathbold{E}_1$ and $\mathbold{E}_2$}
-Since $\mathbold{E}_1$ and $\mathbold{E}_2$ are guaranteed to be square matrices, typically they are invertible with sufficient integration points provided, performing static condensation leads to the following elemental stiffness.
+\subsubsection{Option One --- Invertible $\mb{E}_1$ and $\mb{E}_2$}
+Since $\mb{E}_1$ and $\mb{E}_2$ are guaranteed to be square matrices, typically they are invertible with sufficient integration points provided, performing static condensation leads to the following elemental stiffness.
 \begin{gather}
-\mathbold{K}=
+\mb{K}=
 \begin{bmatrix}
-\mathbold{H}_2\left(\mathbold{H}_5^\mT\mathbold{E}_1^{-1}\mathbold{H}_5\right)^{-1}\mathbold{H}_2^\mT+\mathbold{H}_1\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_1^\mT&\mathbold{H}_1\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_3^\mT\\
-\mathbold{H}_3\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_1^\mT&\mathbold{H}_3\left(\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4\right)^{-1}\mathbold{H}_3^\mT
+\mb{H}_2\left(\mb{H}_5^\mT\mb{E}_1^{-1}\mb{H}_5\right)^{-1}\mb{H}_2^\mT+\mb{H}_1\left(\mb{H}_4^\mT\mb{E}_2^{-1}\mb{H}_4\right)^{-1}\mb{H}_1^\mT&\mb{H}_1\left(\mb{H}_4^\mT\mb{E}_2^{-1}\mb{H}_4\right)^{-1}\mb{H}_3^\mT\\
+\mb{H}_3\left(\mb{H}_4^\mT\mb{E}_2^{-1}\mb{H}_4\right)^{-1}\mb{H}_1^\mT&\mb{H}_3\left(\mb{H}_4^\mT\mb{E}_2^{-1}\mb{H}_4\right)^{-1}\mb{H}_3^\mT
 \end{bmatrix}.
 \end{gather}
 The above procedure requires matrix inversions to be conducted at element level whenever tangent moduli update. This is considered not very efficient for nonlinear analysis.
 \paragraph{Stability Condition}
-Let the size of $\mathbold{\phi}_\mathbold{\varepsilon}$ be $i\times{}j$ and the size of $\mathbold{\phi}_\mathbold{\sigma}$ be $i\times{}k$, then the number of integration points $n_{ip}$ must satisfy the following inequality for $\mathbold{E}_1$ to be invertible,
+Let the size of $\mb{\phi}_{\mb{\varepsilon}}$ be $i\times{}j$ and the size of $\mb{\phi}_{\mb{\sigma}}$ be $i\times{}k$, then the number of integration points $n_{ip}$ must satisfy the following inequality for $\mb{E}_1$ to be invertible,
 \begin{gather}
 n_{ip}\cdot{}\min\left(i,~j\right)\geqslant{}\max\left(i,~j\right).
 \end{gather}
-Furthermore, for $\mathbold{H}_5^\mT\mathbold{E}_1^{-1}\mathbold{H}_5$ to be invertible,
+Furthermore, for $\mb{H}_5^\mT\mb{E}_1^{-1}\mb{H}_5$ to be invertible,
 \begin{gather}
 n_{ip}\cdot{}\min\left(i,~j,~k\right)\geqslant{}\max\left(i,~j,~k\right).
 \end{gather}
@@ -322,7 +320,7 @@ This, however, only guarantees successful computation of elemental stiffness mat
 \begin{gather}
 n_{ip}\cdot{}\min\left(i,~j,~k\right)\geqslant{}n_k-n_f.
 \end{gather}
-Similar procedure can be applied to term $\mathbold{H}_4^\mT\mathbold{E}_2^{-1}\mathbold{H}_4$. Let the size of $\mathbold{\phi}_\mathbold{\kappa}$ be $l\times{}m$ and the size of $\mathbold{\phi}_\mathbold{\mu}$ be $l\times{}n$, then
+Similar procedure can be applied to term $\mb{H}_4^\mT\mb{E}_2^{-1}\mb{H}_4$. Let the size of $\mb{\phi}_{\mb{\kappa}}$ be $l\times{}m$ and the size of $\mb{\phi}_{\mb{\mu}}$ be $l\times{}n$, then
 \begin{gather}
 n_{ip}\cdot{}\min\left(l,~m,~n\right)\geqslant{}\max\left(l,~m,~n,~n_k-n_f\right).
 \end{gather}
@@ -330,98 +328,98 @@ Eventually,
 \begin{gather}\label{eq:stability}
 n_{ip}\cdot{}\min\left(i,~j,~k,~l,~m,~n\right)\geqslant{}\max\left(i,~j,~k,~l,~m,~n,~n_k-n_f\right).
 \end{gather}
-\subsubsection{Option Two --- Invertible $\mathbold{H}_4$ and $\mathbold{H}_5$}
-By proper construction, $\mathbold{H}_4$ and $\mathbold{H}_5$ can be square and invertible. Similar to the work by the author \citep{Chang2019}, by static condensation, one can obtain
+\subsubsection{Option Two --- Invertible $\mb{H}_4$ and $\mb{H}_5$}
+By proper construction, $\mb{H}_4$ and $\mb{H}_5$ can be square and invertible. Similar to the work by the author \citep{Chang2019}, by static condensation, one can obtain
 \begin{gather}
 \begin{bmatrix}
-\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{E}_1\mathbold{H}_5^{-\mT}\mathbold{H}_2^\mT+\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{E}_2\mathbold{H}_4^{-\mT}\mathbold{H}_1^\mT&\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{E}_2\mathbold{H}_4^{-\mT}\mathbold{H}_3^\mT\\
-\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{E}_2\mathbold{H}_4^{-\mT}\mathbold{H}_1^\mT&\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{E}_2\mathbold{H}_4^{-\mT}\mathbold{H}_3^\mT
+\mb{H}_2\mb{H}_5^{-1}\mb{E}_1\mb{H}_5^{-\mT}\mb{H}_2^\mT+\mb{H}_1\mb{H}_4^{-1}\mb{E}_2\mb{H}_4^{-\mT}\mb{H}_1^\mT&\mb{H}_1\mb{H}_4^{-1}\mb{E}_2\mb{H}_4^{-\mT}\mb{H}_3^\mT\\
+\mb{H}_3\mb{H}_4^{-1}\mb{E}_2\mb{H}_4^{-\mT}\mb{H}_1^\mT&\mb{H}_3\mb{H}_4^{-1}\mb{E}_2\mb{H}_4^{-\mT}\mb{H}_3^\mT
 \end{bmatrix}
 \begin{bmatrix}
-\Delta\mathbold{p}\\\Delta\mathbold{q}
-\end{bmatrix}=\mathbold{R}.
+\Delta\mb{p}\\\Delta\mb{q}
+\end{bmatrix}=\mb{R}.
 \end{gather}
 
-The above system can be conveniently converted into a more expressive form, in which the elemental stiffness matrix $\mathbold{K}$ can be shown as
+The above system can be conveniently converted into a more expressive form, in which the elemental stiffness matrix $\mb{K}$ can be shown as
 \begin{gather}\label{eq:stiffness}
-\mathbold{K}=\mathbold{K}_1+\mathbold{K}_2
+\mb{K}=\mb{K}_1+\mb{K}_2
 \end{gather}
 with
 \begin{gather}
-\mathbold{K}_1=\begin{bmatrix}
-\mathbold{H}_2\mathbold{H}_5^{-1}&\cdot\\\cdot&\cdot
+\mb{K}_1=\begin{bmatrix}
+\mb{H}_2\mb{H}_5^{-1}&\cdot\\\cdot&\cdot
 \end{bmatrix}\begin{bmatrix}
-\mathbold{E}_1&\cdot\\\cdot&\cdot
+\mb{E}_1&\cdot\\\cdot&\cdot
 \end{bmatrix}\begin{bmatrix}
-\mathbold{H}_5^{-\mT}\mathbold{H}_2^\mT&\cdot\\\cdot&\cdot
+\mb{H}_5^{-\mT}\mb{H}_2^\mT&\cdot\\\cdot&\cdot
 \end{bmatrix},\\
-\mathbold{K}_2=\begin{bmatrix}
-\cdot&\mathbold{H}_1\mathbold{H}_4^{-1}\\\cdot&\mathbold{H}_3\mathbold{H}_4^{-1}
+\mb{K}_2=\begin{bmatrix}
+\cdot&\mb{H}_1\mb{H}_4^{-1}\\\cdot&\mb{H}_3\mb{H}_4^{-1}
 \end{bmatrix}\begin{bmatrix}
-\cdot&\cdot\\\cdot&\mathbold{E}_2
+\cdot&\cdot\\\cdot&\mb{E}_2
 \end{bmatrix}\begin{bmatrix}
-\cdot&\cdot\\\mathbold{H}_4^{-\mT}\mathbold{H}_1^\mT&\mathbold{H}_4^{-\mT}\mathbold{H}_3^\mT
+\cdot&\cdot\\\mb{H}_4^{-\mT}\mb{H}_1^\mT&\mb{H}_4^{-\mT}\mb{H}_3^\mT
 \end{bmatrix}.
 \end{gather}
-The first term $\mathbold{K}_1$ solely depends on conventional displacement, strain and stress as defined in the Cauchy theory. Thus it can be derived from the Hu--Washizu theorem.
+The first term $\mb{K}_1$ solely depends on conventional displacement, strain and stress as defined in the Cauchy theory. Thus it can be derived from the Hu--Washizu theorem.
 
-Since all $\mathbold{H}_n$ matrices are constant once interpolations are determined, they only need to be computed once during the initialisation stage. Furthermore, $\mathbold{H}_n$ require no additional storage as $\mathbold{H}_2\mathbold{H}_5^{-1}\mathbold{\phi}_\mathbold{\varepsilon}^\mT$, $\mathbold{H}_1\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ and $\mathbold{H}_3\mathbold{H}_4^{-1}\mathbold{\phi}_\mathbold{\kappa}^\mT$ can be stored as `equivalent strain matrices' for each integration point. Once the elemental stiffness matrix is computed, reordering of degrees of freedom may be performed.
+Since all $\mb{H}_n$ matrices are constant once interpolations are determined, they only need to be computed once during the initialisation stage. Furthermore, $\mb{H}_n$ require no additional storage as $\mb{H}_2\mb{H}_5^{-1}\mb{\phi}_{\mb{\varepsilon}}^\mT$, $\mb{H}_1\mb{H}_4^{-1}\mb{\phi}_{\mb{\kappa}}^\mT$ and $\mb{H}_3\mb{H}_4^{-1}\mb{\phi}_{\mb{\kappa}}^\mT$ can be stored as `equivalent strain matrices' for each integration point. Once the elemental stiffness matrix is computed, reordering of degrees of freedom may be performed.
 
-It can be noted that the elemental stiffness possesses a symmetric structure although moduli $\mathbold{E}_1$ and $\mathbold{E}_2$ may be asymmetric due to, for example, non-associative plasticity in the case of material nonlinearity.
+It can be noted that the elemental stiffness possesses a symmetric structure although moduli $\mb{E}_1$ and $\mb{E}_2$ may be asymmetric due to, for example, non-associative plasticity in the case of material nonlinearity.
 \paragraph{Stability Condition}
-This option only requires the inversion of square matrices $\mathbold{H}_4$ and $\mathbold{H}_5$. Thus $\mathbold{\phi}_\mathbold{\varepsilon}$ ($\mathbold{\phi}_\mathbold{\kappa}$) and $\mathbold{\phi}_\mathbold{\sigma}$ ($\mathbold{\phi}_\mathbold{\mu}$) have the same size. Let $i\times{}j$ be the size of $\mathbold{\phi}_\mathbold{\varepsilon}$ and $m\times{}n$ be the size of $\mathbold{\phi}_\mathbold{\kappa}$, then the stability condition becomes
+This option only requires the inversion of square matrices $\mb{H}_4$ and $\mb{H}_5$. Thus $\mb{\phi}_{\mb{\varepsilon}}$ ($\mb{\phi}_{\mb{\kappa}}$) and $\mb{\phi}_{\mb{\sigma}}$ ($\mb{\phi}_{\mb{\mu}}$) have the same size. Let $i\times{}j$ be the size of $\mb{\phi}_{\mb{\varepsilon}}$ and $m\times{}n$ be the size of $\mb{\phi}_{\mb{\kappa}}$, then the stability condition becomes
 \begin{gather}\label{eq:stability2}
 n_{ip}\cdot{}\min\left(i,~j,~m,~n\right)\geqslant{}\max\left(i,~j,~m,~n,~n_k-n_f\right).
 \end{gather}
 \subsubsection{Resistance}
-From the third equation of the stationary condition \eqsref{eq:stationary}, $\mathbold{s}$ solely depends on material response thus can be computed directly as
+From the third equation of the stationary condition \eqsref{eq:stationary}, $\mb{s}$ solely depends on material response thus can be computed directly as
 \begin{gather}\label{eq:s}
-\mathbold{s}=\mathbold{H}_4^{-1}\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT{}\bar{\mathbold{\mu}}~\md{V}.
+\mb{s}=\mb{H}_4^{-1}\int_V\mb{\phi}_{\mb{\kappa}}^\mT{}\bar{\mb{\mu}}~\md{V}.
 \end{gather}
 Applying the same strategy to the fifth equation, one can obtain
 \begin{gather}\label{eq:alpha}
-\mathbold{\alpha}=\mathbold{H}_5^{-1}\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT{}\bar{\mathbold{\sigma}}~\md{V}.
+\mb{\alpha}=\mb{H}_5^{-1}\int_V\mb{\phi}_{\mb{\varepsilon}}^\mT{}\bar{\mb{\sigma}}~\md{V}.
 \end{gather}
-In the above equations, similar to \eqsref{eq:potential_energy}, $\bar{\mathbold{\sigma}}$ and $\bar{\mathbold{\mu}}$ denote the stress and couple stress obtained from material model. Inserting \eqsref{eq:s} and \eqsref{eq:alpha} back to the first two equations in \eqsref{eq:stationary}, one can obtain the elemental resistance as
+In the above equations, similar to \eqsref{eq:potential_energy}, $\bar{\mb{\sigma}}$ and $\bar{\mb{\mu}}$ denote the stress and couple stress obtained from material model. Inserting \eqsref{eq:s} and \eqsref{eq:alpha} back to the first two equations in \eqsref{eq:stationary}, one can obtain the elemental resistance as
 \begin{gather}
 \begin{bmatrix}
-\mathbold{R}_\mathbold{u}\\\mathbold{R}_\mathbold{\theta}
+\mb{R}_{\mb{u}}\\\mb{R}_{\mb{\theta}}
 \end{bmatrix}=\begin{bmatrix}
-\displaystyle\mathbold{H}_2\mathbold{H}_4^{-1}\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT{}\bar{\mathbold{\mu}}~\md{V}+\mathbold{H}_1\mathbold{H}_5^{-1}\int_V\mathbold{\phi}_\mathbold{\varepsilon}^\mT{}\bar{\mathbold{\sigma}}~\md{V}\\
-\displaystyle\mathbold{H}_3\mathbold{H}_4^{-1}\int_V\mathbold{\phi}_\mathbold{\kappa}^\mT{}\bar{\mathbold{\mu}}~\md{V}
+\displaystyle\mb{H}_2\mb{H}_4^{-1}\int_V\mb{\phi}_{\mb{\kappa}}^\mT{}\bar{\mb{\mu}}~\md{V}+\mb{H}_1\mb{H}_5^{-1}\int_V\mb{\phi}_{\mb{\varepsilon}}^\mT{}\bar{\mb{\sigma}}~\md{V}\\
+\displaystyle\mb{H}_3\mb{H}_4^{-1}\int_V\mb{\phi}_{\mb{\kappa}}^\mT{}\bar{\mb{\mu}}~\md{V}
 \end{bmatrix}.
 \end{gather}
 Once material response is computed, elemental resistance can be conveniently assembled without worrying about local residual.
 \subsubsection{Remarks}
 Although the second option appears to be more efficient and possesses a form similar to that of displacement based elements, both options can be chosen to formulate elemental stiffness matrix and they share similar stability conditions. However, they may require different numbers of shape functions for the corresponding fields in order to construct square matrices. Depending on the type of element and the number of available integration points, one may switch from one option to another for optimal formulation.
 
-If \eqsref{eq:functional2} is used, except for replacing all $\mathbold{\phi}_\mathbold{\kappa}$ with $\mathbold{\phi}_\mathbold{k}$, only $\mathbold{H}_4$ needs to be modified.
+If \eqsref{eq:functional2} is used, except for replacing all $\mb{\phi}_{\mb{\kappa}}$ with $\mb{\phi}_{\mb{k}}$, only $\mb{H}_4$ needs to be modified.
 \begin{gather}
-\mathbold{H}_4=\int_V\mathbold{\phi}_\mathbold{k}^\mT\mathbold{\phi}_\mathbold{\mu}~\md{V},
+\mb{H}_4=\int_V\mb{\phi}_{\mb{k}}^\mT\mb{\phi}_{\mb{\mu}}~\md{V},
 \end{gather}
-where $\mathbold{\phi}_\mathbold{k}$ is the interpolation of engineering mean curvature $\mathbold{k}$.
+where $\mb{\phi}_{\mb{k}}$ is the interpolation of engineering mean curvature $\mb{k}$.
 \subsection{Some Basic Elements}
 \subsubsection{An Elementary Triangular Membrane Element --- CSMT3}
 Not all couple stress theories support membrane problems, the popular modified couple stress theory \citep{Yang2002} adopts a symmetric couple stress tensor, with which in-plane response cannot be fully decoupled from out-of-plane response. Discussions of relevant topics can be seen elsewhere \citep{Hadjesfandiari2016}. The consistent couple stress theory is free from similar issues, which makes it more appealing for a wide range of general continuum problems.
 
 The simplest membrane element may be the three-node triangular element. For plane stress problem, given the constitutive equation between mean curvature vector $\kappa_i$ and couple stress vector $\mu_i$ occupies the form shown in \eqsref{eq:constitutive_couple}, it is clear that in-plane and out-of-plane actions are decoupled. Thus six fields reduce to the following Voigt forms.
 \begin{gather}
-\mathbold{u}=\begin{bmatrix}
+\mb{u}=\begin{bmatrix}
 u_x\\u_y
 \end{bmatrix},\quad
-\mathbold{\theta}=\begin{bmatrix}
+\mb{\theta}=\begin{bmatrix}
 \theta_z
 \end{bmatrix},\quad
-\mathbold{\kappa}=\begin{bmatrix}
+\mb{\kappa}=\begin{bmatrix}
 \kappa_x\\\kappa_y
 \end{bmatrix},\quad
-\mathbold{\mu}=\begin{bmatrix}
+\mb{\mu}=\begin{bmatrix}
 \mu_x\\\mu_y
 \end{bmatrix},\quad
-\mathbold{\varepsilon}=\begin{bmatrix}
+\mb{\varepsilon}=\begin{bmatrix}
 \varepsilon_x\\\varepsilon_y\\\gamma_{xy}
 \end{bmatrix},\quad
-\mathbold{\sigma}=\begin{bmatrix}
+\mb{\sigma}=\begin{bmatrix}
 \sigma_x\\\sigma_y\\\tau_{xy}
 \end{bmatrix}.
 \end{gather}
@@ -434,14 +432,14 @@ where $N_i$ is the complete first order shape function with modes $\begin{bmatri
 1&x&y
 \end{bmatrix}$, $\chi$ represents any of $x$, $y$, $u_x$, $u_y$, $\theta_z$, $\kappa_x$, $\kappa_y$, $\mu_x$ and $\mu_y$. Thus for each fields, three nodal values are used for interpolation.
 
-Given that $\mathbold{u}$ is linearly interpolated, $\mathbold{\varepsilon}$ and $\mathbold{\sigma}$ can be chosen to be constant fields.
+Given that $\mb{u}$ is linearly interpolated, $\mb{\varepsilon}$ and $\mb{\sigma}$ can be chosen to be constant fields.
 \begin{gather}
-\mathbold{\varepsilon}=\begin{bmatrix}
+\mb{\varepsilon}=\begin{bmatrix}
 1&\cdot&\cdot\\\cdot&1&\cdot\\\cdot&\cdot&1
 \end{bmatrix}\begin{bmatrix}
 \beta_1\\\beta_2\\\beta_3
 \end{bmatrix},\qquad
-\mathbold{\sigma}=\begin{bmatrix}
+\mb{\sigma}=\begin{bmatrix}
 1&\cdot&\cdot\\\cdot&1&\cdot\\\cdot&\cdot&1
 \end{bmatrix}\begin{bmatrix}
 \alpha_1\\\alpha_2\\\alpha_3
@@ -459,13 +457,13 @@ Similarly, the aforementioned formulation can be applied to four-node quadrilate
 \end{gather}
 with $N_i=\left(1+\xi_i\xi\right)\left(1+\eta_i\eta\right)/4$ where $\xi$ and $\eta$ are parent coordinates while $\xi_i$ and $\eta_i$ are values of parent coordinates of target node. Again, $\chi$ can be any of $x$, $y$, $u_x$, $u_y$, $\theta_z$, $\kappa_x$, $\kappa_y$, $\mu_x$ and $\mu_y$. A complete first order interpolation can be chosen for both strain and stress.
 \begin{gather}
-\mathbold{\phi}_\mathbold{\varepsilon}=\mathbold{\phi}_\mathbold{\sigma}=\begin{bmatrix}
+\mb{\phi}_{\mb{\varepsilon}}=\mb{\phi}_{\mb{\sigma}}=\begin{bmatrix}
 1&\cdot&\cdot&x&\cdot&\cdot&y&\cdot&\cdot\\
 \cdot&1&\cdot&\cdot&x&\cdot&\cdot&y&\cdot\\
 \cdot&\cdot&1&\cdot&\cdot&x&\cdot&\cdot&y
 \end{bmatrix}.
 \end{gather}
-It shall be mentioned that in the consistent couple stress theory, $\mathbold{\sigma}$ is not only governed by the Airy stress function but also an additional stress function \citep{Hadjesfandiari2011} from which $\mathbold{\mu}$ can be derived. Based on the previous discovery \citep{Chang2019}, $\mathbold{\phi}_\mathbold{\varepsilon}$ can be further modified to include the Poisson effect, which overcomes (near) incompressible problems. A \numproduct{2x2} Gauss quadrature is used for numerical integration, this element is denoted as couple stress mixed quadrilateral (CSMQ4) element.
+It shall be mentioned that in the consistent couple stress theory, $\mb{\sigma}$ is not only governed by the Airy stress function but also an additional stress function \citep{Hadjesfandiari2011} from which $\mb{\mu}$ can be derived. Based on the previous discovery \citep{Chang2019}, $\mb{\phi}_{\mb{\varepsilon}}$ can be further modified to include the Poisson effect, which overcomes (near) incompressible problems. A \numproduct{2x2} Gauss quadrature is used for numerical integration, this element is denoted as couple stress mixed quadrilateral (CSMQ4) element.
 
 Given that the displacement interpolation only uses four modes $\begin{bmatrix}
 1&x&y&xy
@@ -568,7 +566,7 @@ Numerical results of the transverse displacement $u_\theta$ along the vertical c
 \end{figure}
 The numerical solution matches the analytical one well, indicating the implementation is correct. Since no dedicated optimisation is designed to improve the performance apart from the mixed formulation, relatively dense mesh grids are required to reduce error. The second order quadrilateral CSMQ8 shows higher accuracy as can be predicted based on experience with the Cauchy framework.
 \subsection{Membrane--Beam Joint}
-From the previous two examples, it can be concluded that the formulation developed in this work and the corresponding implementation are both correct. Since the drilling degree of freedom defined in the consistent couple stress theory has an energetic conjugate --- curl of couple stress $\nabla\times\mathbold{\mu}$ as can be seen in \eqsref{eq:functional2}, size effect can be accounted for by its nature. In this example, the performance of drilling DoFs is investigated. Although it is possible to directly apply loads to drilling DoFs as 'moments', a membrane--beam joint, which is frequently encountered in structural engineering, is used instead.
+From the previous two examples, it can be concluded that the formulation developed in this work and the corresponding implementation are both correct. Since the drilling degree of freedom defined in the consistent couple stress theory has an energetic conjugate --- curl of couple stress $\nabla\times\mb{\mu}$ as can be seen in \eqsref{eq:functional2}, size effect can be accounted for by its nature. In this example, the performance of drilling DoFs is investigated. Although it is possible to directly apply loads to drilling DoFs as 'moments', a membrane--beam joint, which is frequently encountered in structural engineering, is used instead.
 
 The model shown in \figref{fig:joint_example} is subjected to plane stress condition and consists of a square panel of size \numproduct{10x10} and a beam of length \num{4}. The height of beam section is \num{1} while the thickness along $z$-axis is chosen to be unity.
 \begin{figure}[htb]
