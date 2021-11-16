@@ -101,9 +101,9 @@ or
 \delta{}W\left(\varepsilon_{ij},k_i\right)=\bar{\sigma}_{ij}\delta\varepsilon_{ij}+\bar{\mu}_{i}\delta{}k_i,
 \end{gather}
 with $\bar{\sigma}_{ij}$ and $\bar{\mu}_{i}$ denoting stress and couple stress tensors obtained from typical strain driven constitutive model. For linear elasticity, they are simply
-\begin{gather*}
+\begin{gather}
 \bar{\sigma}_{ij}=\sigma_{ij},\qquad\bar{\mu}_{i}=\mu_{i}.
-\end{gather*}
+\end{gather}
 \subsection{Remarks}
 It could be noted that $C^1$ continuity is required by the displacement field $u_i$ due to the presence of the second order derivatives in $\kappa_i$. Shape functions based on functions, such as NURBS \citep[see][]{Dargush2021}, that support $C^1$ continuity can be adopted to construct proper finite elements. Alternatively, $\theta_i$ can be treated as an independent field and the corresponding kinematic equations can be introduced into the functional via the method of Lagrange multiplier, applications of which can be seen for example in the work by \citet{Darrall2013,Deng2016,Pedgaonkar2021}. Further discussions of such a consistent couple stress theory can also be seen in the work by \citet{Hadjesfandiari2016}.
 \section{A Six--Field Mixed Framework}
@@ -170,11 +170,11 @@ Since the variations $\delta{}u_i$, $\delta{}\theta_i$, $\delta{}\varepsilon_{ij
 %\end{array}\right.
 \end{gather}
 It can be identified that $\alpha_{ij}=-\sigma_{ij}$, $\beta_i=2\mu_i$ and $\gamma_i=\epsilon_{ijk}\mu_{k,j}$ with $\sigma_{ij}$ and $\mu_i$ be independent fields. The third equation in \eqsref{eq:langrange} is essentially
-\begin{gather*}
+\begin{gather}
 \begin{split}
 0=\left(\alpha_{kj}+\alpha_{jk}\right)_{,j}+\epsilon_{ijk}\epsilon_{imn}\mu_{m,nj}=\left(\alpha_{ji}+\alpha_{ij}\right)_{,j}+\left(\mu_{j,i}-\mu_{i,j}\right)_{,j},
 \end{split}
-\end{gather*}
+\end{gather}
 which is the stress equilibrium \eqsref{eq:equilibrium} in absence of body force $f_i$.
 
 The functional in its general form is then
@@ -269,7 +269,7 @@ Taking variations leads to the following system of equations.
 In the above system, $\mb{R}_{\mb{u}}$ and $\mb{R}_{\mb{\theta}}$ are nodal forces/resistances due to omitted boundary terms, $W_{\mb{\kappa}}$ and $W_{\mb{\varepsilon}}$ denote the partial derivatives respectively.
 
 By further denoting
-\begin{gather*}
+\begin{gather}
 \mb{E}_1=\int_V\mb{\phi}_{\mb{\varepsilon}}^\mT\mb{C}\mb{\phi}_{\mb{\varepsilon}}~\md{V},\quad
 \mb{E}_2=\int_V\mb{\phi}_{\mb{\kappa}}^\mT\mb{D}\mb{\phi}_{\mb{\kappa}}~\md{V},\quad
 \mb{H}_1=-2\int_V\left(\mb{J}\mb{\phi}_{\mb{u}}\right)^\mT\left(\mb{J}\mb{\phi}_{\mb{\mu}}\right)~\md{V},\\
@@ -277,7 +277,7 @@ By further denoting
 \mb{H}_3=2\int_V\mb{\phi}_{\mb{\theta}}^\mT\mb{J}\mb{\phi}_{\mb{\mu}}-\left(\mb{J}\mb{\phi}_{\mb{\theta}}\right)^\mT\mb{\phi}_{\mb{\mu}}~\md{V},\\
 \mb{H}_4=-2\int_V\mb{\phi}_{\mb{\kappa}}^\mT\mb{\phi}_{\mb{\mu}}~\md{V},\quad
 \mb{H}_5=\int_V\mb{\phi}_{\mb{\varepsilon}}^\mT\mb{\phi}_{\mb{\sigma}}~\md{V},\quad
-\end{gather*}
+\end{gather}
 in which $\mb{C}$ and $\mb{D}$ denote material tangent moduli, the incremental form of linear system can be expressed as
 \begin{gather}\label{eq:incremental_form}
 \begin{bmatrix}
